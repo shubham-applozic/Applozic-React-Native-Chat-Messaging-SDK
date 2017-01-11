@@ -1,0 +1,1 @@
+# Applozic-React-Native-Chat-Messaging-SDK
