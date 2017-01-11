@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <scale
+        android:duration="@android:integer/config_shortAnimTime"
+        android:fromXScale="0.3"
+        android:fromYScale="0.3"
+        android:pivotX="50%"
+        android:pivotY="0%"
+        android:toXScale="1.0"
+        android:toYScale="1.0" />
+    <alpha
+        android:duration="@android:integer/config_shortAnimTime"
+        android:fromAlpha="0.0"
+        android:interpolator="@android:anim/decelerate_interpolator"
+        android:toAlpha="1.0" />
+</set><!-- From: file:/Users/Devashish/Documents/Github/Chat-React-Native/AwesomeProject/android/app/build/intermediates/exploded-aar/com.applozic.communication.uiwidget/mobicomkitui/4.67/res/anim/mobicom_multimedia_options_grow_from_top.xml -->

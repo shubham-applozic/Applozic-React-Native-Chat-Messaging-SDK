@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="alphabet_color">
+        <item>#f16364</item>
+        <item>#f58559</item>
+        <item>#f9a43e</item>
+        <item>#e4c62e</item>
+        <item>#67bf74</item>
+        <item>#59a2be</item>
+        <item>#2093cd</item>
+        <item>#ad62a7</item>
+    </array>
+    <string-array name="channel_users_menu_option">
+        <item>Message</item>
+        <item>Remove</item>
+    </string-array>
+    <string-array name="conversation_options_menu">
+        <item>Delete conversation</item>
+        <item>Delete group</item>
+        <item>Exit group</item>
+    </string-array>
+    <string-array name="menu">
+        <item>Copy</item>
+        <item>Forward</item>
+        <item>Resend</item>
+        <item>Delete</item>
+        <item>Info</item>
+    </string-array>
+    <string-array name="multimediaOptionIcons_without_price">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+    <string-array name="multimediaOptions_mt">
+        <item>Current location</item>
+        <item>Take photo</item>
+        <item>Attach file</item>
+        <item>Audio Message</item>
+        <item>Video Message</item>
+        <item>Share Contact</item>
+    </string-array>
+    <string-array name="multimediaOptions_sms">
+        <item>Current location</item>
+    </string-array>
+    <string-array name="multimediaOptions_with_price">
+        <item>Current location</item>
+        <item>Take photo</item>
+        <item>Attach file</item>
+        <item>Audio Message</item>
+        <item>Video Message</item>
+        <item>Share Contact</item>
+        <item>Attach price</item>
+
+    </string-array>
+    <string-array name="multimediaOptions_with_price_text">
+        <item>Location</item>
+        <item>Camera</item>
+        <item>File</item>
+        <item>Audio</item>
+        <item>Video</item>
+        <item>Contact</item>
+        <item>Price</item>
+    </string-array>
+    <string-array name="multimediaOptions_without_price_text">
+        <item>Location</item>
+        <item>Camera</item>
+        <item>File</item>
+        <item>Audio</item>
+        <item>Video</item>
+        <item>Contact</item>
+    </string-array>
+    <string-array name="schedule_menu">
+        <item>Copy</item>
+        <item>Cancel</item>
+    </string-array>
+    <string-array name="secret_message_timer_array">
+        <item>Self Destruct</item>
+        <item>Off</item>
+        <item>1 min</item>
+        <item>2 mins</item>
+        <item>5 mins</item>
+        <item>10 mins</item>
+    </string-array>
+    <string-array name="send_type_options">
+        <item>SMS</item>
+        <item>MT</item>
+    </string-array>
+    <bool name="has_two_panes">true</bool>
+    <bool name="use_activity">true</bool>
+    <bool name="use_provider">false</bool>
+    <color name="alphabet_a">#FF4FC3F7</color>
+    <color name="alphabet_b">#FFF06292</color>
+    <color name="alphabet_c">#FFBA68C8</color>
+    <color name="alphabet_d">#FF9575CD</color>
+    <color name="alphabet_e">#FF7986CB</color>
+    <color name="alphabet_f">#FF4FC3F7</color>
+    <color name="alphabet_g">#FFE06055</color>
+    <color name="alphabet_h">#FF4DD0E1</color>
+    <color name="alphabet_i">#FF4DB6AC</color>
+    <color name="alphabet_j">#FF57BB8A</color>
+    <color name="alphabet_k">#FF9CCC65</color>
+    <color name="alphabet_l">#FFD4E157</color>
+    <color name="alphabet_m">#FFFDD835</color>
+    <color name="alphabet_n">#FFF6BF26</color>
+    <color name="alphabet_o">#FFFFA726</color>
+    <color name="alphabet_p">#FFFF8A65</color>
+    <color name="alphabet_q">#FFC2C2C2</color>
+    <color name="alphabet_r">#FF90A4AE</color>
+    <color name="alphabet_s">#FFA1887F</color>
+    <color name="alphabet_t">#FFA3A3A3</color>
+    <color name="alphabet_text_a">#FFF6D2CE</color>
+    <color name="alphabet_text_b">#FFFAC3D7</color>
+    <color name="alphabet_text_c">#FFE1BEE6</color>
+    <color name="alphabet_text_d">#FFD2C5E9</color>
+    <color name="alphabet_text_e">#FFC9CCEA</color>
+    <color name="alphabet_text_f">#FFC3D7FA</color>
+    <color name="alphabet_text_g">#FFC5EBFC</color>
+    <color name="alphabet_text_h">#FFC8F0F5</color>
+    <color name="alphabet_text_i">#FFB6E0DD</color>
+    <color name="alphabet_text_j">#FFB9E1CD</color>
+    <color name="alphabet_text_k">#FFDAECC6</color>
+    <color name="alphabet_text_l">#FFF8FAE6</color>
+    <color name="alphabet_text_m">#FFFFFCE2</color>
+    <color name="alphabet_text_n">#FFFAE6B4</color>
+    <color name="alphabet_text_o">#FFFFE1B4</color>
+    <color name="alphabet_text_p">#FFFFC8B9</color>
+    <color name="alphabet_text_q">#FFF1F1F1</color>
+    <color name="alphabet_text_r">#FFD2DCDE</color>
+    <color name="alphabet_text_s">#FFD7CDC8</color>
+    <color name="alphabet_text_t">#FFD9D9D9</color>
+    <color name="alphabet_text_u">#FFEDEEF8</color>
+    <color name="alphabet_text_v">#FFEFE9F6</color>
+    <color name="alphabet_text_w">#FFF1F1F1</color>
+    <color name="alphabet_text_x">#FFE8F8FA</color>
+    <color name="alphabet_text_y">#FFEBE4E4</color>
+    <color name="alphabet_text_z">#FFDDEDCA</color>
+    <color name="alphabet_u">#FFAFB6E0</color>
+    <color name="alphabet_v">#FFB39DDB</color>
+    <color name="alphabet_w">#FFC2C2C2</color>
+    <color name="alphabet_x">#FF80DEEA</color>
+    <color name="alphabet_y">#FFBCAAA4</color>
+    <color name="alphabet_z">#FFAED581</color>
+    <color name="apploizc_black_color">#000000</color>
+    <color name="apploizc_custom_channel_message_text_color">#cccccc</color>
+    <color name="apploizc_dark_black_color">#ff000000</color>
+    <color name="apploizc_darker_gray_color">#aaa</color>
+    <color name="apploizc_gray_color">#333333</color>
+    <color name="apploizc_lite_gray_color">#666666</color>
+    <color name="apploizc_transparent_color">#00000000</color>
+    <color name="apploizc_white_color">#FFFFFFFF</color>
+    <color name="applozic_green_color">#5fba7d</color>
+    <color name="applozic_lite_black_color">#b2b2b2</color>
+    <color name="applozic_location_view_divider_color">#d2d2d2</color>
+    <color name="applozic_message_border_color">#ffffff</color>
+    <color name="applozic_message_status_color">#ff000000</color>
+    <color name="applozic_multimedia_grid_view_background_color">#F0F0F0</color>
+    <color name="applozic_profile_devider_color">#F8F8F8</color>
+    <color name="applozic_send_message_layout_background_color">#ffffffff</color>
+    <color name="applozic_share_contact_background">#fff5f5ff</color>
+    <color name="applozic_share_contact_divider">#FFB6B6B6</color>
+    <color name="applozic_theme_color">#FFB3E5FC</color>
+    <color name="applozic_theme_color_accent">#FF607D8B</color>
+    <color name="applozic_theme_color_app">#ff0099cc</color>
+    <color name="applozic_theme_color_control_activated">#ff0099cc</color>
+    <color name="applozic_theme_color_control_highlight">#ff0099ee</color>
+    <color name="applozic_theme_color_primary">#FF03A9F4</color>
+    <color name="applozic_theme_color_primary_dark">#FF0288D1</color>
+    <color name="applozic_theme_divider">#FFB6B6B6</color>
+    <color name="applozic_theme_icons">#FF727272</color>
+    <color name="applozic_theme_primary_text">#FF000000</color>
+    <color name="applozic_theme_secondary_text">#FFFFFFFF</color>
+    <color name="attachment_background_color">#FFFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="compose_action_button">#db4437</color>
+    <color name="contact_name">#ff0099cc</color>
+    <color name="contact_name_text_color">#ff000000</color>
+    <color name="contact_userId_text_color">#838b83</color>
+    <color name="conversation_list_all_background">#FFFFFFFF</color>
+    <color name="conversation_list_background">#FFFAFAFA</color>
+    <color name="dark_black">#ff000000</color>
+    <color name="edittext_hint_color">#bdbdbd</color>
+    <color name="empty_conversation_text_color">#838b83</color>
+    <color name="error_background_color">#ff0000</color>
+    <color name="holo_blue">#FF33B5E5</color>
+    <color name="incoming_call">#ff0099cc</color>
+    <color name="instruction_color">#ff337ab7</color>
+    <color name="location_activity_background">#FFFAFAFA</color>
+    <color name="message_action_button">#FFE5E4E2</color>
+    <color name="message_details_text_color">#838b83</color>
+    <color name="message_text_color">#ff000000</color>
+    <color name="message_type_inbox">#FFFFFFFF</color>
+    <color name="message_type_incoming_call">#FFFFFFFF</color>
+    <color name="message_type_mt_inbox">#FFFFFFFF</color>
+    <color name="message_type_mt_outbox">#FFFFFFFF</color>
+    <color name="message_type_outbox">#FFFFFFFF</color>
+    <color name="message_type_outbox_sent_from_device">#FFFFFFFF</color>
+    <color name="message_type_outgoing_call">#FFFFFFFF</color>
+    <color name="mg_alphabet_fifth">#FF8B627D</color>
+    <color name="mg_alphabet_first">#FF617D8A</color>
+    <color name="mg_alphabet_fourth">#FF8C8863</color>
+    <color name="mg_alphabet_second">#FF628B70</color>
+    <color name="mg_alphabet_sixth">#FF8B6F62</color>
+    <color name="mg_alphabet_third">#FF6F628B</color>
+    <color name="mobitexter_main_color">#ff33B5E5</color>
+    <color name="non_alpha">#FFDDA185</color>
+    <color name="outgoing_call">#ff008000</color>
+    <color name="people_activity_action_bar_color">#ff3B94D9</color>
+    <color name="people_activity_main_color">#ff3B94D9</color>
+    <color name="people_activity_primary_dark_color">#ff206ca7</color>
+    <color name="primary_dark_color">#ff178ab4</color>
+    <color name="received_message_bg_color">#ffffffff</color>
+    <color name="sent_message_bg_color">#ff33B5E5</color>
+    <color name="sent_message_text_color">#ffffffff</color>
+    <color name="text_non_alpha">#FFF1F1F1</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="whitesmoke">#f5f5f5</color>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="left_menu_item_text_size">16sp</dimen>
+    <dimen name="letter_tile_size">64dp</dimen>
+    <dimen name="listview_item_padding">16dp</dimen>
+    <dimen name="message_text_size">15sp</dimen>
+    <dimen name="mobicom_activity_horizontal_margin">16dp</dimen>
+    <dimen name="tile_letter_font_size">250dp</dimen>
+    <string name="ScheduleText">Schedule</string>
+    <string name="action_settings">Settings</string>
+    <string name="activity_contact_detail">Contact Detail</string>
+    <string name="activity_contacts_list">MobiTexter</string>
+    <string name="activity_contacts_title">Select contact</string>
+    <string name="add_member">Add</string>
+    <string name="adding_channel_user">Adding....</string>
+    <string name="admin_text">Group admin</string>
+    <string name="alert_for_empty_message">Do you want to send a message without text?</string>
+    <string name="alphabet">ABCDEFGHIJKLMNOPQRSTUVWXYZ</string>
+    <string name="app_name">Applozic</string>
+    <string name="applozic_account_closed">Please contact Applozic to activate chat in your app</string>
+    <string name="applozic_add_user_to_multiple_channel_error_info_in_logs">UserId can not be null or empty and Channel key list should not be null</string>
+    <string name="applozic_audio_permission_missing">Unable to launch audio recorder.</string>
+    <string name="applozic_channel_error_info_in_logs">Please check group name is Null or Empty or it has at least one member to be added in group</string>
+    <string name="applozic_contacts_loading_error">You need to have network access for loading contacts</string>
+    <string name="applozic_contacts_loading_info">Loading please wait...</string>
+    <string name="applozic_free_version_not_allowed_on_release_build">Please contact Applozic to activate chat in your app</string>
+    <string name="applozic_message_info">Message Info</string>
+    <string name="applozic_message_info_no_network">Not able to fetch message info.</string>
+    <string name="applozic_my_profile_option_info">Profile</string>
+    <string name="applozic_select_photo">Select a photo</string>
+    <string name="applozic_server_error">Oops! You caught an error, try again later</string>
+    <string name="applozic_userId_error_info_in_logs">UserId can not be null or empty and Channel key should not be null</string>
+    <string name="applozic_user_already_in_a_group">Already added to the [groupType]</string>
+    <string name="applozic_user_profile_heading">Profile</string>
+    <string name="attachment_retry"> Retry </string>
+    <string name="audio_recording_send_text">Tap on Start to record audio</string>
+    <string name="broadcast_creating_info">Creating broadcast please wait</string>
+    <string name="broadcast_delete_button">DELETE BROADCAST</string>
+    <string name="broadcast_exit_button">EXIT BROADCAST</string>
+    <string name="broadcast_string">broadcast</string>
+    <string name="call_history_display_within_messages_pref_key">CALL_HISTORY_DISPLAY_WITHIN_MESSAGES</string>
+    <string name="cancel_text">CANCEL</string>
+    <string name="channel_add_alert">Unable to add participant in group because you are not a participant</string>
+    <string name="channel_create_title">New group</string>
+    <string name="channel_created_by">Created by</string>
+    <string name="channel_delete_group_button">DELETE GROUP</string>
+    <string name="channel_deleting">Delete</string>
+    <string name="channel_edit_alert">Unable to change the group name because you are not a participant</string>
+    <string name="channel_exit">Exit</string>
+    <string name="channel_exit_button">EXIT GROUP</string>
+    <string name="channel_member_exit">Exiting....</string>
+    <string name="channel_member_title">Select contact</string>
+    <string name="channel_members_title">Add Members</string>
+    <string name="channel_name_empty">Group name can not be empty</string>
+    <string name="channel_update">Updating group info....</string>
+    <string name="confirm">Confirm</string>
+    <string name="confirm_your_number">Confirm your number</string>
+    <string name="contact_permission">Contact permission are needed to access</string>
+    <string name="contact_permission_granted">Contacts Permission have been granted</string>
+    <string name="contact_permission_not_granted">Permission were not granted for Contact</string>
+    <string name="contact_sync_in_progress">Contact sync is in progress, might take few mins</string>
+    <string name="contactsListActivity">Contact List</string>
+    <string name="contacts_list_search_results_title">Contact search for \"%s\"</string>
+    <string name="conversation">Conversation</string>
+    <string name="conversation_options">Options</string>
+    <string name="conversations">Conversations</string>
+    <string name="defaultDate">dd-mm-yyyy</string>
+    <string name="defaultTime">HH:MM:SS</string>
+    <string name="delete_channel_messages_and_channel_info">Are you sure you want to delete [group] [groupType]?</string>
+    <string name="delete_conversation">Delete</string>
+    <string name="delete_conversation_failed">Delete failed</string>
+    <string name="delete_thread_text">Deleting....</string>
+    <string name="deleting_channel_user">Deleting...</string>
+    <string name="delivery_report_pref_key">DELIVERY_REPORT_ENABLE</string>
+    <string name="device_key_string">DEVICE_KEY_STRING</string>
+    <string name="device_registration_id">DEVICE_REGISTRATION_ID</string>
+    <string name="dialog_add_group_user">Add [name] to [group]?</string>
+    <string name="dialog_delete_conversation_confir">Delete all messages of [name]?</string>
+    <string name="dialog_delete_conversation_title">Delete Conversation</string>
+    <string name="dialog_remove_group_user">Remove [name] from [group]?</string>
+    <string name="edit">Edit</string>
+    <string name="email">EMAIL_ID_VALUE</string>
+    <string name="email_verified">EMAIL_VERIFIED</string>
+    <string name="empty_conversations">No conversations!!!</string>
+    <string name="enter_message_hint">Write a Message...</string>
+    <string name="enter_mt_message_hint">Write a Message..</string>
+    <string name="enter_support_query_hint">enter your queries, bug reporting or feedback here</string>
+    <string name="exit_channel_message_info">Are you sure you want to exit [group] [groupType]?</string>
+    <string name="failed_to_leave_group">Failed to leave group</string>
+    <string name="file_not_selected">Did you miss selecting the file?</string>
+    <string name="groupType_info">[groupType]</string>
+    <string name="group_creating_info">Creating group please wait</string>
+    <string name="group_name_hint">Name of the group</string>
+    <string name="group_name_info">[group]</string>
+    <string name="group_sms_freq_key">GROUP_SMS_FREQ_KEY</string>
+    <string name="group_string">group</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="incoming_call">Received call</string>
+    <string name="info_app_not_found_to_open_file">No application found to open this file</string>
+    <string name="info_attachment_max_allowed_file_size">Can\'t send maximum uploading file size limit exceeded 10Mb </string>
+    <string name="info_broadcast_message">Messages will be broadcasted to each recipient individually</string>
+    <string name="info_file_attachment_error">Can\'t send! Some unexpected error occurred while reading file</string>
+    <string name="info_message_scheduled">Message is successfully scheduled</string>
+    <string name="info_message_sync">Syncing messages with the server, it might take few mins!</string>
+    <string name="info_sample_contact_list">Populate your app contacts here, showing device contacts as sample</string>
+    <string name="instruction_go_back_to_recent_conversation_list">To go back to previous screen, slide from left to right</string>
+    <string name="instruction_long_press_message">For delete &amp; other options, long press the message</string>
+    <string name="instruction_open_conversation_thread">Tap on any conversation to see full thread</string>
+    <string name="internet_connection_for_group_name_info">Your phone needs an Internet connection to change the group name</string>
+    <string name="internet_connection_not_available">No internet connection</string>
+    <string name="invite">Invite your friends</string>
+    <string name="is_typing">is typing...</string>
+    <string name="last_inbox_sync_time">LAST_INBOX_SYNC_TIME</string>
+    <string name="last_message_stat_sync_time">LAST_MESSAGE_STAT_SYNC_TIME</string>
+    <string name="last_outbox_sync_time">LAST_OUTBOX_SYNC_TIME</string>
+    <string name="last_sms_sync_time">LAST_SMS_SYNC_TIME</string>
+    <string name="launch_mobitexter_app">LAUNCH_MOBITEXTER</string>
+    <string name="leave_channel">Are you sure you want to exit from this [groupType]?</string>
+    <string name="location_permission">Location permission are needed to access</string>
+    <string name="location_permission_granted">Location Permissions has been granted</string>
+    <string name="location_permission_not_granted">Permissions were not granted for Location</string>
+    <string name="location_sending_cancelled">Location sending cancelled</string>
+    <string name="location_service_settings">Settings</string>
+    <string name="location_services_disabled_message">Sending location requires access to your location. Turn on location access.</string>
+    <string name="location_services_disabled_title">Location services disabled</string>
+    <string name="menu_add_contact">Create a new contact</string>
+    <string name="menu_edit_contact">Edit Contact</string>
+    <string name="menu_search">Search</string>
+    <string name="messageOptions">Message Options</string>
+    <string name="message_option_string">Message</string>
+    <string name="mobicom_max_attachment_warning">Max attachment limit reached</string>
+    <string name="mobicom_select_attachment_text">Select at least one attachment</string>
+    <string name="mobiframework_title_device">Device</string>
+    <string name="mobiframework_title_group">Group</string>
+    <string name="mobitexter_contact_sync_key">KEYMOBITEXTER_CONTACT_SYNC_</string>
+    <string name="negetiveButtonText">Clear</string>
+    <string name="new_broadcast_name_info">New broadcast</string>
+    <string name="new_channel_name_hint">Group name..</string>
+    <string name="no_contact_selected">No Contact Selected</string>
+    <string name="no_contacts">No Contacts Found</string>
+    <string name="no_conversation">You have no conversations</string>
+    <string name="outgoing_call">Dialed call</string>
+    <string name="patch_available">NEWPATCHAVAILABLE</string>
+    <string name="phone_call_permission">Phone call permission are needed to access</string>
+    <string name="phone_call_permission_granted">Phone call Permission has been granted</string>
+    <string name="phone_call_permission_not_granted">Permission were not granted for Phone call</string>
+    <string name="phone_camera_permission">Camera permission are needed to access</string>
+    <string name="phone_camera_permission_granted">Camera permission has been granted</string>
+    <string name="phone_camera_permission_not_granted">Permission were not granted for Camera</string>
+    <string name="phone_number_key">phone_number_key</string>
+    <string name="phone_number_not_present">Phone number is not present</string>
+    <string name="phone_state_permission_granted">Phone state Permissions has been granted</string>
+    <string name="phone_state_permission_not_granted">Permissions were not granted for Phone state</string>
+    <string name="phone_state_permisssion">Phone state permission are needed to access</string>
+    <string name="please_wait_info">Please wait a moment...</string>
+    <string name="quick_conversation_loading">loading conversation..</string>
+    <string name="read_sms_permission">Read sms permission are needed to access</string>
+    <string name="read_sms_permission_granted">Read sms Permissions have been granted</string>
+    <string name="read_sms_permission_not_granted">Permissions were not granted for Read</string>
+    <string name="received_sms_sync_pref_key">RECEIVED_SMS_SYNC_FLAG</string>
+    <string name="record_audio">Audio recording permission needed</string>
+    <string name="record_audio_permission_granted">Audio Record permissions has been granted</string>
+    <string name="record_audio_permission_not_granted">Permissions were not granted for Audio recording</string>
+    <string name="remove_member">Remove</string>
+    <string name="removing_channel_user">Removing....</string>
+    <string name="scheduleDialogHeader">Schedule Message</string>
+    <string name="scheduledDateText">Scheduled Date :</string>
+    <string name="scheduledTimeText">Scheduled Time :</string>
+    <string name="search_hint">Search...</string>
+    <string name="search_match_other">Matches Other Field</string>
+    <string name="search_not_found_for_messages">No conversation found</string>
+    <string name="search_title">Search</string>
+    <string name="select_at_least">At least  1 contact must be selected</string>
+    <string name="select_file">Select a file</string>
+    <string name="select_file_count_limit">Can\'t select more than 1 file</string>
+    <string name="selectionRequestText">Select date and time to schedule your message.</string>
+    <string name="send_text">SEND</string>
+    <string name="sent_sms_sync_pref_key">SENT_SMS_SYNC_FLAG</string>
+    <string name="shareOptions">Share</string>
+    <string name="skip">Skip</string>
+    <string name="start_text">START</string>
+    <string name="stop_service">STOPSERVICE</string>
+    <string name="storage_permission">Storage permission are needed to access</string>
+    <string name="storage_permission_granted">Storage Permissions have been granted</string>
+    <string name="storage_permission_not_granted">Permissions were not granted for Storage</string>
+    <string name="subtitle_last_seen_at_time">Last seen</string>
+    <string name="sync_messages_from_server">Syncing with server...</string>
+    <string name="sync_older_messages">Do you want to sync older messages?</string>
+    <string name="title_activity_mobi_com">MobiComActivity</string>
+    <string name="unable_to_fetch_location">Unable to fetch location</string>
+    <string name="update_channel_title_name">Enter Group Name</string>
+    <string name="update_push_registration">UPDATE_PUSH_REGISTRATION</string>
+    <string name="user_block">Block</string>
+    <string name="user_block_info">Block [name]? Blocked user will no longer be able to send you messages</string>
+    <string name="user_is_already_exists">User already exists in group</string>
+    <string name="user_key_string">SU_USER_KEY_STRING</string>
+    <string name="user_name_info">[name]</string>
+    <string name="user_not_in_this_group_text">You are no longer a participant of this group</string>
+    <string name="user_online">Online</string>
+    <string name="user_un_block">Unblock</string>
+    <string name="user_un_block_info">Unblock [name] to send a message</string>
+    <string name="verification_send_sms_itself">We need to confirm that [phone_number] is your phone number. Your phone will be used to send itself a message.</string>
+    <string name="verification_success">Your phone number got verified successfully</string>
+    <string name="verify_contact_number">VERIFY_CONTACT_NUMBER</string>
+    <string name="verify_phone_number_notify_message">sending a text message to verify your number, we will automatically detect it when it arrives</string>
+    <string name="view_option_string">View</string>
+    <string name="waiting_for_current_location">Waiting for current location</string>
+    <string name="wearable_action_label">Reply to</string>
+    <string name="wearable_action_title">Reply</string>
+    <string name="webhook_enable_key">WEBHOOK_ENABLE_KEY</string>
+    <string name="welcome_message">Welcome,
+        \nMobiTexter is a Messenger &amp; SMS Texting app
+        \nText from your laptop, mobile &amp; any android device using your own phone number.
+        \nSend and receive text on the laptop/pc/computer browser from http://www.mobitexter.net
+        \nFor any queries, get in touch with us at support@mobitexter.net</string>
+    <string name="yes_alert">Yes</string>
+    <string name="you_dont_have_any_network_access_info">You don\'t have any network access now</string>
+    <string name="you_need_network_access_for_block_or_unblock">You need to have network access for block/unblock a user</string>
+    <string name="you_need_network_access_for_delete">You need to have network access for deleting Conversation </string>
+    <string name="you_string">You</string>
+    <string name="zero_friends_on_app">Contacts not found</string>
+    <string name="zero_friends_on_phone">No matching contact found on phone contacts but you can still send message by entering the email, userId or phone number</string>
+    <string name="zero_groups_on_app">Groups not found</string>
+    <style name="Animations"/>
+    <style name="Animations.GrowFromTop">
+        <item name="@android:windowEnterAnimation">@anim/mobicom_multimedia_options_grow_from_top
+        </item>
+        <item name="@android:windowExitAnimation">
+            @anim/mobicom_multimedia_option_shrink_from_bottom
+        </item>
+    </style>
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="Applozic.People.Theme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/applozic_theme_color_primary</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/applozic_theme_color_primary_dark</item>
+
+        <!-- colorAccent is used as the default value for colorControlActivated
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/white</item>
+
+        <!-- You can also set colorControlNormal, colorControlActivated
+             colorControlHighlight & colorSwitchThumbNormal. -->
+        <!-- <item name="colorControlNormal">#c5c5c5</item>-->
+        <item name="colorControlActivated">@color/applozic_theme_color_control_activated</item>
+        <item name="colorControlHighlight">@color/applozic_theme_color_control_highlight</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <!--actionbar icon color-->
+        <item name="android:textColorSecondary">@color/applozic_theme_secondary_text</item>
+    </style>
+    <style name="ApplozicActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/mobitexter_main_color</item>
+
+        <!-- Support library compatibility -->
+        <item name="background">@color/mobitexter_main_color</item>
+
+    </style>
+    <style name="ApplozicTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/applozic_theme_color_primary</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/applozic_theme_color_primary_dark</item>
+        <!-- colorAccent is used as the default value for colorControlActivated which is used to tint widgets -->
+        <item name="colorAccent">@color/applozic_theme_color_primary</item>
+        <item name="windowActionModeOverlay">true</item>
+
+        <!-- &lt;!&ndash; You can also set colorControlNormal, colorControlActivated
+              colorControlHighlight & colorSwitchThumbNormal. &ndash;&gt;
+        &lt;!&ndash; <item name="colorControlNormal">#c5c5c5</item>&ndash;&gt;
+         <item name="colorControlActivated">@color/applozic_theme_color_control_activated</item>
+         <item name="colorControlHighlight">@color/applozic_theme_color_control_highlight</item>
+         <item name="android:textColorPrimary">@color/applozic_theme_primary_text</item>
+          &lt;!&ndash;actionbar icon color&ndash;&gt;
+         <item name="android:textColorSecondary">@color/applozic_theme_secondary_text</item>-->
+    </style>
+    <style name="ApplozicTheme.ActionBar.SubTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
+        <item name="android:textSize">10sp</item>
+    </style>
+    <style name="ApplozicTheme.ActionBar.TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    <style name="ApplozicTheme.ActionBarStyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:subtitleTextStyle">@style/ApplozicTheme.ActionBar.TitleTextStyle</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    <style name="ApplozicTheme_ActionButtonStyle" parent="@android:style/Widget.Holo.Light.ActionButton">
+        <item name="android:width">20dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+    <style name="Applozic_FullScreen_Theme" parent="@style/Theme.AppCompat.Light">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimaryDark">@color/dark_black</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+    <style name="Applozic_PopUpTheme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
+    <style name="ContactActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/people_activity_action_bar_color</item>
+        <item name="background">@color/people_activity_action_bar_color</item>
+    </style>
+    <style name="ContactTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/ContactActionBar</item>
+        <item name="actionBarStyle">@style/ContactActionBar</item>
+        <!-- Set AppCompat’s color theming attrs -->
+        <item name="colorPrimary">@color/people_activity_main_color</item>
+        <item name="colorPrimaryDark">@color/people_activity_primary_dark_color</item>
+        <item name="colorAccent">@color/white</item>
+    </style>
+    <style name="MobiComAppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/ApplozicActionBar</item>
+        <item name="actionBarStyle">@style/ApplozicActionBar</item>
+        <!-- Set AppCompat’s color theming attrs -->
+        <item name="colorPrimary">@color/mobitexter_main_color</item>
+        <item name="colorPrimaryDark">@color/primary_dark_color</item>
+        <item name="colorAccent">@color/holo_blue</item>
+
+        <!--
+                <item name="android:actionDropDownStyle">@style/actionDropDownStyle</item>
+                <item name="actionDropDownStyle">@style/actionDropDownStyle</item> -->
+
+    </style>
+    <style name="ToolbarSubtitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    <style name="ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">18sp</item>
+    </style>
+    <style name="actionDropDownStyle" parent="android:style/Widget.Holo.Light.Spinner"/>
+    <style name="quickContactBadgeStyle">
+        <item name="android:background">@drawable/quickcontact_badge_small</item>
+    </style>
+    <style name="searchTextHiglight">
+        <item name="android:textColor">@color/holo_blue</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>
