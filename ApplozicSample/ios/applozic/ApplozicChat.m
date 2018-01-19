@@ -106,7 +106,7 @@ RCT_EXPORT_METHOD(openChatWithGroup:(NSNumber*)groupId orClientGroupId:(NSString
  */
 
 
-RCT_EXPORT_METHOD(logoutUser: andCallback:(RCTResponseSenderBlock)callback )
+RCT_EXPORT_METHOD(logoutUser:(RCTResponseSenderBlock)callback )
 {
   ALRegisterUserClientService * alRegisterUserClientService = [[ALRegisterUserClientService alloc]init];
   

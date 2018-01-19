@@ -30,10 +30,8 @@ export default class AwesomeProject extends Component {
             title: 'Login/SignUp',
             mytoken: ''
         };
-        this.openChat = this.openChat.bind(this);
         this.isUserLogIn = this.isUserLogIn.bind(this);
         this.chatLogin = this.chatLogin.bind(this);
-        this.initiateChat = this.initiateChat.bind(this);
         this.logoutUser = this.logoutUser.bind(this);
         this.show = this.show.bind(this);
         this.tokenRefresh = this.tokenRefresh.bind(this);
@@ -75,7 +73,7 @@ export default class AwesomeProject extends Component {
                   console.log(error)
               }else{
                 this.setState({loggedIn: true, title: 'Loading...'}),
-                ApplozicChat.openChat(),
+                ApplozicChat.openChatWithUser("ak102"),
                 console.log(response)
               }
             })
@@ -89,7 +87,10 @@ export default class AwesomeProject extends Component {
 
 
   logoutUser() {
-        ApplozicChat.logoutUser({}, (response) => {
+        ApplozicChat.logoutUser((error, response) => {
+          if(error){
+            console.log("error :#" + error);
+          }else{
             this.setState({
                 userId: '',
                 email: '',
@@ -99,8 +100,8 @@ export default class AwesomeProject extends Component {
                 loggedIn: false,
                 title: 'Login/SignUp'
             });
-        }, (error) => {
-            alert("logout error");
+          }
+
         })
     }
 
