@@ -35,6 +35,8 @@ export default class AwesomeProject extends Component {
         this.logoutUser = this.logoutUser.bind(this);
         this.show = this.show.bind(this);
         this.tokenRefresh = this.tokenRefresh.bind(this);
+        this.openChat = this.openChat.bind(this);
+        this.openOneToOneChat = this.openOneToOneChat.bind(this);
     }
 
     componentDidMount() {
@@ -58,85 +60,9 @@ export default class AwesomeProject extends Component {
         this.refreshUnsubscribe();
 
     }
-    //Login chat to the users..
-    chatLogin() {
 
-        if (this.state.userId.length > 0 && this.state.pass_word.length > 0) {
-          ApplozicChat.login({
-                'userId': this.state.userId,
-                'email': this.state.email,
-                'contactNumber': this.state.phoneNumber,
-                'password': this.state.pass_word,
-                'displayName': this.state.displayName
-            }, (error, response) => {
-              if(error){
-                  console.log(error)
-              }else{
-                this.setState({loggedIn: true, title: 'Loading...'}),
-                ApplozicChat.openChatWithUser("ak102"),
-                console.log(response)
-              }
-            })
-        } else {
-            this.setState({title: 'Login/SignUp'});
-            alert("Please Enter UserId & Password");
-        //ApplozicChat.login("test");
-
-         };
-    }
-
-
-  logoutUser() {
-        ApplozicChat.logoutUser((error, response) => {
-          if(error){
-            console.log("error :#" + error);
-          }else{
-            this.setState({
-                userId: '',
-                email: '',
-                phoneNumber: '',
-                pass_word: '',
-                displayName: '',
-                loggedIn: false,
-                title: 'Login/SignUp'
-            });
-          }
-
-        })
-    }
-
-    contactUnreadCount() {
-        ApplozicChat.contactUnreadCount({
-            'userId': 'ak01'
-        }, (response) => {
-            alert(response)
-        }, (error) => {
-            console.log(error)
-        },)
-    }
-
-    channelUnreadCount() {
-        ApplozicChat.channelUnreadCount({
-            'channelKey': '1234'
-        }, (response) => {
-            alert(response)
-        }, (error) => {
-            console.log(error)
-        },)
-    }
-
-    totalUnreadCount() {
-        ApplozicChat.totalUnreadCount({}, (response) => {
-            console.log(response)
-        }, (error) => {
-            console.log(error)
-        },)
-    }
-
-    isUserLogIn() {
-        ApplozicChat.isUserLogIn((response) => {
-            this.setState({loggedIn: response});
-        })
+    openOneToOneChat(userId){
+     this.
     }
 
     show() {
@@ -165,10 +91,12 @@ export default class AwesomeProject extends Component {
             Applozic </Text>
 			  <Text style = {styles.baseText}>
      			  Demo App </Text>
-			  <Text style = {styles.btn} onPress = {this.initiateChat}>
-				    Chat Logs </Text>
-			  <Text style = {styles.btn} onPress = {this.logoutUser}>
-     			  LogOut </Text>
+			  <Text style = {styles.btn} onPress = {this.openChat}>
+				    Open Chat List </Text>
+        <Text style = {styles.btn} onPress = {this.openOneToOneChat}>
+    				    One-One Chat </Text>
+        <Text style = {styles.btn} onPress = {this.logoutUser}>
+                    LogOut </Text>
 		     </View >
             );
         }
@@ -266,3 +194,122 @@ const styles = StyleSheet.create({
         marginRight: 10
     }
 });
+
+//======================== Applozic fucntions ==========================================================
+
+    //Login chat to the users..
+    chatLogin() {
+
+        if (this.state.userId.length > 0 && this.state.pass_word.length > 0) {
+          ApplozicChat.login({
+                'userId': this.state.userId,
+                'email': this.state.email,
+                'contactNumber': this.state.phoneNumber,
+                'password': this.state.pass_word,
+                'displayName': this.state.displayName
+            }, (error, response) => {
+              if(error){
+                  console.log(error)
+              }else{
+                this.setState({loggedIn: true, title: 'Loading...'});
+                console.log(response);
+              }
+            })
+        } else {
+            this.setState({title: 'Login/SignUp'});
+            alert("Please Enter UserId & Password");
+         };
+    }
+
+    openChat(){
+      ApplozicChat.openChat();
+    }
+    //Launch Chat with clientGroupID : '6543274'
+    openChatWithUser(userId){
+      ApplozicChat.openChatWithUser(userId);
+    }
+
+    //Launch Chat with clientGroupID : '6543274'
+    openChatWithGroupId(groupId){
+
+          ApplozicChat.openChatWithGroup(groupId , (error,response) =>{
+            if(error){
+              //Group launch error
+              console.log(error);
+            }else{
+              //group launch successfull
+              console.log(response)
+            }
+          });
+    }
+
+    //Launch Chat with clientGroupID
+    openChatWithClientGroupId(){
+
+      ApplozicChat.openChatWithClientGroupId('6543274', (error,response) =>{
+        if(error){
+          //Group launch error
+          console.log(error);
+        }else{
+          //group launch successfull
+          console.log(response)
+        }
+      });
+
+    }
+
+  logoutUser() {
+
+        ApplozicChat.logoutUser((error, response) => {
+          if(error){
+            console.log("error :#" + error);
+          }else{
+            this.setState({
+                userId: '',
+                email: '',
+                phoneNumber: '',
+                pass_word: '',
+                displayName: '',
+                loggedIn: false,
+                title: 'Login/SignUp'
+            });
+          }
+
+        })
+    }
+
+    contactUnreadCount() {
+        ApplozicChat.contactUnreadCount({
+            'userId': 'ak01'
+        }, (response) => {
+            alert(response)
+        }, (error) => {
+            console.log(error)
+        },)
+    }
+
+    channelUnreadCount() {
+        ApplozicChat.channelUnreadCount({
+            'channelKey': '1234'
+        }, (response) => {
+            alert(response)
+        }, (error) => {
+            console.log(error)
+        },)
+    }
+
+    totalUnreadCount() {
+        ApplozicChat.totalUnreadCount({}, (response) => {
+            console.log(response)
+        }, (error) => {
+            console.log(error)
+        },)
+    }
+
+    isUserLogIn() {
+        ApplozicChat.isUserLogIn((response) => {
+            this.setState({loggedIn: response});
+        })
+    }
+
+//======================== Applozic fucntions END===================================================

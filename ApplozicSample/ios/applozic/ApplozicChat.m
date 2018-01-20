@@ -10,6 +10,7 @@
 #import "ALChatManager.h"
 #import <Applozic/ALUser.h>
 #import <Applozic/ALPushAssist.h>
+#import <Applozic/ALChannelService.h>
 
 @implementation ApplozicChat
 
@@ -18,11 +19,11 @@ RCT_EXPORT_MODULE();
 
 
 /**
- * Login method of the user...
+ * Login method of the user
  *
  */
 
-RCT_EXPORT_METHOD(login:(NSDictionary *)userDetails  andCallback:(RCTResponseSenderBlock)callback )
+RCT_EXPORT_METHOD(login:(NSDictionary *)userDetails andCallback:(RCTResponseSenderBlock)callback )
 {
   
   ALUser * aluser =  [[ALUser alloc] initWithJSONString:[self getJsonString:userDetails]];
@@ -87,16 +88,45 @@ RCT_EXPORT_METHOD(openChatWithUser:(NSString*)userId)
  * Open chat with Group
  *
  **/
-RCT_EXPORT_METHOD(openChatWithGroup:(NSNumber*)groupId orClientGroupId:(NSString*) clientGroupId)
+RCT_EXPORT_METHOD(openChatWithGroup:(nonnull NSNumber*)groupId)
 {
   
   ALChatManager * chatManger = [[ALChatManager alloc] init];
   ALChatLauncher * chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:chatManger.getApplicationKey];
   ALPushAssist* pushAssistant = [[ALPushAssist alloc] init];
+  
   dispatch_async(dispatch_get_main_queue(), ^{
     
     [chatLauncher launchIndividualChat:nil withGroupId:groupId andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
     
+  });
+}
+
+/**
+ * Open chat with ClientGroupId
+ *
+ **/
+RCT_EXPORT_METHOD(openChatWithClientGroupId:(nonnull NSString*) clientGroupId andCallback:(RCTResponseSenderBlock)callback)
+{
+  
+  ALChatManager * chatManger = [[ALChatManager alloc] init];
+  ALPushAssist* pushAssistant = [[ALPushAssist alloc] init];
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+    
+    ALChannelService *service = [ALChannelService new];
+    ALChatLauncher * chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:chatManger.getApplicationKey];
+    
+    [service getChannelInformation:nil orClientChannelKey:clientGroupId withCompletion:^(ALChannel *alChannel) {
+      
+      if(alChannel){
+         [chatLauncher launchIndividualChat:nil withGroupId:alChannel.key andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
+        return callback(@[ [NSNull null],@"success"]);
+    }else{
+      return callback(@[@"channel not found", [NSNull null] ]);
+    }
+              
+    }] ;
   });
 }
 
