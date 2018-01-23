@@ -11,6 +11,7 @@
 #import <Applozic/ALUser.h>
 #import <Applozic/ALPushAssist.h>
 #import <Applozic/ALChannelService.h>
+#import <Applozic/ALChannelService.h>
 
 @implementation ApplozicChat
 
@@ -50,6 +51,7 @@ RCT_EXPORT_METHOD(login:(NSDictionary *)userDetails andCallback:(RCTResponseSend
   
   NSLog(@"Pretending to create an event  at ");
   
+//===================================== initiating chats=================================================
 }
 /**
  * Open chats
@@ -120,8 +122,10 @@ RCT_EXPORT_METHOD(openChatWithClientGroupId:(nonnull NSString*) clientGroupId an
     [service getChannelInformation:nil orClientChannelKey:clientGroupId withCompletion:^(ALChannel *alChannel) {
       
       if(alChannel){
+        
          [chatLauncher launchIndividualChat:nil withGroupId:alChannel.key andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
-        return callback(@[ [NSNull null],@"success"]);
+         return callback(@[ [NSNull null],@"success"]);
+        
     }else{
       return callback(@[@"channel not found", [NSNull null] ]);
     }
@@ -130,6 +134,102 @@ RCT_EXPORT_METHOD(openChatWithClientGroupId:(nonnull NSString*) clientGroupId an
   });
 }
 
+//========================= Group Methods ================================================================
+
+RCT_EXPORT_METHOD(createGroup:(NSDictionary *)channelDetails andCallback:(RCTResponseSenderBlock)callback )
+{
+  
+  NSString* channelName = [channelDetails valueForKey:@"groupName"];
+  NSString* clientChannelKey = [channelDetails valueForKey:@"clientGroupId"];
+  NSString* imageLink = [channelDetails valueForKey:@"imageUrl"];
+  NSMutableArray * groupMemberList= [channelDetails objectForKey:@"groupMemberList"];
+  NSMutableDictionary * groupMetaData= [channelDetails objectForKey:@"metadata"];
+  NSNumber * parentChannelKey= [channelDetails objectForKey:@"parentChannelKey"];
+  NSString * adminUserId= [channelDetails objectForKey:@"adminUserId"];
+
+  
+  [ALChannelClientService createChannel:channelName andParentChannelKey:parentChannelKey orClientChannelKey:clientChannelKey
+                         andMembersList:groupMemberList andImageLink:imageLink channelType:(short)PUBLIC
+                            andMetaData:groupMetaData adminUser:adminUserId withCompletion:^(NSError *error, ALChannelCreateResponse *response) {
+                              
+                              if(!error && response.alChannel)
+                              {
+                                response.alChannel.adminKey = [ALUserDefaultsHandler getUserId];
+                                ALChannelDBService *channelDBService = [[ALChannelDBService alloc] init];
+                                [channelDBService createChannel:response.alChannel];
+                                return callback(@[[NSNull null],response.alChannel.key]);
+                              }else if(response){
+                                return callback(@[[NSNull null],[self getJsonString:response.response]]);
+                              }
+                              else
+                              {
+                                NSLog(@"ERROR_IN_CHANNEL_CREATING :: %@",error);
+                               return callback(@[error.description,[NSNull null]]);
+
+                              }
+                            }];
+  
+
+}
+
+RCT_EXPORT_METHOD(addMemberToGroup:(NSDictionary *)requestData andCallback:(RCTResponseSenderBlock)callback )
+{
+  
+  ALChannelService * alChannelService = [ALChannelService new];
+  
+  NSNumber * groupId = [requestData valueForKey:@"groupId"];
+  NSString * clientGroupId = [requestData valueForKey:@"clientGroupId"];
+  NSString * userId = [requestData valueForKey:@"userId"];
+
+  [alChannelService addMemberToChannel:userId
+                         andChannelKey:groupId
+                    orClientChannelKey:clientGroupId
+                        withCompletion:^(NSError *error, ALAPIResponse *response) {
+                          if(error){
+                            NSLog(@"error description %@", error.description);
+                            return callback(@[ error.description ,[NSNull null]]);
+                          }else if([ response.status isEqualToString:RESPONSE_SUCCESS]){
+                            return callback(@[ [NSNull null],[self getJsonString:response.actualresponse]]);
+                          }else{
+                            return callback(@[ [self getJsonString:response.actualresponse], [NSNull null]]);
+
+                          }
+    
+  }];
+
+  
+  
+}
+
+RCT_EXPORT_METHOD(removeMemberFromGroup:(NSDictionary *)requestData andCallback:(RCTResponseSenderBlock)callback )
+{
+  
+  ALChannelService * alChannelService = [ALChannelService new];
+  
+  NSNumber * groupId = [requestData valueForKey:@"groupId"];
+  NSString * clientGroupId = [requestData valueForKey:@"clientGroupId"];
+  NSString * userId = [requestData valueForKey:@"userId"];
+  
+  [alChannelService removeMemberFromChannel:userId
+                              andChannelKey:groupId
+                         orClientChannelKey:clientGroupId
+                             withCompletion:^(NSError *error, ALAPIResponse *response) {
+                               
+                               if(error){
+                                 NSLog(@"error description %@", error.description);
+                                 return callback(@[ error.description ,[NSNull null]]);
+                               }else{
+                                 return callback(@[ [NSNull null],[self getJsonString:response.dictionary]]);
+                               }
+                               
+                             }];
+  
+}
+
+//======================================Unreadcounts ==============================================
+
+
+//===================================== Log Out ===================================================
 /**
  *  Logout users
  *

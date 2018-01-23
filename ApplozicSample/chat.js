@@ -9,6 +9,7 @@ import {
     View,
     Button,
     TextInput,
+    Modal,
     ScrollView,
     NativeModules
 } from 'react-native';
@@ -36,7 +37,9 @@ export default class AwesomeProject extends Component {
         this.show = this.show.bind(this);
         this.tokenRefresh = this.tokenRefresh.bind(this);
         this.openChat = this.openChat.bind(this);
-        this.openOneToOneChat = this.openOneToOneChat.bind(this);
+        this.createGroup = this.createGroup.bind(this);
+        this.addMemberToGroup = this.addMemberToGroup.bind(this);
+
     }
 
     componentDidMount() {
@@ -60,9 +63,16 @@ export default class AwesomeProject extends Component {
         this.refreshUnsubscribe();
 
     }
+    openModal() {
+        this.setState({modalVisible:true});
+      }
 
-    openOneToOneChat(userId){
-     this.
+    closeModal() {
+        this.setState({modalVisible:false});
+    }
+    openOneToOneChat(){
+     alert("");
+
     }
 
     show() {
@@ -93,7 +103,7 @@ export default class AwesomeProject extends Component {
      			  Demo App </Text>
 			  <Text style = {styles.btn} onPress = {this.openChat}>
 				    Open Chat List </Text>
-        <Text style = {styles.btn} onPress = {this.openOneToOneChat}>
+        <Text style = {styles.btn} onPress = {this.openChat}>
     				    One-One Chat </Text>
         <Text style = {styles.btn} onPress = {this.logoutUser}>
                     LogOut </Text>
@@ -103,6 +113,26 @@ export default class AwesomeProject extends Component {
 
         return (
 		    <View style ={styles.container}>
+        <Modal
+              visible={this.state.modalVisible}
+              animationType={'slide'}
+              onRequestClose={() => this.closeModal()}
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.innerContainer}>
+                <Text>This is content inside of modal component</Text>
+                <Button
+                    onPress={() => this.closeModal()}
+                    title="Close modal"
+                >
+                </Button>
+              </View>
+            </View>
+          </Modal>
+          <Button
+              onPress={() => this.openModal()}
+              title="Open modal"
+          />
             <ScrollView>
               <Text style = {styles.titleText}>
                  Applozic </Text>
@@ -156,6 +186,181 @@ export default class AwesomeProject extends Component {
 			  </View>
         );
     }
+    //======================== Applozic fucntions ==========================================================
+
+        //Login chat to the users..
+        chatLogin() {
+
+            if (this.state.userId.length > 0 && this.state.pass_word.length > 0) {
+              ApplozicChat.login({
+                    'userId': this.state.userId,
+                    'email': this.state.email,
+                    'contactNumber': this.state.phoneNumber,
+                    'password': this.state.pass_word,
+                    'displayName': this.state.displayName
+                }, (error, response) => {
+                  if(error){
+                      console.log(error)
+                  }else{
+                    this.setState({loggedIn: true, title: 'Loading...'});
+                    //this.createGroup();
+                    this.addMemberToGroup();
+                    console.log(response);
+                  }
+                })
+            } else {
+                this.setState({title: 'Login/SignUp'});
+                alert("Please Enter UserId & Password");
+             };
+        }
+
+        openChat(){
+          ApplozicChat.openChat();
+        }
+        //Launch Chat with clientGroupID : '6543274'
+        openChatWithUser(userId){
+          ApplozicChat.openChatWithUser(userId);
+        }
+
+        //Launch Chat with clientGroupID : '6543274'
+        openChatWithGroupId(groupId){
+
+              ApplozicChat.openChatWithGroup(groupId , (error,response) =>{
+                if(error){
+                  //Group launch error
+                  console.log(error);
+                }else{
+                  //group launch successfull
+                  console.log(response)
+                }
+              });
+        }
+
+        //Launch Chat with clientGroupID
+        openChatWithClientGroupId(){
+
+          ApplozicChat.openChatWithClientGroupId('6543274', (error,response) =>{
+            if(error){
+              //Group launch error
+              console.log(error);
+            }else{
+              //group launch successfull
+              console.log(response)
+            }
+          });
+
+        }
+
+      logoutUser() {
+
+            ApplozicChat.logoutUser((error, response) => {
+              if(error){
+                console.log("error :#" + error);
+              }else{
+                this.setState({
+                    userId: '',
+                    email: '',
+                    phoneNumber: '',
+                    pass_word: '',
+                    displayName: '',
+                    loggedIn: false,
+                    title: 'Login/SignUp'
+                });
+              }
+
+            })
+        }
+
+        contactUnreadCount() {
+            ApplozicChat.contactUnreadCount({
+                'userId': 'ak01'
+            }, (response) => {
+                alert(response)
+            }, (error) => {
+                console.log(error)
+            },)
+        }
+
+        channelUnreadCount() {
+            ApplozicChat.channelUnreadCount({
+                'channelKey': '1234'
+            }, (response) => {
+                alert(response)
+            }, (error) => {
+                console.log(error)
+            },)
+        }
+
+        totalUnreadCount() {
+            ApplozicChat.totalUnreadCount({}, (response) => {
+                console.log(response)
+            }, (error) => {
+                console.log(error)
+            },)
+        }
+
+        isUserLogIn() {
+            ApplozicChat.isUserLogIn((response) => {
+                this.setState({loggedIn: response});
+            })
+        }
+
+       createGroup(){
+
+          var groupDetails = {
+                'groupName':'React Test2',
+                'clientGroupId':'recatNativeCGI',
+                'groupMemberList': ['ak101', 'ak102', 'ak103'], // Pass list of user Ids in groupMemberList
+                'imageUrl': 'https://www.applozic.com/favicon.ico',
+                'type' : 2,    //'type' : 1, //(required) 1:private, 2:public, 5:broadcast,7:GroupofTwo
+                'metadata' : {
+                    'key1' : 'value1',
+                    'key2' : 'value2'
+                }
+            };
+            ApplozicChat.createGroup(groupDetails, (error, response) => {
+                if(error){
+                    console.log(error)
+                }else{
+                  console.log(response);
+                }
+              });
+      }
+
+      addMemberToGroup(){
+
+        var requestData = {
+              'clientGroupId':'recatNativeCGI',
+              'userId': 'ak110', // Pass list of user Ids in groupMemberList
+          };
+
+          ApplozicChat.addMemberToGroup(requestData, (error, response) => {
+               if(error){
+                   console.log(error)
+               }else{
+                 console.log(response);
+               }
+             });
+     }
+
+     removeUserFromGroup(){
+
+       var requestData = {
+             'clientGroupId':'recatNativeCGI',
+             'userId': 'ak104', // Pass list of user Ids in groupMemberList
+         };
+
+          ApplozicChat.removeUserFromGroup(requestData, (error, response) => {
+              if(error){
+                  console.log(error)
+              }else{
+                console.log(response);
+              }
+            });
+    }
+
+    //======================== Applozic fucntions END===================================================
+
 }
 const styles = StyleSheet.create({
     container: {
@@ -194,122 +399,3 @@ const styles = StyleSheet.create({
         marginRight: 10
     }
 });
-
-//======================== Applozic fucntions ==========================================================
-
-    //Login chat to the users..
-    chatLogin() {
-
-        if (this.state.userId.length > 0 && this.state.pass_word.length > 0) {
-          ApplozicChat.login({
-                'userId': this.state.userId,
-                'email': this.state.email,
-                'contactNumber': this.state.phoneNumber,
-                'password': this.state.pass_word,
-                'displayName': this.state.displayName
-            }, (error, response) => {
-              if(error){
-                  console.log(error)
-              }else{
-                this.setState({loggedIn: true, title: 'Loading...'});
-                console.log(response);
-              }
-            })
-        } else {
-            this.setState({title: 'Login/SignUp'});
-            alert("Please Enter UserId & Password");
-         };
-    }
-
-    openChat(){
-      ApplozicChat.openChat();
-    }
-    //Launch Chat with clientGroupID : '6543274'
-    openChatWithUser(userId){
-      ApplozicChat.openChatWithUser(userId);
-    }
-
-    //Launch Chat with clientGroupID : '6543274'
-    openChatWithGroupId(groupId){
-
-          ApplozicChat.openChatWithGroup(groupId , (error,response) =>{
-            if(error){
-              //Group launch error
-              console.log(error);
-            }else{
-              //group launch successfull
-              console.log(response)
-            }
-          });
-    }
-
-    //Launch Chat with clientGroupID
-    openChatWithClientGroupId(){
-
-      ApplozicChat.openChatWithClientGroupId('6543274', (error,response) =>{
-        if(error){
-          //Group launch error
-          console.log(error);
-        }else{
-          //group launch successfull
-          console.log(response)
-        }
-      });
-
-    }
-
-  logoutUser() {
-
-        ApplozicChat.logoutUser((error, response) => {
-          if(error){
-            console.log("error :#" + error);
-          }else{
-            this.setState({
-                userId: '',
-                email: '',
-                phoneNumber: '',
-                pass_word: '',
-                displayName: '',
-                loggedIn: false,
-                title: 'Login/SignUp'
-            });
-          }
-
-        })
-    }
-
-    contactUnreadCount() {
-        ApplozicChat.contactUnreadCount({
-            'userId': 'ak01'
-        }, (response) => {
-            alert(response)
-        }, (error) => {
-            console.log(error)
-        },)
-    }
-
-    channelUnreadCount() {
-        ApplozicChat.channelUnreadCount({
-            'channelKey': '1234'
-        }, (response) => {
-            alert(response)
-        }, (error) => {
-            console.log(error)
-        },)
-    }
-
-    totalUnreadCount() {
-        ApplozicChat.totalUnreadCount({}, (response) => {
-            console.log(response)
-        }, (error) => {
-            console.log(error)
-        },)
-    }
-
-    isUserLogIn() {
-        ApplozicChat.isUserLogIn((response) => {
-            this.setState({loggedIn: response});
-        })
-    }
-
-//======================== Applozic fucntions END===================================================
