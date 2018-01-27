@@ -16,8 +16,19 @@ Setup your Podfile located at /ios/Podfile and add below pod dependency.
 ```
 If you have not yet using pod dependency, check out how you can add pod in your react native project here.
 
-**NOTE :** Please make sure to use .xcworkspace, not .xcproject after that.
-
 #### Add bridge files to your project
+Please follow below steps to add react native bridge files to your porject.
 
+ 1) copy applozic folder from here to /ios/ folder to your project. 
 
+ 2) Open project from /ios/ folder in xcode.
+ 
+ **NOTE :** Please make sure to use .xcworkspace, not .xcproject after that.
+
+ 3) Add all .h and .m files to your project from applozic folder in step 1)
+ 
+ 
+ ## Integration 
+ 
+ 
+ 
