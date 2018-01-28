@@ -37,6 +37,12 @@ Please follow below steps to add react native bridge files to your porject.
  
  ## Integration 
  
+ Define native module.
+ 
+ ```
+ var ApplozicChat = NativeModules.ApplozicChat;
+```
+
  ### User Authentication
  
  ```
