@@ -26,7 +26,8 @@
     }
     else
     {
-        return nil;
+        self.response= JSONString;
+        return self;
     }
     
 }

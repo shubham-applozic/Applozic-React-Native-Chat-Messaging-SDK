@@ -331,7 +331,7 @@ export default class AwesomeProject extends Component {
 
         var requestData = {
               'clientGroupId':'recatNativeCGI',
-              'userId': 'ak110', // Pass list of user Ids in groupMemberList
+              'userId': 'ak111', // Pass list of user Ids in groupMemberList
           };
 
           ApplozicChat.addMemberToGroup(requestData, (error, response) => {

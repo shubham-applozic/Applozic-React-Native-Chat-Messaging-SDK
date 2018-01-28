@@ -39,8 +39,8 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		87D37334FA9E7F75D5E73CD2 /* libPods-ApplozicSample-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 803F2743FE73F3EF803E2BAC /* libPods-ApplozicSample-tvOSTests.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		C76443DA201DEF580096F911 /* ALChatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C76443D9201DEF580096F911 /* ALChatManager.m */; };
 		C76DE1702010CD5100AE1A99 /* ApplozicChat.m in Sources */ = {isa = PBXBuildFile; fileRef = C76DE16F2010CD5100AE1A99 /* ApplozicChat.m */; };
-		C7FC06062012442500430D82 /* ALChatManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C7FC06052012442400430D82 /* ALChatManager.m */; };
 		DB0443342DBCB937719FC774 /* Pods_ApplozicSampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E09BECAD1B762BCF3725A5E /* Pods_ApplozicSampleTests.framework */; };
 		E327AC4809F475D0E79D504E /* libPods-ApplozicSample-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71F42BBC5CD1D89EFF35CCF5 /* libPods-ApplozicSample-tvOS.a */; };
 /* End PBXBuildFile section */
@@ -359,9 +359,9 @@
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		C656F769CD75E23CDAD3938B /* Pods-ApplozicSample-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSample-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSample-tvOS/Pods-ApplozicSample-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		C7421864200F2509001EFE91 /* ApplozicChat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplozicChat.h; sourceTree = "<group>"; };
+		C76443D8201DEF570096F911 /* ALChatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ALChatManager.h; sourceTree = "<group>"; };
+		C76443D9201DEF580096F911 /* ALChatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ALChatManager.m; sourceTree = "<group>"; };
 		C76DE16F2010CD5100AE1A99 /* ApplozicChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ApplozicChat.m; sourceTree = "<group>"; };
-		C7FC06042012442400430D82 /* ALChatManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ALChatManager.h; path = "../../../../Applozic-iOS-Chat-Samples/ApplozicCocoaPodDemo/ApplozicCocoaPodDemo/ALChatManager.h"; sourceTree = "<group>"; };
-		C7FC06052012442400430D82 /* ALChatManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ALChatManager.m; path = "../../../../Applozic-iOS-Chat-Samples/ApplozicCocoaPodDemo/ApplozicCocoaPodDemo/ALChatManager.m"; sourceTree = "<group>"; };
 		E548CC38D6A4EA08E8E5862B /* Pods-ApplozicSampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSampleTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSampleTests/Pods-ApplozicSampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		F6C16C0194C2111F9BE786DC /* Pods-ApplozicSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ApplozicSample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ApplozicSample/Pods-ApplozicSample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -652,8 +652,8 @@
 		C7032B61200E724100647FA8 /* applozic */ = {
 			isa = PBXGroup;
 			children = (
-				C7FC06042012442400430D82 /* ALChatManager.h */,
-				C7FC06052012442400430D82 /* ALChatManager.m */,
+				C76443D8201DEF570096F911 /* ALChatManager.h */,
+				C76443D9201DEF580096F911 /* ALChatManager.m */,
 				C76DE16F2010CD5100AE1A99 /* ApplozicChat.m */,
 				C7421864200F2509001EFE91 /* ApplozicChat.h */,
 			);
@@ -1368,7 +1368,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				C7FC06062012442500430D82 /* ALChatManager.m in Sources */,
+				C76443DA201DEF580096F911 /* ALChatManager.m in Sources */,
 				C76DE1702010CD5100AE1A99 /* ApplozicChat.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
