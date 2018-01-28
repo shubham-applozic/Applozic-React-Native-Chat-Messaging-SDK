@@ -107,7 +107,47 @@ ApplozicChat.openChatWithClientGroupId(clientGroupId, (error,response) =>{
 ```
  **NOTE**: grpupId must be String
  
+ ### Unread Count
  
+ 1) Individual user
+
+  To get the user's chat unread count with any user, use the below code:
+  
+  ```
+    ApplozicChat.getUnreadCountForUser( <user Id>, (error, count) => {
+              console.log("count for userId:" + count);
+            });
+  ```
+ 2) Individual Group
+ 
+To get the user's chat unread count in any group, use the below code:
+
+```
+  var requestData = {
+                'clientGroupId':'recatNativeCGI',
+                'groupId': GROUP_ID // pass either channelKey or clientGroupId
+            };
+
+          ApplozicChat.getUnreadCountForChannel(requestData, (error, count) => {
+            if(error){
+              console.log("error ::" + error);
+            }else{
+              console.log("count for requestData ::" + count);
+            }
+          });
+
+```
+ 3) Total count
+ 
+ To get the user's total unread count i.e Users + Groups, use the below code:
+ 
+ ```
+ ApplozicChat.totalUnreadCount((error, totalUnreadCount) => {
+              console.log("totalUnreadCount for logged-in user:" + totalUnreadCount);
+
+            });
+            
+ ```
  ### Create Group 
  
  ```
