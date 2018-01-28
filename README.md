@@ -85,7 +85,7 @@ Please follow below steps to add react native bridge files to your porject.
                   //Group launch error
                   console.log(error);
                 }else{
-                  //group launch successfull
+                  //group launch successful
                   console.log(response)
                 }
               });
@@ -100,7 +100,7 @@ ApplozicChat.openChatWithClientGroupId(clientGroupId, (error,response) =>{
               //Group launch error
               console.log(error);
             }else{
-              //group launch successfull
+              //group launch successful
               console.log(response)
             }
           });
