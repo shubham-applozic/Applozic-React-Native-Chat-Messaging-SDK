@@ -95,7 +95,7 @@ Please follow below steps to add react native bridge files to your porject.
  2. With your assigned groupId (Client group Id)
  
 ```
-ApplozicChat.openChatWithClientGroupId('6543274', (error,response) =>{
+ApplozicChat.openChatWithClientGroupId(clientGroupId, (error,response) =>{
             if(error){
               //Group launch error
               console.log(error);
