@@ -40,6 +40,10 @@ export default class AwesomeProject extends Component {
         this.createGroup = this.createGroup.bind(this);
         this.addMemberToGroup = this.addMemberToGroup.bind(this);
 
+        this.getUnreadCountForUser = this.getUnreadCountForUser.bind(this);
+        this.getUnreadCountForChannel = this.getUnreadCountForChannel.bind(this);
+        this.totalUnreadCount = this.totalUnreadCount.bind(this);
+
     }
 
     componentDidMount() {
@@ -105,6 +109,13 @@ export default class AwesomeProject extends Component {
 				    Open Chat List </Text>
         <Text style = {styles.btn} onPress = {this.openChat}>
     				    One-One Chat </Text>
+        <Text style = {styles.btn} onPress = {this.getUnreadCountForUser}>
+                            Unread count User </Text>
+        <Text style = {styles.btn} onPress = {this.getUnreadCountForChannel}>
+                                        Unread count Channel </Text>
+        <Text style = {styles.btn} onPress = {this.totalUnreadCount}>
+                                Total Unread Count </Text>
+
         <Text style = {styles.btn} onPress = {this.logoutUser}>
                     LogOut </Text>
 		     </View >
@@ -113,26 +124,6 @@ export default class AwesomeProject extends Component {
 
         return (
 		    <View style ={styles.container}>
-        <Modal
-              visible={this.state.modalVisible}
-              animationType={'slide'}
-              onRequestClose={() => this.closeModal()}
-          >
-            <View style={styles.modalContainer}>
-              <View style={styles.innerContainer}>
-                <Text>This is content inside of modal component</Text>
-                <Button
-                    onPress={() => this.closeModal()}
-                    title="Close modal"
-                >
-                </Button>
-              </View>
-            </View>
-          </Modal>
-          <Button
-              onPress={() => this.openModal()}
-              title="Open modal"
-          />
             <ScrollView>
               <Text style = {styles.titleText}>
                  Applozic </Text>
@@ -204,7 +195,6 @@ export default class AwesomeProject extends Component {
                   }else{
                     this.setState({loggedIn: true, title: 'Loading...'});
                     //this.createGroup();
-                    this.addMemberToGroup();
                     console.log(response);
                   }
                 })
@@ -237,9 +227,9 @@ export default class AwesomeProject extends Component {
         }
 
         //Launch Chat with clientGroupID
-        openChatWithClientGroupId(){
+        openChatWithClientGroupId(clientGroupID){
 
-          ApplozicChat.openChatWithClientGroupId('6543274', (error,response) =>{
+          ApplozicChat.openChatWithClientGroupId(clientGroupID, (error,response) =>{
             if(error){
               //Group launch error
               console.log(error);
@@ -268,35 +258,38 @@ export default class AwesomeProject extends Component {
                 });
               }
 
-            })
+            });
         }
 
-        contactUnreadCount() {
-            ApplozicChat.contactUnreadCount({
-                'userId': 'ak01'
-            }, (response) => {
-                alert(response)
-            }, (error) => {
-                console.log(error)
-            },)
+        getUnreadCountForUser() {
+            ApplozicChat.getUnreadCountForUser( 'ak102', (error, count) => {
+              console.log("count for userId:" + count);
+            });
         }
 
-        channelUnreadCount() {
-            ApplozicChat.channelUnreadCount({
-                'channelKey': '1234'
-            }, (response) => {
-                alert(response)
-            }, (error) => {
-                console.log(error)
-            },)
+        getUnreadCountForChannel() {
+
+          var requestData = {
+                'clientGroupId':'recatNativeCGI',
+                  // pass either channelKey or clientGroupId
+            };
+
+          ApplozicChat.getUnreadCountForChannel(requestData, (error, count) => {
+            if(error){
+              console.log("error ::" + error);
+            }else{
+              console.log("count for requestData ::" + count);
+            }
+          });
+
         }
 
         totalUnreadCount() {
-            ApplozicChat.totalUnreadCount({}, (response) => {
-                console.log(response)
-            }, (error) => {
-                console.log(error)
-            },)
+            ApplozicChat.totalUnreadCount((error, totalUnreadCount) => {
+              console.log("totalUnreadCount for logged-in user:" + totalUnreadCount);
+
+            });
+
         }
 
         isUserLogIn() {

@@ -12,6 +12,8 @@
 #import <Applozic/ALPushAssist.h>
 #import <Applozic/ALChannelService.h>
 #import <Applozic/ALChannelService.h>
+#import <Applozic/ALUserService.h>
+#import <Applozic/ALContactService.h>
 
 @implementation ApplozicChat
 
@@ -229,6 +231,53 @@ RCT_EXPORT_METHOD(removeMemberFromGroup:(NSDictionary *)requestData andCallback:
 //======================================Unreadcounts ==============================================
 
 
+RCT_EXPORT_METHOD(getUnreadCountForUser:(NSString*)userId andCallback:(RCTResponseSenderBlock)callback )
+{
+  
+  ALContactService* contactService = [ALContactService new];
+  ALContact *contact = [contactService loadContactByKey:@"userId" value:userId];
+  NSNumber *unreadCount = [contact unreadCount];
+  return callback(@[[NSNull null], unreadCount]);
+  
+}
+
+RCT_EXPORT_METHOD(getUnreadCountForChannel:(NSDictionary *)requestData andCallback:(RCTResponseSenderBlock)callback )
+{
+  
+  ALChannelService *channelService = [ALChannelService new];
+  NSNumber * groupId = [requestData valueForKey:@"groupId"];
+  NSString * clientGroupId = [requestData valueForKey:@"clientGroupId"];
+  
+  if(clientGroupId){
+    [channelService getChannelInformation:nil orClientChannelKey:clientGroupId withCompletion:^(ALChannel *alChannel) {
+      
+      if(alChannel){
+        NSNumber *unreadCount = [alChannel unreadCount];
+        return callback(@[[NSNull null], unreadCount]);
+        
+      }else{
+        return callback(@[@"channel not found", [NSNull null] ]);
+      }
+      
+    }] ;
+    
+  } else {
+    
+    ALChannel *alChannel = [channelService getChannelByKey:groupId];
+    NSNumber *unreadCount = [alChannel unreadCount];
+    return callback(@[[NSNull null], unreadCount]);
+  }
+}
+
+RCT_EXPORT_METHOD(totalUnreadCount:(RCTResponseSenderBlock)callback )
+{
+  
+  ALUserService * alUserService = [[ALUserService alloc] init];
+  NSNumber * totalUnreadCount = [alUserService getTotalUnreadCount];
+  return callback(@[[NSNull null], totalUnreadCount]);
+  
+}
+
 //===================================== Log Out ===================================================
 /**
  *  Logout users
@@ -254,6 +303,8 @@ RCT_EXPORT_METHOD(logoutUser:(RCTResponseSenderBlock)callback )
   }];
   
 }
+
+
 
 
 -(NSString *)getJsonString:(id) Object{
