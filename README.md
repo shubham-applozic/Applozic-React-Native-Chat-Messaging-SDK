@@ -164,5 +164,15 @@ ApplozicChat.openChatWithClientGroupId(clientGroupId, (error,response) =>{
             });
  ```
  
+ ### Logout
  
- 
+ ```
+   ApplozicChat.logoutUser((error, response) => {
+              if(error){
+                console.log("error" + error);
+              }else{
+                console.log(response);
+              }
+
+            });
+ ```
