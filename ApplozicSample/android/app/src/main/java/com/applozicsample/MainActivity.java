@@ -1,8 +1,6 @@
-package com.awesomeproject;
+package com.applozicsample;
 
 import com.facebook.react.ReactActivity;
-import com.evollu.react.fcm.FIRMessagingPackage;
-import com.evollu.react.fcm.FIRMessagingPackage;
 
 public class MainActivity extends ReactActivity {
 
@@ -12,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "AwesomeProject";
+        return "ApplozicSample";
     }
 }

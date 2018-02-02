@@ -1,40 +1,35 @@
-package com.awesomeproject;
+package com.applozicsample;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.applozic.ApplozicChatPackage;
 import com.facebook.react.ReactApplication;
-import com.evollu.react.fcm.FIRMessagingPackage;
-
-
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.image.ImagePickerPackage;
 
 import java.util.Arrays;
 import java.util.List;
-
-
 
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
-    protected boolean getUseDeveloperSupport() {
+    public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
     }
 
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-               new FIRMessagingPackage(),
-            new ImagePickerPackage(), new ApplozicChatPackage()
+          new MainReactPackage(), new ApplozicChatPackage()
       );
+    }
+
+    @Override
+    protected String getJSMainModuleName() {
+      return "index";
     }
   };
 

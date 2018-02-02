@@ -35,10 +35,10 @@ export default class AwesomeProject extends Component {
         this.chatLogin = this.chatLogin.bind(this);
         this.logoutUser = this.logoutUser.bind(this);
         this.show = this.show.bind(this);
-        this.tokenRefresh = this.tokenRefresh.bind(this);
         this.openChat = this.openChat.bind(this);
         this.createGroup = this.createGroup.bind(this);
         this.addMemberToGroup = this.addMemberToGroup.bind(this);
+        this.openChatWithUser = this.openChatWithUser.bind(this);
 
         this.getUnreadCountForUser = this.getUnreadCountForUser.bind(this);
         this.getUnreadCountForChannel = this.getUnreadCountForChannel.bind(this);
@@ -84,18 +84,6 @@ export default class AwesomeProject extends Component {
         this.chatLogin();
     }
 
-    tokenRefresh()
-    {
-        ApplozicChat.tokenRefresh({
-            'token': this.state.mytoken
-        }, (response) => {
-            console.log(response)
-
-        }, (error) => {
-            console.log(error)
-        },)
-    }
-
     render() {
           let display = this.state.loggedIn;
           if (display) {
@@ -107,7 +95,7 @@ export default class AwesomeProject extends Component {
      			  Demo App </Text>
 			  <Text style = {styles.btn} onPress = {this.openChat}>
 				    Open Chat List </Text>
-        <Text style = {styles.btn} onPress = {this.openChat}>
+        <Text style = {styles.btn} onPress = {this.openChatWithUser}>
     				    One-One Chat </Text>
         <Text style = {styles.btn} onPress = {this.getUnreadCountForUser}>
                             Unread count User </Text>
@@ -191,11 +179,11 @@ export default class AwesomeProject extends Component {
                     'displayName': this.state.displayName
                 }, (error, response) => {
                   if(error){
-                      console.log(error)
+                      console.log("error " + error);
                   }else{
                     this.setState({loggedIn: true, title: 'Loading...'});
                     //this.createGroup();
-                    console.log(response);
+                    console.log("response::" + response);
                   }
                 })
             } else {
@@ -208,8 +196,9 @@ export default class AwesomeProject extends Component {
           ApplozicChat.openChat();
         }
         //Launch Chat with clientGroupID : '6543274'
-        openChatWithUser(userId){
-          ApplozicChat.openChatWithUser(userId);
+        openChatWithUser(){
+
+          ApplozicChat.openChatWithUser('ak101');
         }
 
         //Launch Chat with clientGroupID : '6543274'
@@ -270,7 +259,7 @@ export default class AwesomeProject extends Component {
         getUnreadCountForChannel() {
 
           var requestData = {
-                'clientGroupId':'recatNativeCGI',
+                'channelKey':7107309
                   // pass either channelKey or clientGroupId
             };
 
