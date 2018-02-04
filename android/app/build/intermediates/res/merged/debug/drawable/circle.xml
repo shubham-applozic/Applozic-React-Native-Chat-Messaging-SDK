@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <gradient
-        android:angle="270"
-        android:endColor="#E64A19"
-        android:startColor="#FFFF0000" />
-</shape><!-- From: file:/Users/Devashish/Documents/Github/Chat-React-Native/AwesomeProject/android/app/build/intermediates/exploded-aar/com.applozic.communication.uiwidget/mobicomkitui/4.67/res/drawable/circle.xml -->
