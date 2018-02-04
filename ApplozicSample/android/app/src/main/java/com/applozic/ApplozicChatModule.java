@@ -352,12 +352,14 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         ApplozicChannelRemoveMemberTask.ChannelRemoveMemberListener channelRemoveMemberListener = new ApplozicChannelRemoveMemberTask.ChannelRemoveMemberListener() {
             @Override
             public void onSuccess(String response, Context context) {
+                callback.invoke(null,response);
                 //Response will be "success" if user is removed successfully
                 Log.i("ApplozicChannel","remove member response:"+response);
             }
 
             @Override
             public void onFailure(String response, Exception e, Context context) {
+                callback.invoke(response,null);
 
             }
         };
