@@ -3,6 +3,7 @@ package com.applozic;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
@@ -12,11 +13,14 @@ import com.applozic.mobicomkit.api.account.user.UserClientService;
 import com.applozic.mobicomkit.api.account.user.UserLoginTask;
 import com.applozic.mobicomkit.api.account.user.PushNotificationTask;
 import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
+import com.applozic.mobicomkit.api.people.ChannelInfo;
 import com.applozic.mobicomkit.channel.service.ChannelService;
+import com.applozic.mobicomkit.uiwidgets.async.ApplozicChannelAddMemberTask;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.applozic.mobicommons.json.GsonUtils;
 import com.applozic.mobicommons.people.channel.Channel;
+import com.applozic.mobicommons.people.channel.ChannelMetadata;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -25,8 +29,12 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.applozic.mobicomkit.api.account.register.RegisterUserClientService;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
+import com.applozic.mobicomkit.uiwidgets.async.ApplozicChannelRemoveMemberTask;
 
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -131,15 +139,17 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         }
         currentActivity.startActivity(intent);
     }
+
     @ReactMethod
-    public void openChatWithUser( ReadableMap config, final Callback callback ) {
+    public void openChatWithGroup(  Integer groupId, final Callback callback ) {
 
         Activity currentActivity = getCurrentActivity();
         Intent intent = new Intent(currentActivity, ConversationActivity.class);
 
-        if (config != null && config.hasKey("clientGroupId")) {
+        if (groupId !=null ) {
+
             ChannelService channelService = ChannelService.getInstance(currentActivity);
-            Channel channel = channelService.getChannelByClientGroupId(config.getString("clientGroupId"));
+            Channel channel = channelService.getChannel(groupId);
 
             if(channel==null){
                 callback.invoke("Channel dose not exist", null);
@@ -150,22 +160,41 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             currentActivity.startActivity(intent);
             callback.invoke(null,"success");
 
-        } else if(config != null && config.hasKey("channelKey")){
-            Integer groupId = config.getInt("channelKey");
-            intent.putExtra(ConversationUIService.GROUP_ID, groupId);
+        } else {
+            callback.invoke("unable to launch group chat, check your groupId/ClientGroupId","success");
+        }
+
+    }
+
+    @ReactMethod
+    public void openChatWithClientGroupId(  String  clientGroupId, final Callback callback ) {
+
+        Activity currentActivity = getCurrentActivity();
+        Intent intent = new Intent(currentActivity, ConversationActivity.class);
+
+        if ( TextUtils.isEmpty(clientGroupId) ) {
+
+            callback.invoke("unable to launch group chat, check your groupId/ClientGroupId","success");
+        } else {
+
+            ChannelService channelService = ChannelService.getInstance(currentActivity);
+            Channel channel = channelService.getChannelByClientGroupId(clientGroupId);
+
+            if(channel==null){
+                callback.invoke("Channel dose not exist", null);
+                return;
+            }
+            intent.putExtra(ConversationUIService.GROUP_ID, channel.getKey());
             intent.putExtra(ConversationUIService.TAKE_ORDER, true);
             currentActivity.startActivity(intent);
             callback.invoke(null,"success");
-
-        } else {
-            callback.invoke("unable to launch group chat, check your groupId/ClientGroupId","success");
 
         }
 
     }
 
     @ReactMethod
-    public void logoutUser(ReadableMap config, final Callback callback) {
+    public void logoutUser(final Callback callback) {
 
         Activity currentActivity = getCurrentActivity();
 
@@ -175,8 +204,168 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         }
 
         new UserClientService(currentActivity).logout();
-        callback.invoke("success");
+        callback.invoke(null,"success");
     }
+
+    //============================================ Group Method ==============================================
+    /***
+     *
+     * @param config
+     * @param callback
+     */
+    @ReactMethod
+    public void createGroup(final ReadableMap config, final Callback callback){
+
+        final Activity currentActivity = getCurrentActivity();
+
+        if (currentActivity == null) {
+
+            callback.invoke("Activity doesn't exist",null);
+            return;
+
+        }
+
+        if(TextUtils.isEmpty(config.getString("groupName"))){
+
+            callback.invoke("Group name must be passed",null);
+            return;
+        }
+
+        List<String> channelMembersList =  (List<String>)(Object)(config.getArray("groupMemberList").toArrayList());
+
+       final ChannelInfo channelInfo  = new ChannelInfo(config.getString("groupName"),channelMembersList);
+
+        if(!TextUtils.isEmpty(config.getString("clientGroupId"))){
+            channelInfo.setClientGroupId(config.getString("clientGroupId"));
+        }
+        if(config.hasKey("type")){
+            channelInfo.setType(config.getInt("type")); //group type
+        }else{
+            channelInfo.setType(Channel.GroupType.PUBLIC.getValue().intValue()); //group type
+        }
+        channelInfo.setImageUrl(config.getString("imageUrl")); //pass group image link URL
+        Map<String,String > metadata =  (HashMap<String,String>)(Object)(config.getMap("metadata").toHashMap());
+        channelInfo.setMetadata(metadata);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Channel channel = ChannelService.getInstance(currentActivity).createChannel(channelInfo);
+                if(channel!=null && channel.getKey() !=null ) {
+                    callback.invoke(null,channel.getKey());
+                }else{
+                    callback.invoke("error",null);
+                }
+            }
+        }).start();
+    }
+
+    /**
+     *
+     * @param config
+     * @param callback
+     */
+    @ReactMethod
+    public void addMemberToGroup(final ReadableMap config, final Callback callback){
+
+        final Activity currentActivity = getCurrentActivity();
+
+        if (currentActivity == null) {
+
+            callback.invoke("Activity doesn't exist",null);
+            return;
+
+        }
+
+        Integer channelKey =null;
+        String userId = config.getString("userId");
+
+        if(!TextUtils.isEmpty(config.getString("clientGroupId"))){
+            Channel channel =  ChannelService.getInstance(currentActivity).getChannelByClientGroupId(config.getString("clientGroupId"));
+            channelKey =  channel!=null? channel.getKey() : null;
+
+        } else if ( !TextUtils.isEmpty(config.getString("groupId")) ){
+            channelKey =  Integer.parseInt(config.getString("groupId"));
+        }
+
+        if(channelKey==null){
+            callback.invoke("groupId/clientGroupId not passed",null);
+            return;
+        }
+
+        ApplozicChannelAddMemberTask.ChannelAddMemberListener channelAddMemberListener =  new ApplozicChannelAddMemberTask.ChannelAddMemberListener() {
+            @Override
+            public void onSuccess(String response, Context context) {
+                //Response will be "success" if user is added successfully
+                Log.i("ApplozicChannelMember","Add Response:" + response);
+                callback.invoke(null,response);
+            }
+
+            @Override
+            public void onFailure(String response, Exception e, Context context) {
+                callback.invoke(response,null);
+
+            }
+        };
+
+
+        ApplozicChannelAddMemberTask applozicChannelAddMemberTask =  new ApplozicChannelAddMemberTask(currentActivity,channelKey,userId,channelAddMemberListener);//pass channel key and userId whom you want to add to channel
+        applozicChannelAddMemberTask.execute((Void)null);
+
+    }
+
+
+    /**
+     *
+     * @param config
+     * @param callback
+     */
+    @ReactMethod
+    public void removeUserFromGroup(final ReadableMap config, final Callback callback){
+
+        final Activity currentActivity = getCurrentActivity();
+
+        if (currentActivity == null) {
+
+            callback.invoke("Activity doesn't exist",null);
+            return;
+
+        }
+
+        Integer channelKey =null;
+        String userId = config.getString("userId");
+
+        if(!TextUtils.isEmpty(config.getString("clientGroupId"))){
+            Channel channel =  ChannelService.getInstance(currentActivity).getChannelByClientGroupId(config.getString("clientGroupId"));
+            channelKey =  channel!=null? channel.getKey() : null;
+
+        } else if ( !TextUtils.isEmpty(config.getString("groupId")) ){
+            channelKey =  Integer.parseInt(config.getString("groupId"));
+        }
+
+        if(channelKey==null){
+            callback.invoke("groupId/clientGroupId not passed",null);
+            return;
+        }
+
+        ApplozicChannelRemoveMemberTask.ChannelRemoveMemberListener channelRemoveMemberListener = new ApplozicChannelRemoveMemberTask.ChannelRemoveMemberListener() {
+            @Override
+            public void onSuccess(String response, Context context) {
+                //Response will be "success" if user is removed successfully
+                Log.i("ApplozicChannel","remove member response:"+response);
+            }
+
+            @Override
+            public void onFailure(String response, Exception e, Context context) {
+
+            }
+        };
+        
+        ApplozicChannelRemoveMemberTask applozicChannelRemoveMemberTask =  new ApplozicChannelRemoveMemberTask(currentActivity,channelKey,userId,channelRemoveMemberListener);//pass channelKey and userId whom you want to remove from channel
+        applozicChannelRemoveMemberTask.execute((Void)null);
+    }
+    //======================================================================================================
 
     @ReactMethod
     public void getUnreadCountForUser(String userId, final Callback callback) {
@@ -186,9 +375,10 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         if (currentActivity == null) {
             callback.invoke("Activity doesn't exist",null);
             return;
-         }
-            int contactUnreadCount = new MessageDatabaseService(getCurrentActivity()).getUnreadMessageCountForContact(userId);
-            callback.invoke(null,contactUnreadCount);
+        }
+
+        int contactUnreadCount = new MessageDatabaseService(getCurrentActivity()).getUnreadMessageCountForContact(userId);
+        callback.invoke(null,contactUnreadCount);
 
     }
 
@@ -212,7 +402,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             int channelUnreadCount = new MessageDatabaseService(currentActivity).getUnreadMessageCountForChannel(channel.getKey());
             callback.invoke(null,channelUnreadCount);
 
-        } else if(config != null && config.hasKey("channelKey")){
+        } else if(config != null && config.hasKey("groupId")){
 
             int channelUnreadCount = new MessageDatabaseService(currentActivity).getUnreadMessageCountForChannel((Integer.parseInt(config.getString("channelKey"))));
             callback.invoke(null,channelUnreadCount);

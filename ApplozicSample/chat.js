@@ -103,6 +103,10 @@ export default class AwesomeProject extends Component {
                                         Unread count Channel </Text>
         <Text style = {styles.btn} onPress = {this.totalUnreadCount}>
                                 Total Unread Count </Text>
+        <Text style = {styles.btn} onPress = {this.addMemberToGroup}>
+                                            Add Member to group </Text>
+        <Text style = {styles.btn} onPress = {this.removeUserFromGroup}>
+                                  remove member to group </Text>
 
         <Text style = {styles.btn} onPress = {this.logoutUser}>
                     LogOut </Text>
@@ -182,7 +186,7 @@ export default class AwesomeProject extends Component {
                       console.log("error " + error);
                   }else{
                     this.setState({loggedIn: true, title: 'Loading...'});
-                    //this.createGroup();
+                    this.createGroup();
                     console.log("response::" + response);
                   }
                 })
@@ -259,7 +263,8 @@ export default class AwesomeProject extends Component {
         getUnreadCountForChannel() {
 
           var requestData = {
-                'channelKey':7107309
+                'groupId':7107309, //replace with your groupId
+                'clientGroupId': '' //
                   // pass either channelKey or clientGroupId
             };
 
@@ -290,7 +295,7 @@ export default class AwesomeProject extends Component {
        createGroup(){
 
           var groupDetails = {
-                'groupName':'React Test2',
+                'groupName':'React Test3',
                 'clientGroupId':'recatNativeCGI',
                 'groupMemberList': ['ak101', 'ak102', 'ak103'], // Pass list of user Ids in groupMemberList
                 'imageUrl': 'https://www.applozic.com/favicon.ico',
@@ -329,7 +334,7 @@ export default class AwesomeProject extends Component {
 
        var requestData = {
              'clientGroupId':'recatNativeCGI',
-             'userId': 'ak104', // Pass list of user Ids in groupMemberList
+             'userId': 'ak111', // Pass list of user Ids in groupMemberList
          };
 
           ApplozicChat.removeUserFromGroup(requestData, (error, response) => {
