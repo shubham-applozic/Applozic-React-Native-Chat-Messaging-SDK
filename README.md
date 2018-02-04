@@ -27,12 +27,17 @@ Please follow below steps to add react native bridge files to your porject.
 
  3) Add all .h and .m files to your project from applozic folder in step 1)
  
- ### Push Notification
+ ## Push Notification
+ 
+ ### iOS
  
    Open AppDelegate.m file under /ios/YOUR_PROJECT/
    
    Add code as mentioned in the following documentation:
    https://www.applozic.com/docs/ios-chat-sdk.html#step-4-push-notification-setup
+ 
+ ### Android
+ 
  
  
  ## Integration 
