@@ -33,6 +33,11 @@ dependencies {
 include ':react-native-applozic-chat'
 project(':react-native-applozic-chat').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-applozic-chat/android')
 ```
+#### AndroidManifest.xml 
+
+Add entries for permission, activities,meta in the manifest files from documentaion below.
+
+https://docs.applozic.com/docs/android-chat-sdk#section-androidmanifest
 
 
 #### iOS CocoaPods
