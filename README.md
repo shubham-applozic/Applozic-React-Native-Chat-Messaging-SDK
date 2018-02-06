@@ -67,7 +67,7 @@ If you have not yet using pod dependency, check out how you can add pod in your 
 
 ### Add Bridge Files 
 
-1) copy applozic folder from [here](https://github.com/adarshmishra/Applozic-React-Native-Chat-Messaging-SDK/tree/master/ios/applozic) to /ios/ folder to your project. 
+1) Copy applozic folder from [here](https://github.com/adarshmishra/Applozic-React-Native-Chat-Messaging-SDK/tree/master/ios/applozic) to /ios/ folder to your project. 
  	 
 2) Open project from /ios/ folder in xcode.
  
