@@ -55,24 +55,20 @@ https://docs.applozic.com/docs/android-chat-sdk#section-androidmanifest
 
 #### iOS CocoaPods
 
+```
+link the lib with react-native link react-native-applozic-chat
+
+```
+
 Setup your Podfile located at /ios/Podfile and add below pod dependency.
 
 ```
   pod 'Applozic', '~>5.0.0'
 ```
-If you have not yet using pod dependency, check out how you can add pod in your react native project here.
 
-#### Add bridge files to your project
-Please follow below steps to add react native bridge files to your porject.
+If you have not yet using pod dependency, check out how you can add pod in your react-native [here](https://guides.cocoapods.org/using/getting-started.html])
 
- 1) copy applozic folder from here to /ios/ folder to your project. 
 
- 2) Open project from /ios/ folder in xcode.
- 
- **NOTE :** Please make sure to use .xcworkspace, not .xcproject after that.
-
- 3) Add all .h and .m files to your project from applozic folder in step 1)
- 
  ## Push Notification
  
  ### iOS
