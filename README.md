@@ -33,6 +33,19 @@ dependencies {
 include ':react-native-applozic-chat'
 project(':react-native-applozic-chat').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-applozic-chat/android')
 ```
+
+3. Add ApplozicChatPackage in MainApplication.java
+
+```
+ @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),new ApplozicChatPackage()
+      );
+    }
+
+```
+
 #### AndroidManifest.xml 
 
 Add entries for permission, activities,meta in the manifest files from documentaion below.
