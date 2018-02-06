@@ -53,12 +53,15 @@ Add entries for permission, activities,meta in the manifest files from documenta
 https://docs.applozic.com/docs/android-chat-sdk#section-androidmanifest
 
 
-#### iOS CocoaPods
+#### iOS 
+
+### Automatic linking 
 
 ```
 link the lib with react-native link react-native-applozic-chat
 
 ```
+### Adding Applozic Pod
 
 Setup your Podfile located at /ios/Podfile and add below pod dependency.
 
