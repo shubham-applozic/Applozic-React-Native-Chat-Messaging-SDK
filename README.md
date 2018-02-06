@@ -5,28 +5,73 @@ Applozic powers real time messaging across any device, any platform & anywhere i
 
 Signup at https://www.applozic.com/signup.html to get the application key.
 
-## Instalation
+### Instalation
 
-#### iOS CocoaPods
+install plugin in root directory of react-native project.
+
+```
+npm install https://github.com/adarshmishra/Applozic-React-Native-Chat-Messaging-SDK.git
+```
+
+### Android
+
+#### Add applozic-chat in gradle
+
+1. Open project's android/app/build.gradle file add below dependency
+
+```
+dependencies {
+    ...
+    compile project(':react-native-applozic-chat')
+}
+
+```
+
+2. Open android/settings.gradle and include below
+
+```
+include ':react-native-applozic-chat'
+project(':react-native-applozic-chat').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-applozic-chat/android')
+```
+
+3. Add ApplozicChatPackage in MainApplication.java
+
+```
+ @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),new ApplozicChatPackage()
+      );
+    }
+
+```
+
+#### AndroidManifest.xml 
+
+Add entries for permission, activities,meta in the manifest files from documentaion below.
+
+https://docs.applozic.com/docs/android-chat-sdk#section-androidmanifest
+
+
+#### iOS 
+
+### Automatic linking 
+
+```
+react-native link react-native-applozic-chat
+
+```
+### Adding Applozic Pod
 
 Setup your Podfile located at /ios/Podfile and add below pod dependency.
 
 ```
   pod 'Applozic', '~>5.0.0'
 ```
-If you have not yet using pod dependency, check out how you can add pod in your react native project here.
 
-#### Add bridge files to your project
-Please follow below steps to add react native bridge files to your porject.
+If you have not yet using pod dependency, check out how you can add pod in your react-native [here](https://guides.cocoapods.org/using/getting-started.html])
 
- 1) copy applozic folder from here to /ios/ folder to your project. 
 
- 2) Open project from /ios/ folder in xcode.
- 
- **NOTE :** Please make sure to use .xcworkspace, not .xcproject after that.
-
- 3) Add all .h and .m files to your project from applozic folder in step 1)
- 
  ## Push Notification
  
  ### iOS
