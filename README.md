@@ -58,7 +58,7 @@ https://docs.applozic.com/docs/android-chat-sdk#section-androidmanifest
 ### Automatic linking 
 
 ```
-link the lib with react-native link react-native-applozic-chat
+react-native link react-native-applozic-chat
 
 ```
 ### Adding Applozic Pod
