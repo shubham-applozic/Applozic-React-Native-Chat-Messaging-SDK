@@ -144,7 +144,7 @@ If you have not yet using pod dependency, check out how you can add pod in your 
                 }
               });
  ```
- **NOTE**: grpupId must be Numeric
+ **NOTE**: groupId must be Numeric.
  
  2. With your assigned groupId (Client group Id)
  
@@ -159,7 +159,7 @@ ApplozicChat.openChatWithClientGroupId(clientGroupId, (error,response) =>{
             }
           });
 ```
- **NOTE**: grpupId must be String
+ **NOTE**: groupId must be String
  
  ### Unread Count
  
