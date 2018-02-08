@@ -87,7 +87,24 @@ If you have not yet using pod dependency, check out how you can add pod in your 
  
  ### Android
  
+ ### gradle changes 
+ 1. Open android/app/build.gradle and add below at bottom
  
+ ```
+ apply plugin: 'com.google.gms.google-services'
+ ```
+ 2. open project android/build.gradle and add google service dependency.
+ 
+ ```
+ dependencies {
+        ......
+        classpath 'com.google.gms:google-services:3.0.0'
+    }
+ ```
+ ### FCM/GCM setup 
+ Follow below documentation for FCM/GCM setup.
+ 
+ https://docs.applozic.com/docs/android-push-notification
  
  ## Integration 
  
