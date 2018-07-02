@@ -95,7 +95,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.mobicomkit.sample"
@@ -120,6 +120,10 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
+
+        dexOptions {
+        jumboMode true
+    }
     }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
@@ -138,8 +142,8 @@ android {
 
 dependencies {
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:27.0.2"
-    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.5'
+    compile "com.android.support:appcompat-v7:27.1.1"
+    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.8.5'
     compile "com.facebook.react:react-native:+"  // From node_modules
 }
 
