@@ -14,6 +14,7 @@
 #import <Applozic/ALChannelService.h>
 #import <Applozic/ALUserService.h>
 #import <Applozic/ALContactService.h>
+#import <Applozic/Applozic.h>
 
 @implementation ApplozicChat
 
@@ -226,32 +227,6 @@ RCT_EXPORT_METHOD(removeMemberFromGroup:(NSDictionary *)requestData andCallback:
   
 }
 
-RCT_EXPORT_METHOD(removeMemberFromGroup:(NSDictionary *)requestData andCallback:(RCTResponseSenderBlock)callback )
-{
-  
-  ALChannelService * alChannelService = [ALChannelService new];
-  
-  NSNumber * groupId = [requestData valueForKey:@"groupId"];
-  NSString * clientGroupId = [requestData valueForKey:@"clientGroupId"];
-  NSString * userId = [requestData valueForKey:@"userId"];
-  
-  [alChannelService removeMemberFromChannel:userId
-                              andChannelKey:groupId
-                         orClientChannelKey:clientGroupId
-                             withCompletion:^(NSError *error, ALAPIResponse *response) {
-                               
-                               if(error){
-                                 NSLog(@"error description %@", error.description);
-                                 return callback(@[ error.description ,[NSNull null]]);
-                               }else{
-                                 return callback(@[ [NSNull null],[self getJsonString:response.dictionary]]);
-                               }
-                               
-                             }];
-  
-}
-
-
 //======================================Unreadcounts ==============================================
 
 
@@ -309,7 +284,7 @@ RCT_EXPORT_METHOD(totalUnreadCount:(RCTResponseSenderBlock)callback )
  */
 
 
-RCT_EXPORT_METHOD(logoutUser:(RCTResponseSenderBlock)callback )
+RCT_EXPORT_METHOD(logoutUser:(RCTResponseSenderBlock)callback)
 {
   ALRegisterUserClientService * alRegisterUserClientService = [[ALRegisterUserClientService alloc]init];
   
@@ -328,7 +303,19 @@ RCT_EXPORT_METHOD(logoutUser:(RCTResponseSenderBlock)callback )
   
 }
 
+RCT_EXPORT_METHOD(hideCreateGroupIcon: (BOOL) hide){
+  [ALApplozicSettings setGroupOption: !hide];
+} 
 
+RCT_EXPORT_METHOD(showOnlyMyContacts: (BOOL) showOnlyMyContacts){
+  [ALApplozicSettings setFilterContactsStatus:NO];
+
+  if(showOnlyMyContacts){
+    NSMutableArray * array = [NSMutableArray new];
+    [array addObject:[NSNumber numberWithInt:1]];
+    [ALApplozicSettings setContactTypeToFilter: array];
+  }
+}
 
 
 -(NSString *)getJsonString:(id) Object{

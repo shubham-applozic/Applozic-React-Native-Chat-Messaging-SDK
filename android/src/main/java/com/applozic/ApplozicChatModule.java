@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.applozic.mobicomkit.Applozic;
+import com.applozic.mobicomkit.ApplozicClient;
+import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
 import com.applozic.mobicomkit.api.account.user.User;
@@ -434,6 +436,28 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         Activity currentActivity = getCurrentActivity();
         MobiComUserPreference mobiComUserPreference = MobiComUserPreference.getInstance(currentActivity);
         successCallback.invoke(mobiComUserPreference.isLoggedIn());
+    }
+
+    @ReactMethod
+    public void hideCreateGroupIcon(boolean hide){
+        Activity currentActivity = getCurrentActivity();
+
+        if(hide){
+           ApplozicSetting.getInstance(currentActivity).hideStartNewGroupButton();
+        }else{
+            ApplozicSetting.getInstance(currentActivity).showStartNewGroupButton();
+        }
+    }
+
+    @ReactMethod
+    public void showOnlyMyContacts(boolean showOnlyMyContacts){
+        Activity currentActivity = getCurrentActivity();
+
+        if(showOnlyMyContacts){
+            ApplozicClient.getInstance(currentActivity).enableShowMyContacts(); 
+        }else{
+            ApplozicClient.getInstance(currentActivity).disableShowMyContacts(); 
+        }
     }
 
     @Override
