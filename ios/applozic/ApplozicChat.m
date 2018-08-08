@@ -310,11 +310,13 @@ RCT_EXPORT_METHOD(hideCreateGroupIcon: (BOOL) hide){
 RCT_EXPORT_METHOD(showOnlyMyContacts: (BOOL) showOnlyMyContacts){
   [ALApplozicSettings setFilterContactsStatus:NO];
 
-  if(showOnlyMyContacts){
-    NSMutableArray * array = [NSMutableArray new];
-    [array addObject:[NSNumber numberWithInt:1]];
-    [ALApplozicSettings setContactTypeToFilter: array];
-  }
+    if(showOnlyMyContacts){
+        NSMutableArray * array = [NSMutableArray new];
+        [array addObject:[NSNumber numberWithInt:1]];
+        [ALApplozicSettings setContactTypeToFilter: array];
+    }else{
+        [ALApplozicSettings setContactTypeToFilter: nil];
+    }
 }
 
 
