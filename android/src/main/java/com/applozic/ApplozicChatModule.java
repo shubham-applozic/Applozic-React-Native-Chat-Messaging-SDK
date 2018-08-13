@@ -600,7 +600,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             }
 
             @Override
-            public void onSent(Message message) {
+            public void onSent(Message message, String oldMessageKey) {
                 callback.invoke("Message sent", GsonUtils.getJsonFromObject(message, Message.class));
             }
         });
