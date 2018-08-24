@@ -5,12 +5,12 @@ Applozic powers real time messaging across any device, any platform & anywhere i
 
 Signup at https://www.applozic.com/signup.html to get the application key.
 
-### Instalation
+### Installation
 
 install plugin in root directory of react-native project.
 
 ```
-npm install https://github.com/adarshmishra/Applozic-React-Native-Chat-Messaging-SDK.git
+npm install https://github.com/AppLozic/Applozic-React-Native-Chat-Messaging-SDK.git
 ```
 
 ### Android
