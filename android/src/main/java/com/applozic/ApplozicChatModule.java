@@ -44,6 +44,9 @@ import com.applozic.mobicomkit.exception.ApplozicException;
 import com.applozic.mobicomkit.api.conversation.Message;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.applozic.mobicomkit.listners.ConversationListHandler;
+import com.applozic.mobicomkit.api.conversation.AlConversation;
+import com.applozic.mobicomkit.listners.ConversationListHandler;
 
 
 import java.util.Arrays;
@@ -463,7 +466,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void getLatestMessageList(final ReadableMap args, final Callback messageListCallback) {
         final Activity currentActivity = getCurrentActivity();
-        ApplozicConversation.getLatestMessageList(currentActivity, "true".equals(args.getString("isScroll")), new MessageListHandler() {
+        ApplozicConversation.getLatestMessageList(currentActivity, args.getBoolean("isScroll"), new MessageListHandler() {
             @Override
             public void onResult(List<Message> messageList, ApplozicException e) {
                 if (e == null) {
@@ -476,8 +479,46 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     }
 
     @ReactMethod
-    public void addLatestMessage(Message message, Message[] messageArray, final Callback addMessageCallback) {
-        List<Message> messageList = Arrays.asList(messageArray);
+    public void getLatestConversationList(final ReadableMap args, final Callback conversationListCallback){
+        final Activity currentActivity = getCurrentActivity();
+        ApplozicConversation.getConversationList(currentActivity, args.getString("searchString"), args.getBoolean("isScroll"), new ConversationListHandler(){
+            @Override
+            public void onResult(Context context, List<AlConversation> conversationList, ApplozicException e){
+                if (e == null) {
+                    conversationListCallback.invoke(null, GsonUtils.getJsonFromObject(conversationList.toArray(), AlConversation[].class));
+                } else {
+                    conversationListCallback.invoke(GsonUtils.getJsonFromObject(e, ApplozicException.class), null);
+                }
+            }
+        });
+    }
+
+    @ReactMethod
+    public void addLatestConversation(final ReadableMap args, final Callback addConversationCallback){
+        final Activity currentActivity = getCurrentActivity();
+
+        List<AlConversation> conversationList = Arrays.asList((AlConversation[]) GsonUtils.getObjectFromJson(args.getString("conversationList"), AlConversation[].class));
+        Message message = (Message) GsonUtils.getObjectFromJson(args.getString("message"), Message.class);
+
+        ApplozicConversation.addLatestConversation(currentActivity, message, conversationList);
+        addConversationCallback.invoke(GsonUtils.getJsonFromObject(conversationList.toArray(), AlConversation[].class));
+    }
+
+    @ReactMethod
+    public void getConversationFromMessage(final ReadableMap args, final Callback getConversationCallback){
+        final Activity currentActivity = getCurrentActivity();
+
+        AlConversation conversation = ApplozicConversation.getConversationFromMessage(currentActivity, (Message) GsonUtils.getObjectFromJson(args.getString("message"), Message.class));
+        
+        getConversationCallback.invoke(GsonUtils.getJsonFromObject(conversation, AlConversation.class));
+    }
+
+    @ReactMethod
+    public void addLatestMessage(final ReadableMap args, final Callback addMessageCallback) {
+
+        List<Message> messageList = Arrays.asList((Message[]) GsonUtils.getObjectFromJson(args.getString("messageList"), Message[].class));
+        Message message = (Message) GsonUtils.getObjectFromJson(args.getString("message"), Message.class);
+
         ApplozicConversation.addLatestMessage(message, messageList);
         addMessageCallback.invoke(GsonUtils.getJsonFromObject(messageList.toArray(), Message[].class));
     }
@@ -551,11 +592,12 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
 
         new MobiComConversationService(currentActivity).sendMessage(message, new MediaUploadProgressHandler() {
             @Override
-            public void onUploadStarted(ApplozicException e) {
+            public void onUploadStarted(ApplozicException e, String oldMessageKey) {
                 //Utils.printLog(currentActivity, "UpTest", "Upload started " + message.getCreatedAtTime() + ", " + "Exception : " + e);
                 if (e == null) {
                     WritableMap map = Arguments.createMap();
                     map.putDouble("createdAtTime", message.getCreatedAtTime());
+                    map.putString("oldMessageKey", oldMessageKey);
                     sendEvent("UploadStarted", map);
                 } else if (message.getFilePaths() != null && !message.getFilePaths().isEmpty()) {
                     callback.invoke("error", e.getCause());
@@ -563,12 +605,13 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             }
 
             @Override
-            public void onProgressUpdate(int percentage, ApplozicException e) {
+            public void onProgressUpdate(int percentage, ApplozicException e, String oldMessageKey) {
                 //Utils.printLog(currentActivity, "UpTest", "Upload progress " + message.getCreatedAtTime() + ", " + "Exception : " + e + ", " + percentage);
                 if (e == null) {
                     WritableMap map = Arguments.createMap();
                     map.putDouble("createdAtTime", message.getCreatedAtTime());
                     map.putInt("uploadProgress", percentage);
+                    map.putString("oldMessageKey", oldMessageKey);
                     sendEvent("UploadProgress", map);
                 } else if (message.getFilePaths() != null && !message.getFilePaths().isEmpty()) {
                     callback.invoke("error : ", e.getCause());
@@ -576,11 +619,12 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             }
 
             @Override
-            public void onCancelled(ApplozicException e) {
+            public void onCancelled(ApplozicException e, String oldMessageKey) {
                 //Utils.printLog(currentActivity, "UpTest", "Upload cancelled" + message.getCreatedAtTime() + ", " + "Exception : " + e);
                 if (e == null) {
                     WritableMap map = Arguments.createMap();
                     map.putDouble("createdAtTime", message.getCreatedAtTime());
+                    map.putString("oldMessageKey", oldMessageKey);
                     sendEvent("UploadCancelled", map);
                 } else if (message.getFilePaths() != null && !message.getFilePaths().isEmpty()) {
                     callback.invoke("error : ", e.getCause());
@@ -588,11 +632,12 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             }
 
             @Override
-            public void onCompleted(ApplozicException e) {
+            public void onCompleted(ApplozicException e, String oldMessageKey) {
                 //Utils.printLog(currentActivity, "UpTest", "Upload completed " + message.getCreatedAtTime() + ", " + "Exception : " + e);
                 if (e == null) {
                     WritableMap map = Arguments.createMap();
                     map.putDouble("createdAtTime", message.getCreatedAtTime());
+                    map.putString("oldMessageKey", oldMessageKey);
                     sendEvent("UploadCompleted", map);
                 } else if (message.getFilePaths() != null && !message.getFilePaths().isEmpty()) {
                     callback.invoke("error : ", e.getCause());
@@ -600,8 +645,8 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             }
 
             @Override
-            public void onSent(Message message) {
-                callback.invoke("Message sent", GsonUtils.getJsonFromObject(message, Message.class));
+            public void onSent(Message message, String oldMessageKey) {
+                callback.invoke("Message sent", oldMessageKey, GsonUtils.getJsonFromObject(message, Message.class));
             }
         });
     }
@@ -639,7 +684,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
                 map.putString("messageKey", message.getKeyString());
                 map.putInt("downloadProgress", percentage);
                 if (e != null) {
-                    callback.invoke("error", e.getMessage());
+                    callback.invoke("Error", e.getMessage());
                 }
                 sendEvent("DownloadProgress", map);
             }
@@ -647,7 +692,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             @Override
             public void onCompleted(Message message, ApplozicException e) {
                 if (e != null) {
-                    callback.invoke("error", e.getMessage());
+                    callback.invoke("Error", e.getMessage());
                 } else {
                     callback.invoke("Success", GsonUtils.getJsonFromObject(message, Message.class));
                 }
@@ -952,7 +997,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     }
 
     private void sendEvent(String eventName, WritableMap data) {
-        Utils.printLog(this.getReactApplicationContext(), "SendingEvent", "Reytum sending event : " + eventName);
         this.getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("Applozic-" + eventName, data);
     }
 

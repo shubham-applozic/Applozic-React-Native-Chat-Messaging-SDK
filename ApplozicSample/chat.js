@@ -63,7 +63,7 @@ export default class AwesomeProject extends React.Component {
 
      componentDidMount() {
        this.isUserLogIn();
-       ApplozicChat.getLatestMessageList({'isScroll' : 'false'}, (error, response)=>{
+       ApplozicChat.getLatestMessageList({'isScroll' : false, 'searchString' : ''}, (error, response)=>{
            if(error){
 
            }else{
@@ -128,130 +128,91 @@ export default class AwesomeProject extends React.Component {
     }
 
     render() {
-        let display = this.state.loggedIn;
-        if (display) {
-    //       return (
-    //         <View style = {styles.container}>
-    //   <Text style = { styles.titleText} >
-    //       Applozic </Text>
-    //         <Text style = {styles.baseText}>
-    //              Demo App </Text>
-    //         <Text style = {styles.btn} onPress = {this.openChat}>
-    //               Open Chat List </Text>
-    //   <Text style = {styles.btn} onPress = {this.sendMessage}>
-    //                   Send attachment </Text>
-    //   <Text style = {styles.btn} onPress = {this.downloadMessage}>
-    //                       Download Attachment </Text>
-    //   <Text style = {styles.btn} onPress = {this.getMessageForContact}>
-    //                                  Contact Message List </Text>
-    //   <Text style = {styles.btn} onPress = {this.getMessageForChannel}>
-    //                           Channel Message List </Text>
-    //   <Text style = {styles.btn} onPress = {this.addMemberToGroup}>
-    //                                       Add Member to group </Text>
-    //   <Text style = {styles.btn} onPress = {this.removeUserFromGroup}>
-    //                             remove member to group </Text>
-    //   <Text style = {styles.btn} onPress = {this.getConversationList}>
-    //                             Get Latest Messages </Text>
-    //   <Text style = {styles.btn} onPress = {this.getNextConversationList}>
-    //                             Get Next Latest Messages </Text>
-    //   <Text style = {styles.btn} onPress = {this.logoutUser}>
-    //               LogOut </Text>
-    //        </View >
-    //      );
-    return (
-        <View style={styles.container} >
-          <Text style={styles.h2text}>
-            Black Order
-          </Text>
-            <FlatList
-            data={this.state.messages}
-            showsVerticalScrollIndicator={false}
-            renderItem={({item}) => {
-                var channel = null;
-                var contact = null;
-                var imageUrl = null;
-            if(item.hasOwnProperty('groupId')){
-               ApplozicChat.getChannelFromChannelKey(item.groupId, (args1, args2)=>{
-                   channel = JSON.parse(args2).channel;
-                   contact = null;
-                   imageUrl = channel.imageUrl;
-               });
-            }else{
-                 ApplozicChat.getContactById(item.to, (arg1, arg2)=>{
-                     contact = JSON.parse(arg2);
-                     imageUrl = contact.imageUrl;
-                 });
-            }
-            <View style={styles1.flatview}>
-             <Image
-                style={{width: 50, height: 50}}
-                source={{uri: imageUrl}}/>
-              <Text style={styles1.name}>{item.to}</Text>
-              <Text style={styles1.email}>{item.message}</Text>
-            </View>
-            }
-        }
-            keyExtractor={item => item.key}
-          />
-        </View>
-      );
-       }
+          let display = this.state.loggedIn;
+          if (display) {
+            return (
+        <View style = {styles.container}>
+        <Text style = { styles.titleText} >
+            Applozic </Text>
+        <Text style = {styles.baseText}>
+            Demo App </Text>
+        <Text style = {styles.btn} onPress = {this.openChat}>
+            Open Chat List </Text>
+        <Text style = {styles.btn} onPress = {this.getConversationList}>
+                One-One Chat </Text>
+        <Text style = {styles.btn} onPress = {this.getUnreadCountForUser}>
+                            Unread count User </Text>
+        <Text style = {styles.btn} onPress = {this.getUnreadCountForChannel}>
+                                        Unread count Channel </Text>
+        <Text style = {styles.btn} onPress = {this.totalUnreadCount}>
+                                Total Unread Count </Text>
+        <Text style = {styles.btn} onPress = {this.addMemberToGroup}>
+                                            Add Member to group </Text>
+        <Text style = {styles.btn} onPress = {this.removeUserFromGroup}>
+                                  remove member to group </Text>
 
-      return (
+        <Text style = {styles.btn} onPress = {this.logoutUser}>
+                    LogOut </Text>
+         </View >
+            );
+        }
+
+        return (
         <View style ={styles.container}>
-        <ScrollView>
-          <Text style = {styles.titleText}>
-             Applozic </Text>
-                <Text style = {styles.baseText}>
-             Demo App </Text>
-          <TextInput style ={styles.inputText}
-             keyboardType = "default"
-             placeholder = "UserId"
-             maxLength = {25}
-             underlineColorAndroid = 'transparent'
-             value = {this.state.userId}
-             onChangeText={userId => this.setState({userId})}/>
-          <TextInput type = "email-address"
-             style = {styles.inputText}
-             placeholder = "Email"
-             keyboardType = "email-address"
-             maxLength = {30}
-             underlineColorAndroid = 'transparent'
-             value = { this.state.email}
-             onChangeText = {email => this.setState({email})}/>
-          <TextInput style = { styles.inputText}
-             placeholder = "Phone Number"
-             keyboardType = "phone-pad"
-             underlineColorAndroid = 'transparent'
-             maxLength = {10}
-             value = {this.state.phoneNumber}
-             onChangeText = {phoneNumber => this.setState({phoneNumber})}/>
-          <TextInput id = "password"
-             type = "password"
-             style = {styles.inputText}
-             maxLength = {25}
-             placeholder = "Password"
-             keyboardType = "default"
-             underlineColorAndroid = 'transparent'
-             value = {this.state.pass_word}
-             secureTextEntry = {true}
-             password = "true"
-             onChangeText = {pass_word => this.setState({pass_word})}/>
-          <TextInput id = "displayName"
-             style = {styles.inputText}
-             placeholder = "Display Name"
-             keyboardType = "default"
-             underlineColorAndroid = 'transparent'
-             value = {this.state.displayName}
-             maxLength = {25}
-             onChangeText = {displayName => this.setState({displayName})}/>
-          <Button title = {this.state.title}
-             onPress = {this.show}
-             color = "#20B2AA"/>
-          </ScrollView>
-          </View>
-    );
+            <ScrollView>
+              <Text style = {styles.titleText}>
+                 Applozic </Text>
+              <Text style = {styles.baseText}>
+                 Demo App </Text>
+              <TextInput style ={styles.inputText}
+                 keyboardType = "default"
+                 placeholder = "UserId"
+                 maxLength = {25}
+                 underlineColorAndroid = 'transparent'
+                 value = {this.state.userId}
+                 onChangeText={userId => this.setState({userId})}/>
+              <TextInput type = "email-address"
+                 style = {styles.inputText}
+                 placeholder = "Email"
+                 keyboardType = "email-address"
+                 maxLength = {30}
+                 underlineColorAndroid = 'transparent'
+                 value = { this.state.email}
+                 onChangeText = {email => this.setState({email})}/>
+              <TextInput style = { styles.inputText}
+                 placeholder = "Phone Number"
+                 keyboardType = "phone-pad"
+                 underlineColorAndroid = 'transparent'
+                 maxLength = {10}
+                 value = {this.state.phoneNumber}
+                 onChangeText = {phoneNumber => this.setState({phoneNumber})}/>
+              <TextInput id = "password"
+                 type = "password"
+                 style = {styles.inputText}
+                 maxLength = {25}
+                 placeholder = "Password"
+                 keyboardType = "default"
+                 underlineColorAndroid = 'transparent'
+                 value = {this.state.pass_word}
+                 secureTextEntry = {true}
+                 password = "true"
+                 onChangeText = {pass_word => this.setState({pass_word})}/>
+              <TextInput id = "displayName"
+                 style = {styles.inputText}
+                 placeholder = "Display Name"
+                 keyboardType = "default"
+                 underlineColorAndroid = 'transparent'
+                 value = {this.state.displayName}
+                 maxLength = {25}
+                 onChangeText = {displayName => this.setState({displayName})}/>
+              <Button title = {this.state.title}
+                 onPress = {this.show}
+                 color = "#20B2AA"/>
+              </ScrollView>
+        </View>
+        );
     }
+
     //======================== Applozic fucntions ==========================================================
 
         //Login chat to the users..
@@ -428,9 +389,10 @@ export default class AwesomeProject extends React.Component {
 
     getConversationList(){
         var vary = {
-          'isScroll' : false
+          'isScroll' : false,
+          'searchString' : ''
         };
-        ApplozicChat.getLatestMessageList(vary, (error, response) => {
+        ApplozicChat.getLatestConversationList(vary, (error, response) => {
             if(error){
                 console.log("Reytum error : " + JSON.stringify(error));
             }else{
@@ -438,13 +400,13 @@ export default class AwesomeProject extends React.Component {
                 for(var i = 0; i< messageList.length; i++){
                     var name;
                     var message;
-                    if(messageList[i].hasOwnProperty('groupId')){
-                        name = messageList[i].groupId;
+                    if(messageList[i].message.hasOwnProperty('groupId')){
+                        name = messageList[i].channel.name;
                     }else{
-                        name = messageList[i].to;
+                        name = messageList[i].contact.fullName;
                     }
-                    if(messageList[i].message.length){
-                        message = messageList[i].message;
+                    if(messageList[i].message.message.length){
+                        message = messageList[i].message.message;
                     }else{
                         message = 'Some other type of message';
                     }
@@ -457,7 +419,8 @@ export default class AwesomeProject extends React.Component {
 
     getList(isScroll){
         var vary = {
-            'isScroll' : isScroll
+            'isScroll' : isScroll,
+            'searchString' : ''
         };
 
       ApplozicChat.getLatestMessageList(vary, (error, response) => {
@@ -471,7 +434,8 @@ export default class AwesomeProject extends React.Component {
 
     getNextConversationList(){
         var vary = {
-          'isScroll' : true
+          'isScroll' : true,
+          'searchString' : ''
         };
         ApplozicChat.getLatestMessageList(vary, (error, response) => {
             if(error){

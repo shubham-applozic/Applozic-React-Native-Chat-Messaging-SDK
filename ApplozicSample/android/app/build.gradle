@@ -143,7 +143,7 @@ android {
 dependencies {
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:27.1.1"
-    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.8.5'
+    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.9.3'
     compile "com.facebook.react:react-native:+"  // From node_modules
 }
 

@@ -1,0 +1,3 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="applozic_message_search_text_color" tools:override="true">#FF4081</color>
+</resources>
