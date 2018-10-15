@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.applozic.mobicomkit.ALGroupInfoTask;
 import com.applozic.mobicomkit.Applozic;
+import com.applozic.mobicomkit.feed.AlResponse;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
 import com.applozic.mobicomkit.api.account.user.User;
@@ -274,12 +275,13 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                Channel channel = ChannelService.getInstance(currentActivity).createChannel(channelInfo);
+                
+                AlResponse alResponse = ChannelService.getInstance(currentActivity).createChannel(channelInfo);
+                Channel channel = (Channel) alResponse.getResponse();
                 if (channel != null && channel.getKey() != null) {
                     callback.invoke(null, channel.getKey());
                 } else {
-                    callback.invoke("error", null);
+                    callback.invoke((String) alResponse.getResponse(), null);
                 }
             }
         }).start();

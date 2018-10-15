@@ -274,12 +274,13 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                Channel channel = ChannelService.getInstance(currentActivity).createChannel(channelInfo);
+                
+                AlResponse alResponse = ChannelService.getInstance(currentActivity).createChannel(channelInfo);
+                Channel channel = (Channel) alResponse.getResponse();
                 if (channel != null && channel.getKey() != null) {
                     callback.invoke(null, channel.getKey());
                 } else {
-                    callback.invoke("error", null);
+                    callback.invoke((String) alResponse.getResponse(), null);
                 }
             }
         }).start();
