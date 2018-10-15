@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.applozic.mobicomkit.Applozic;
+import com.applozic.mobicomkit.ApplozicClient;
+import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
 import com.applozic.mobicomkit.api.account.user.User;
@@ -28,6 +30,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.applozic.mobicomkit.feed.AlResponse;
+import com.applozic.mobicomkit.feed.ErrorResponseFeed;
 import com.applozic.mobicomkit.api.account.register.RegisterUserClientService;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicomkit.uiwidgets.async.ApplozicChannelRemoveMemberTask;
@@ -253,11 +257,19 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             @Override
             public void run() {
 
-                Channel channel = ChannelService.getInstance(currentActivity).createChannel(channelInfo);
-                if(channel!=null && channel.getKey() !=null ) {
-                    callback.invoke(null,channel.getKey());
-                }else{
-                    callback.invoke("error",null);
+                AlResponse alResponse = ChannelService.getInstance(currentActivity).createChannel(channelInfo);
+                Channel channel = null;
+                if(alResponse.isSuccess()){
+                  channel = (Channel) alResponse.getResponse();
+                }
+                if (channel != null && channel.getKey() != null) {
+                    callback.invoke(null, channel.getKey());
+                } else {
+                    if(alResponse.getResponse() != null){
+                       callback.invoke(GsonUtils.getJsonFromObject(alResponse.getResponse(), List.class), null);
+                    }else if(alResponse.getException() != null){
+                       callback.invoke(alResponse.getException().getMessage(), null);
+                    }
                 }
             }
         }).start();
@@ -430,10 +442,31 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
 
     @ReactMethod
     public void isUserLogIn( final Callback successCallback) {
-
         Activity currentActivity = getCurrentActivity();
         MobiComUserPreference mobiComUserPreference = MobiComUserPreference.getInstance(currentActivity);
         successCallback.invoke(mobiComUserPreference.isLoggedIn());
+    }
+
+    @ReactMethod
+    public void hideCreateGroupIcon(boolean hide){
+        Activity currentActivity = getCurrentActivity();
+
+        if(hide){
+           ApplozicSetting.getInstance(currentActivity).hideStartNewGroupButton();
+        }else{
+            ApplozicSetting.getInstance(currentActivity).showStartNewGroupButton();
+        }
+    }
+
+    @ReactMethod
+    public void showOnlyMyContacts(boolean showOnlyMyContacts){
+        Activity currentActivity = getCurrentActivity();
+
+        if(showOnlyMyContacts){
+            ApplozicClient.getInstance(currentActivity).enableShowMyContacts(); 
+        }else{
+            ApplozicClient.getInstance(currentActivity).disableShowMyContacts(); 
+        }
     }
 
     @Override

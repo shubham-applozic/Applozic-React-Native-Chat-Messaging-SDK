@@ -13,7 +13,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 16
@@ -37,6 +37,6 @@ repositories {
 
 dependencies {
     compile 'com.facebook.react:react-native:+'
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.5'
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.9.4'
 }
