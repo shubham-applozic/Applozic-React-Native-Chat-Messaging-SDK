@@ -29,15 +29,13 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(login:(NSDictionary *)userDetails andCallback:(RCTResponseSenderBlock)callback )
 {
-  
   ALUser * aluser =  [[ALUser alloc] initWithJSONString:[self getJsonString:userDetails]];
   
   ALChatManager * chatManger = [[ALChatManager alloc] init];
-  
-  [chatManger registerUserWithCompletion:aluser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
     
+  [self.applozicClient loginUser:user withCompletion:^(ALRegistrationResponse *rResponse, NSError *error) {
+        
     if(error){
-      
       NSString* errorResponse = error.description;
       if(rResponse){
         
@@ -46,11 +44,9 @@ RCT_EXPORT_METHOD(login:(NSDictionary *)userDetails andCallback:(RCTResponseSend
       return callback(@[errorResponse, [NSNull null]]);
 
     }else if ( rResponse.isRegisteredSuccessfully ){
-      
       return callback(@[[NSNull null],[self getJsonString:[rResponse dictionary]]]);
-      
     }
-  }];
+    }];
   
   NSLog(@"Pretending to create an event  at ");
   
@@ -319,6 +315,13 @@ RCT_EXPORT_METHOD(showOnlyMyContacts: (BOOL) showOnlyMyContacts){
     }
 }
 
+RCT_EXPORT_METHOD(hideGroupSubtitle){
+  [ALApplozicSettings showChannelMembersInfoInNavigationBar:NO]
+} 
+
+RCT_EXPORT_METHOD(hideChatListOnNotification){
+
+}
 
 -(NSString *)getJsonString:(id) Object{
 

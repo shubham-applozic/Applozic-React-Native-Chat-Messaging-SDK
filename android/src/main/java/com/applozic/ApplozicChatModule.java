@@ -469,6 +469,12 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         }
     }
 
+    @ReactMethod
+    public void hideChatListOnNotification(){
+        Activity currentActivity = getCurrentActivity();
+        ApplozicClient.getInstance(currentActivity).hideChatListOnNotification();
+    }
+
     @Override
     public void onActivityResult(Activity activity, final int requestCode, final int resultCode, final Intent intent) {
     }
