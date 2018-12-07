@@ -173,7 +173,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     }
 
     @ReactMethod
-    public void openChatWithClientGroupId(  String  clientGroupId, final Callback callback ) {
+    public void openChatWithClientGroupId(String  clientGroupId, final Callback callback ) {
 
         Activity currentActivity = getCurrentActivity();
         Intent intent = new Intent(currentActivity, ConversationActivity.class);
@@ -473,6 +473,11 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void hideChatListOnNotification(){
         Activity currentActivity = getCurrentActivity();
         ApplozicClient.getInstance(currentActivity).hideChatListOnNotification();
+    }
+
+    @ReactMethod
+    public void hideGroupSubtitle(){
+        
     }
 
     @Override
