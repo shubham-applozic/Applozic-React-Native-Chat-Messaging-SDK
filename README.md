@@ -10,7 +10,7 @@ Signup at https://www.applozic.com/signup.html to get the application key.
 install plugin in root directory of react-native project.
 
 ```
-npm install https://github.com/AppLozic/Applozic-React-Native-Chat-Messaging-SDK.git
+npm install react-native-applozic-chat
 ```
 
 ### Android
