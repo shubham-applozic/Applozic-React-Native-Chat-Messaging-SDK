@@ -17,6 +17,6 @@ Pod::Spec.new do |s|
 
 
   s.dependency "React"
-  s.dependency 'Applozic', '~> 6.5.0'
+  s.dependency 'Applozic', '~> 6.7.0'
 
 end

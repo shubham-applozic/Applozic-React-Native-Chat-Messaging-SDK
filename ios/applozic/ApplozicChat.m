@@ -29,28 +29,32 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(login:(NSDictionary *)userDetails andCallback:(RCTResponseSenderBlock)callback )
 {
+  
   ALUser * aluser =  [[ALUser alloc] initWithJSONString:[self getJsonString:userDetails]];
   
   ALChatManager * chatManger = [[ALChatManager alloc] init];
+  
+  [chatManger registerUserWithCompletion:aluser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
     
-  [self.applozicClient loginUser:user withCompletion:^(ALRegistrationResponse *rResponse, NSError *error) {
-        
     if(error){
+      
       NSString* errorResponse = error.description;
       if(rResponse){
         
         errorResponse = [self getJsonString:[rResponse dictionary]];
       }
       return callback(@[errorResponse, [NSNull null]]);
-
+      
     }else if ( rResponse.isRegisteredSuccessfully ){
+      
       return callback(@[[NSNull null],[self getJsonString:[rResponse dictionary]]]);
+      
     }
-    }];
+  }];
   
   NSLog(@"Pretending to create an event  at ");
   
-//===================================== initiating chats=================================================
+  //===================================== initiating chats=================================================
 }
 /**
  * Open chats
@@ -65,7 +69,7 @@ RCT_EXPORT_METHOD(openChat)
     [chatManger launchChat:pushAssistant.topViewController];
     
   });
-
+  
 }
 /**
  * Open chat with Users
@@ -77,7 +81,7 @@ RCT_EXPORT_METHOD(openChatWithUser:(NSString*)userId)
   ALChatManager * chatManger = [[ALChatManager alloc] init];
   ALChatLauncher * chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:chatManger.getApplicationKey];
   ALPushAssist* pushAssistant = [[ALPushAssist alloc] init];
-
+  
   dispatch_async(dispatch_get_main_queue(), ^{
     
     [chatLauncher launchIndividualChat:userId withGroupId:nil andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
@@ -122,13 +126,13 @@ RCT_EXPORT_METHOD(openChatWithClientGroupId:(nonnull NSString*) clientGroupId an
       
       if(alChannel){
         
-         [chatLauncher launchIndividualChat:nil withGroupId:alChannel.key andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
-         return callback(@[ [NSNull null],@"success"]);
+        [chatLauncher launchIndividualChat:nil withGroupId:alChannel.key andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
+        return callback(@[ [NSNull null],@"success"]);
         
-    }else{
-      return callback(@[@"channel not found", [NSNull null] ]);
-    }
-              
+      }else{
+        return callback(@[@"channel not found", [NSNull null] ]);
+      }
+      
     }] ;
   });
 }
@@ -145,7 +149,7 @@ RCT_EXPORT_METHOD(createGroup:(NSDictionary *)channelDetails andCallback:(RCTRes
   NSMutableDictionary * groupMetaData= [channelDetails objectForKey:@"metadata"];
   NSNumber * parentChannelKey= [channelDetails objectForKey:@"parentChannelKey"];
   NSString * adminUserId= [channelDetails objectForKey:@"adminUserId"];
-
+  
   
   [ALChannelClientService createChannel:channelName andParentChannelKey:parentChannelKey orClientChannelKey:clientChannelKey
                          andMembersList:groupMemberList andImageLink:imageLink channelType:(short)PUBLIC
@@ -163,12 +167,12 @@ RCT_EXPORT_METHOD(createGroup:(NSDictionary *)channelDetails andCallback:(RCTRes
                               else
                               {
                                 NSLog(@"ERROR_IN_CHANNEL_CREATING :: %@",error);
-                               return callback(@[error.description,[NSNull null]]);
-
+                                return callback(@[error.description,[NSNull null]]);
+                                
                               }
                             }];
   
-
+  
 }
 
 RCT_EXPORT_METHOD(addMemberToGroup:(NSDictionary *)requestData andCallback:(RCTResponseSenderBlock)callback )
@@ -179,7 +183,7 @@ RCT_EXPORT_METHOD(addMemberToGroup:(NSDictionary *)requestData andCallback:(RCTR
   NSNumber * groupId = [requestData valueForKey:@"groupId"];
   NSString * clientGroupId = [requestData valueForKey:@"clientGroupId"];
   NSString * userId = [requestData valueForKey:@"userId"];
-
+  
   [alChannelService addMemberToChannel:userId
                          andChannelKey:groupId
                     orClientChannelKey:clientGroupId
@@ -191,11 +195,11 @@ RCT_EXPORT_METHOD(addMemberToGroup:(NSDictionary *)requestData andCallback:(RCTR
                             return callback(@[ [NSNull null],[self getJsonString:response.actualresponse]]);
                           }else{
                             return callback(@[ [self getJsonString:response.actualresponse], [NSNull null]]);
-
+                            
                           }
-    
-  }];
-
+                          
+                        }];
+  
 }
 
 RCT_EXPORT_METHOD(removeMemberFromGroup:(NSDictionary *)requestData andCallback:(RCTResponseSenderBlock)callback )
@@ -301,30 +305,42 @@ RCT_EXPORT_METHOD(logoutUser:(RCTResponseSenderBlock)callback)
 
 RCT_EXPORT_METHOD(hideCreateGroupIcon: (BOOL) hide){
   [ALApplozicSettings setGroupOption: !hide];
-} 
+}
 
 RCT_EXPORT_METHOD(showOnlyMyContacts: (BOOL) showOnlyMyContacts){
   [ALApplozicSettings setFilterContactsStatus:NO];
-
-    if(showOnlyMyContacts){
-        NSMutableArray * array = [NSMutableArray new];
-        [array addObject:[NSNumber numberWithInt:1]];
-        [ALApplozicSettings setContactTypeToFilter: array];
-    }else{
-        [ALApplozicSettings setContactTypeToFilter: nil];
-    }
+  
+  if(showOnlyMyContacts){
+    NSMutableArray * array = [NSMutableArray new];
+    [array addObject:[NSNumber numberWithInt:1]];
+    [ALApplozicSettings setContactTypeToFilter: array];
+  }else{
+    [ALApplozicSettings setContactTypeToFilter: nil];
+  }
 }
 
 RCT_EXPORT_METHOD(hideGroupSubtitle){
-  [ALApplozicSettings showChannelMembersInfoInNavigationBar:NO]
-} 
+  [ALApplozicSettings showChannelMembersInfoInNavigationBar:NO];
+}
 
 RCT_EXPORT_METHOD(hideChatListOnNotification){
+  
+}
 
+RCT_EXPORT_METHOD(setAttachmentType: (NSDictionary *) attachmentType){
+  if(attachmentType[@"image"] != nil){
+    NSMutableArray * nsmutable = [[NSMutableArray alloc]init];
+    [nsmutable addObject:@":video"];
+    [ALApplozicSettings setHideMediaSelectOption:nsmutable];
+  }else if(attachmentType[@"video"] != nil){
+    NSMutableArray * nsmutable = [[NSMutableArray alloc]init];
+    [nsmutable addObject:@":image"];
+    [ALApplozicSettings setHideMediaSelectOption:nsmutable];
+  }
 }
 
 -(NSString *)getJsonString:(id) Object{
-
+  
   NSError *error;
   NSString *jsonString;
   NSData *jsonData = [NSJSONSerialization dataWithJSONObject:Object
@@ -341,6 +357,6 @@ RCT_EXPORT_METHOD(hideChatListOnNotification){
   }
   return jsonString;
 }
-                        
+
 
 @end
