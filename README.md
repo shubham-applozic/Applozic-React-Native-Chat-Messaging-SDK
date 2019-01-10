@@ -60,7 +60,7 @@ https://docs.applozic.com/docs/android-chat-sdk#section-androidmanifest
 Setup your Podfile located at /ios/Podfile and add below pod dependency.
 
 ```
-  pod 'Applozic', '~>5.0.0'
+  pod 'Applozic', '~>6.7.1'
 ```
 
 If you have not yet using pod dependency, check out how you can add pod in your react-native [here](https://guides.cocoapods.org/using/getting-started.html])
