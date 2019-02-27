@@ -18,13 +18,13 @@ import com.applozic.mobicomkit.api.account.user.PushNotificationTask;
 import com.applozic.mobicomkit.api.conversation.database.MessageDatabaseService;
 import com.applozic.mobicomkit.api.people.ChannelInfo;
 import com.applozic.mobicomkit.channel.service.ChannelService;
+import com.applozic.mobicomkit.uiwidgets.async.AlGroupInformationAsyncTask;
 import com.applozic.mobicomkit.uiwidgets.async.ApplozicChannelAddMemberTask;
 import com.applozic.mobicomkit.uiwidgets.conversation.ConversationUIService;
 import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActivity;
 import com.applozic.mobicommons.file.FileUtils;
 import com.applozic.mobicommons.json.GsonUtils;
 import com.applozic.mobicommons.people.channel.Channel;
-import com.applozic.mobicommons.people.channel.ChannelMetadata;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -32,16 +32,14 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.applozic.mobicomkit.feed.AlResponse;
-import com.applozic.mobicomkit.feed.ErrorResponseFeed;
-import com.applozic.mobicomkit.api.account.register.RegisterUserClientService;
-import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicomkit.uiwidgets.async.ApplozicChannelRemoveMemberTask;
 
-
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 public class ApplozicChatModule extends ReactContextBaseJavaModule implements ActivityEventListener {
@@ -61,7 +59,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         final Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
             callback.invoke("Activity doesn't exist", null);
-
             return;
         }
 
@@ -98,19 +95,12 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             @Override
             public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
                 //If any failure in registration the callback  will come here
-                callback.invoke(exception.toString(), registrationResponse.toString());
+                callback.invoke(exception != null ? exception.toString() : "error", registrationResponse != null ? GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class) : "Unknown error occurred");
 
             }
         };
 
-        User user = new User();
-        user.setUserId(config.getString("userId")); //userId it can be any unique user identifier
-        user.setDisplayName(config.getString("displayName")); //displayName is the name of the user which will be shown in chat messages
-        user.setEmail(config.getString("email")); //optional
-        user.setAuthenticationTypeId(User.AuthenticationType.APPLOZIC.getValue());  //User.AuthenticationType.APPLOZIC.getValue() for password verification from Applozic server and User.AuthenticationType.CLIENT.getValue() for access Token verification from your server set access token as password
-        user.setPassword(config.getString("password")); //optional, leave it blank for testing purpose, read this if you want to add additional security by verifying password from your server https://www.applozic.com/docs/configuration.html#access-token-url
-        user.setImageLink("");//optional,pass your image link
-        user.setApplicationId("applozic-sample-app");
+        User user = (User) GsonUtils.getObjectFromJson(GsonUtils.getJsonFromObject(config.toHashMap(), HashMap.class), User.class);
         new UserLoginTask(user, listener, currentActivity).execute((Void) null);
     }
 
@@ -324,10 +314,8 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             }
         };
 
-
         ApplozicChannelAddMemberTask applozicChannelAddMemberTask = new ApplozicChannelAddMemberTask(currentActivity, channelKey, userId, channelAddMemberListener);//pass channel key and userId whom you want to add to channel
         applozicChannelAddMemberTask.execute((Void) null);
-
     }
 
 
@@ -406,24 +394,42 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             callback.invoke("Activity doesn't exist", null);
             return;
         }
-        if (config != null && config.hasKey("clientGroupId")) {
-            ChannelService channelService = ChannelService.getInstance(currentActivity);
-            Channel channel = channelService.getChannelByClientGroupId(config.getString("clientGroupId"));
 
-            if (channel == null) {
-                callback.invoke("Channel dose not exist", null);
-                return;
+        AlGroupInformationAsyncTask.GroupMemberListener listener = new AlGroupInformationAsyncTask.GroupMemberListener() {
+            @Override
+            public void onSuccess(Channel channel, Context context) {
+                if (channel == null) {
+                    callback.invoke("Channel dose not exist", null);
+                } else {
+                    callback.invoke(null, new MessageDatabaseService(context).getUnreadMessageCountForChannel(channel.getKey()));
+                }
             }
 
-            int channelUnreadCount = new MessageDatabaseService(currentActivity).getUnreadMessageCountForChannel(channel.getKey());
-            callback.invoke(null, channelUnreadCount);
+            @Override
+            public void onFailure(Channel channel, Exception e, Context context) {
+                callback.invoke("Some error occurred : " + (e != null ? e.getMessage() : ""));
+            }
+        };
 
+        if (config != null && config.hasKey("clientGroupId")) {
+            new AlGroupInformationAsyncTask(currentActivity, config.getString("clientGroupId"), listener).execute();
         } else if (config != null && config.hasKey("groupId")) {
-
-            int channelUnreadCount = new MessageDatabaseService(currentActivity).getUnreadMessageCountForChannel((Integer.parseInt(config.getString("channelKey"))));
-            callback.invoke(null, channelUnreadCount);
-
+            new AlGroupInformationAsyncTask(currentActivity, config.getInt("groupId"), listener).execute();
+        } else {
+            callback.invoke("Invalid data sent");
         }
+    }
+
+    @ReactMethod
+    public void setContactsGroupNameList(ReadableMap config) {
+        Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            return;
+        }
+        List<String> contactGroupIdList = Arrays.asList((String[]) GsonUtils.getObjectFromJson(config.getString("contactGroupNameList"), String[].class));
+        Set<String> contactGroupIdsSet = new HashSet<String>(contactGroupIdList);
+        MobiComUserPreference.getInstance(currentActivity).setIsContactGroupNameList(true);
+        MobiComUserPreference.getInstance(currentActivity).setContactGroupIdList(contactGroupIdsSet);
     }
 
     @ReactMethod

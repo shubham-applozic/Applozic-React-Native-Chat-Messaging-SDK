@@ -277,6 +277,14 @@ RCT_EXPORT_METHOD(totalUnreadCount:(RCTResponseSenderBlock)callback )
   
 }
 
+RCT_EXPORT_METHOD(setContactsGroupNameList:(NSDictionary *) requestData){
+  NSString * contactGroupIdList = [requestData valueForKey:@"contactGroupNameList"];
+  NSData* data = [contactGroupIdList dataUsingEncoding:NSUTF8StringEncoding];
+  NSArray *values = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:nil];
+  [ALApplozicSettings setContactGroupIdList: values];
+  [ALApplozicSettings enableOrDisableContactsGroup:YES];
+}
+
 //===================================== Log Out ===================================================
 /**
  *  Logout users
