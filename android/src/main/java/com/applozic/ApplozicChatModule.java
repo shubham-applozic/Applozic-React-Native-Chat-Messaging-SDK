@@ -138,6 +138,29 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     }
 
     @ReactMethod
+    public void openChatWithUserName(String userId, String userName) {
+        Activity currentActivity = getCurrentActivity();
+
+        if (currentActivity == null) {
+            Log.i("open ChatWithUser  ", "Activity doesn't exist");
+            return;
+        }
+
+        Intent intent = new Intent(currentActivity, ConversationActivity.class);
+
+        if (userId != null) {
+
+            intent.putExtra(ConversationUIService.USER_ID, userId);
+            intent.putExtra(ConversationUIService.TAKE_ORDER, true);
+
+        }
+        if (userName != null && userName != "") {
+            intent.putExtra(ConversationUIService.DISPLAY_NAME, userName);
+        }
+        currentActivity.startActivity(intent);
+    }
+
+    @ReactMethod
     public void openChatWithGroup(Integer groupId, final Callback callback) {
 
         Activity currentActivity = getCurrentActivity();

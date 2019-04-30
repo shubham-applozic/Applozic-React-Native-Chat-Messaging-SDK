@@ -90,6 +90,21 @@ RCT_EXPORT_METHOD(openChatWithUser:(NSString*)userId)
   
 }
 /**
+ * Open chat with Users and display name
+ *
+ **/
+RCT_EXPORT_METHOD(openChatWithUserName:(NSString*)userId userName:(NSString*)userName)
+{
+  
+  ALChatManager * chatManager = [[ALChatManager alloc] init];
+  ALPushAssist* pushAssistant = [[ALPushAssist alloc] init];
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [chatManager launchChatForUserWithDisplayName:userId withGroupId:nil andwithDisplayName:userName andFromViewController:pushAssistant.topViewController];
+  });
+  
+}
+/**
  * Open chat with Group
  *
  **/
