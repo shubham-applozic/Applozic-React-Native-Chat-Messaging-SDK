@@ -1,6 +1,7 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
     }
 
@@ -13,7 +14,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
 
     defaultConfig {
         minSdkVersion 16
@@ -27,6 +27,7 @@ android {
 }
 
 repositories {
+    google()
     mavenCentral()
     maven {
 
@@ -38,5 +39,5 @@ repositories {
 dependencies {
     compile 'com.facebook.react:react-native:+'
     compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.34'
+    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.44'
 }

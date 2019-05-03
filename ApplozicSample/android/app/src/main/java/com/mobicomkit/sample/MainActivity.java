@@ -1,4 +1,4 @@
-package com.applozicsample;
+package com.mobicomkit.sample;
 
 import com.facebook.react.ReactActivity;
 
