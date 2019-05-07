@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.applozic.mobicomkit.Applozic;
 import com.applozic.mobicomkit.ApplozicClient;
+import com.applozic.mobicomkit.contact.AppContactService;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
@@ -25,6 +26,7 @@ import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActiv
 import com.applozic.mobicommons.file.FileUtils;
 import com.applozic.mobicommons.json.GsonUtils;
 import com.applozic.mobicommons.people.channel.Channel;
+import com.applozic.mobicommons.people.contact.Contact;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -535,6 +537,28 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         }
 
         ApplozicSetting.getInstance(currentActivity).setGalleryFilterOptions(options);
+    }
+
+    @ReactMethod
+    public void addContacts(String contactJson, Callback callback) {
+        Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            return;
+        }
+        try {
+            if (!TextUtils.isEmpty(contactJson)) {
+                AppContactService appContactService = new AppContactService(currentActivity);
+                Contact[] contactList = (Contact[]) GsonUtils.getObjectFromJson(contactJson, Contact[].class);
+                for (Contact contact : contactList) {
+                    appContactService.upsert(contact);
+                }
+                callback.invoke("Success", "Contacts inserted");
+            }
+        } catch (Exception e) {
+            if (callback != null) {
+                callback.invoke("Error", e.getMessage());
+            }
+        }
     }
 
     @Override
