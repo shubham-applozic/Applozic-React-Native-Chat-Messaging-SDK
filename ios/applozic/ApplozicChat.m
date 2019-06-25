@@ -277,6 +277,12 @@ RCT_EXPORT_METHOD(totalUnreadCount:(RCTResponseSenderBlock)callback )
   
 }
 
+RCT_EXPORT_METHOD(isUserLogIn:(RCTResponseSenderBlock)callback)
+{
+    NSString *response = [ALUserDefaultsHandler isLoggedIn] ? @"true" : @"false";
+    return callback(@[response]);
+}
+
 //===================================== Log Out ===================================================
 /**
  *  Logout users
