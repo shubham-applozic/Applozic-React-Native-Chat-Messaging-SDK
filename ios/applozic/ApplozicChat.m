@@ -303,6 +303,11 @@ RCT_EXPORT_METHOD(logoutUser:(RCTResponseSenderBlock)callback)
   
 }
 
+RCT_EXPORT_METHOD(isUserLogIn:(RCTResponseSenderBlock)callback)
+{
+  return callback(@[[ALUserDefaultsHandler isLoggedIn]]);
+}
+
 RCT_EXPORT_METHOD(hideCreateGroupIcon: (BOOL) hide){
   [ALApplozicSettings setGroupOption: !hide];
 } 
