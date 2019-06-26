@@ -475,7 +475,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void isUserLogIn(final Callback successCallback) {
         Activity currentActivity = getCurrentActivity();
         MobiComUserPreference mobiComUserPreference = MobiComUserPreference.getInstance(currentActivity);
-        successCallback.invoke(mobiComUserPreference.isLoggedIn());
+        successCallback.invoke(String.valueOf(mobiComUserPreference.isLoggedIn()));
     }
 
     @ReactMethod
