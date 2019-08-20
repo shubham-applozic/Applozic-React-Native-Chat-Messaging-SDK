@@ -16,7 +16,6 @@ FOUNDATION_EXPORT const unsigned char ApplozicVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Applozic/PublicHeader.h>
 
-
 #import <Applozic/ALRegisterUserClientService.h>
 #import <Applozic/ALContact.h>
 #import <Applozic/ALAudioVideoBaseVC.h>
@@ -48,13 +47,14 @@ FOUNDATION_EXPORT const unsigned char ApplozicVersionString[];
 #import <Applozic/ALUtilityClass.h>
 #import <Applozic/ALNewContactsViewController.h>
 #import <Applozic/Applozic.h>
+#import <Applozic/ALContactMessageCell.h>
+#import <Applozic/ALMyContactMessageCell.h>
 #import <Applozic/ALResponseHandler.h>
 #import <Applozic/ALImagePickerHandler.h>
 #import <Applozic/ALFileMetaInfo.h>
 #import <Applozic/ALNotificationView.h>
 #import <Applozic/DB_CONTACT.h>
 #import <Applozic/ALImageCell.h>
-#import <Applozic/ALConnection.h>
 #import <Applozic/ALBaseViewController.h>
 #import <Applozic/ALConnectionQueueHandler.h>
 #import <Applozic/DB_Message.h>
@@ -70,7 +70,6 @@ FOUNDATION_EXPORT const unsigned char ApplozicVersionString[];
 #import <Applozic/ALContactService.h>
 #import <Applozic/ALUserService.h>
 #import <Applozic/ALCollectionReusableView.h>
-#import <Applozic/ALContactMessageCell.h>
 #import <Applozic/ALCustomCell.h>
 #import <Applozic/ALDocumentsCell.h>
 #import <Applozic/ALGroupCreationViewController.h>
@@ -86,7 +85,6 @@ FOUNDATION_EXPORT const unsigned char ApplozicVersionString[];
 #import <Applozic/ALConversationClientService.h>
 #import <Applozic/ALConversationCreateResponse.h>
 #import <Applozic/ALConversationDBService.h>
-#import <Applozic/ALLogs.h>
 #import <Applozic/ALMQTTConversationService.h>
 #import <Applozic/ALMultipleAttachmentView.h>
 #import <Applozic/ALPushAssist.h>
@@ -106,4 +104,21 @@ FOUNDATION_EXPORT const unsigned char ApplozicVersionString[];
 #import <Applozic/AlChannelInfoModel.h>
 #import <Applozic/AlChannelResponse.h>
 #import <Applozic/AlChannelFeedResponse.h>
-
+#import <Applozic/ALGroupUser.h>
+#import <Applozic/ALLogger.h>
+#import <Applozic/ALChannelMsgCell.h>
+#import <Applozic/ALChannelUser.h>
+#import <Applozic/ALVOIPCell.h>
+#import <Applozic/ALApplicationInfo.h>
+#import <Applozic/MQTTDecoder.h>
+#import <Applozic/MQTTInMemoryPersistence.h>
+#import <Applozic/MQTTLog.h>
+#import <Applozic/MQTTSSLSecurityPolicyDecoder.h>
+#import <Applozic/MQTTSessionManager.h>
+#import <Applozic/MQTTSSLSecurityPolicyEncoder.h>
+#import <Applozic/ALMessageBuilder.h>
+#import <Applozic/ApplozicClient.h>
+#import <Applozic/ALRealTimeUpdate.h>
+#import <Applozic/ALMultimediaData.h>
+#import <Applozic/UIImage+animatedGIF.h>
+#import <Applozic/ALAudioSession.h>

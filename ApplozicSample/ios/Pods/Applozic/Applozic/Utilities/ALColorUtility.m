@@ -40,11 +40,48 @@
     return colorFromHex;
 }
 
-+ (UIColor *)getColorForAlphabet:(NSString *)alphabet
++ (UIColor *)getColorForAlphabet:(NSString *)alphabet colorCodes:(NSMutableDictionary *)dictionary
 {
+
+    NSMutableDictionary *colourDictionary = [self getColorCodeWithDictionary:dictionary];
+
+    if(!alphabet || [alphabet isEqualToString:@""])
+    {
+        return [UIColor lightGrayColor];
+    }
+   
+    UIColor * colour;
+    @try
+    {
+        NSString * firstLetter = [[alphabet substringToIndex:1] uppercaseString];
+        colour = [self colorWithHexString:[colourDictionary valueForKey:firstLetter]];
+        
+        if(!colour)
+        {
+            NSArray * keyArray = [colourDictionary allKeys];
+            NSUInteger randomIndex = random()% [keyArray count];
+            NSString * colorKey = [keyArray objectAtIndex:randomIndex];
+            colour = [self colorWithHexString:[colourDictionary valueForKey:colorKey]];
+        }
+    }
+    @catch(NSException *ex)
+    {
+        ALSLog(ALLoggerSeverityInfo, @"ALPHABET = ' %@ ' && EXPCEPTION :: %@", alphabet, ex);
+        colour = [UIColor lightGrayColor];
+    }
     
+    return colour;
+}
+
+
++ (NSMutableDictionary *)getColorCodeWithDictionary:(NSMutableDictionary *)dictionary
+{
+    if(dictionary){
+        return dictionary;
+    }
+
     NSMutableDictionary *colourDictionary = [[NSMutableDictionary alloc] init];
-    
+
     [colourDictionary setObject:@"#4FC3F7" forKey:@"A"];
     [colourDictionary setObject:@"#F06292" forKey:@"B"];
     [colourDictionary setObject:@"#BA68C8" forKey:@"C"];
@@ -71,34 +108,21 @@
     [colourDictionary setObject:@"#80DEEA" forKey:@"X"];
     [colourDictionary setObject:@"#BCAAA4" forKey:@"Y"];
     [colourDictionary setObject:@"#AED581" forKey:@"Z"];
-    
-    if(!alphabet || [alphabet isEqualToString:@""])
-    {
-        return [UIColor lightGrayColor];
-    }
-   
-    UIColor * colour;
-    @try
-    {
-        NSString * firstLetter = [[alphabet substringToIndex:1] uppercaseString];
-        colour = [self colorWithHexString:[colourDictionary valueForKey:firstLetter]];
-        
-        if(!colour)
-        {
-            NSArray * keyArray = [colourDictionary allKeys];
-            NSUInteger randomIndex = random()% [keyArray count];
-            NSString * colorKey = [keyArray objectAtIndex:randomIndex];
-            colour = [self colorWithHexString:[colourDictionary valueForKey:colorKey]];
-        }
-    }
-    @catch(NSException *ex)
-    {
-        NSLog(@"ALPHABET = ' %@ ' && EXPCEPTION :: %@", alphabet, ex);
-        colour = [UIColor lightGrayColor];
-    }
-    
-    return colour;
+    [colourDictionary setObject:@"#E6B0AA" forKey:@"0"];
+    [colourDictionary setObject:@"#F1948A" forKey:@"1"];
+    [colourDictionary setObject:@"#C39BD3" forKey:@"2"];
+    [colourDictionary setObject:@"#7FB3D5" forKey:@"3"];
+    [colourDictionary setObject:@"#5DADE2" forKey:@"4"];
+    [colourDictionary setObject:@"#76D7C4" forKey:@"5"];
+    [colourDictionary setObject:@"#7DCEA0" forKey:@"6"];
+    [colourDictionary setObject:@"#73C6B6" forKey:@"7"];
+    [colourDictionary setObject:@"#7DCEA0" forKey:@"8"];
+    [colourDictionary setObject:@"#F9E79F" forKey:@"9"];
+
+    return colourDictionary;
+
 }
+
 
 +(NSString *)getAlphabetForProfileImage:(NSString *)actualName
 {

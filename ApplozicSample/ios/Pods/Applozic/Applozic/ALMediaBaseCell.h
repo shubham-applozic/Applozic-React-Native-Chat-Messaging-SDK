@@ -27,23 +27,29 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "ALUIConstant.h"
 #import "MessageReplyView.h"
+#import "ALApplozicSettings.h"
+#import "ALChannel.h"
+#import "ALContact.h"
+#import <AVKit/AVKit.h>
 
 @protocol ALMediaBaseCellDelegate <NSObject>
 
 -(void) downloadRetryButtonActionDelegate:(int) index andMessage:(ALMessage *) message;
+-(void) thumbnailDownload:(NSString *) key;
 -(void) stopDownloadForIndex:(int)index andMessage:(ALMessage *)message;
 -(void) showFullScreen:(UIViewController *) fullView;
 -(void) deleteMessageFromView:(ALMessage *)message;
 -(void) loadViewForMedia:(UIViewController *)launch;
--(void) showVideoFullScreen:(MPMoviePlayerViewController *)fullView;
+-(void) showVideoFullScreen:(AVPlayerViewController *)fullView;
 -(void) showSuggestionView:(NSURL *)fileURL andFrame:(CGRect)frame;
 -(void) showAnimationForMsgInfo:(BOOL)flag;
 -(void) processTapGesture:(ALMessage *)alMessage;
 -(void) processForwardMessage:(ALMessage *) message;
-
+-(void) handleTapGestureForKeyBoard;
 
 @optional
 
+-(void)openUserChat:(ALMessage *)alMessage;
 -(void) processUserChatView:(ALMessage *)alMessage;
 -(void) processMessageReply:(ALMessage *) message;
 -(void) scrollToReplyMessage:(ALMessage *)alMessage;
@@ -64,9 +70,9 @@
 @property (nonatomic, strong) UITextView *imageWithText;
 @property (retain, nonatomic) UILabel *mChannelMemberName;
 @property (retain, retain) UIView * replyParentView;
+@property (strong, nonatomic)  NSMutableDictionary *alphabetiColorCodesDictionary;
 
-
-@property (nonatomic, assign) id <ALMediaBaseCellDelegate> delegate;     
+@property (nonatomic, assign) id <ALMediaBaseCellDelegate> delegate;
 
 -(instancetype)populateCell:(ALMessage*) alMessage viewSize:(CGSize)viewSize;
 @property (retain, nonatomic) MessageReplyView * replyUIView;
@@ -80,5 +86,8 @@
 @property (nonatomic, strong) UILabel *sizeLabel;
 @property (nonatomic, strong) UIView *downloadRetryView;
 -(BOOL)isMessageReplyMenuEnabled:(SEL) action;
+
+@property (nonatomic, strong) ALChannel * channel;
+@property (nonatomic, strong) ALContact * contact;
 
 @end

@@ -12,6 +12,8 @@
 #import "ALUserDetail.h"
 #import "ALUserBlocked.h"
 #import "ALContactsResponse.h"
+#import "ALRealTimeUpdate.h"
+
 
 @interface ALContactDBService : NSObject
 
@@ -26,6 +28,8 @@
 -(BOOL)updateContact:(ALContact *)contact;
 
 -(BOOL)addListOfContacts:(NSArray *)contacts;
+
+-(void)addListOfContactsInBackground:(NSArray *)contacts completionHandler:(void(^)(BOOL))response;
 
 -(BOOL)addContact:(ALContact *)userContact;
 
@@ -57,6 +61,7 @@
 -(NSMutableArray *)getAllContactsFromDB;
 -(NSNumber *)getOverallUnreadCountForContactsFromDB;
 -(BOOL)isUserDeleted:(NSString *)userId;
--(NSMutableDictionary *)getMetaDataDictionary:(NSString *)string;
-
+-(void)addUserDetailsWithoutUnreadCount:(NSMutableArray *)userDetails;
+-(ALUserDetail *)updateMuteAfterTime:(NSNumber*)notificationAfterTime andUserId:(NSString*)userId;
+-(NSMutableArray *)addMuteUserDetailsWithDelegate:(id<ApplozicUpdatesDelegate>)delegate withNSDictionary :(NSDictionary *)jsonNSDictionary;
 @end

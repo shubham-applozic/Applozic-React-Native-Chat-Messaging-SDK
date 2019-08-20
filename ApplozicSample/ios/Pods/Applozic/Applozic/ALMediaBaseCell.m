@@ -94,7 +94,7 @@
         [self.contentView addSubview:self.mDowloadRetryButton];
 
         self.imageWithText = [[UITextView alloc] init];
-        [self.imageWithText setFont:[UIFont fontWithName:[ALApplozicSettings getFontFace] size:MESSAGE_TEXT_SIZE]];
+        [self.imageWithText setFont:[UIFont fontWithName:[ALApplozicSettings getFontFace] size:[ALApplozicSettings getChatCellTextFontSize]]];
         self.imageWithText.editable = NO;
         self.imageWithText.scrollEnabled = NO;
         self.imageWithText.textContainerInset = UIEdgeInsetsZero;
@@ -107,16 +107,7 @@
         self.mChannelMemberName.backgroundColor = [UIColor clearColor];
         [self.contentView addSubview:self.mChannelMemberName];
         
-        
-        UIMenuItem * msgInfo = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"infoOptionTitle", nil,[NSBundle mainBundle], @"Info", @"") action:@selector(msgInfo:)];
-        
-        UIMenuItem * messageForward = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"forwardOptionTitle", nil,[NSBundle mainBundle], @"Forward", @"") action:@selector(processForwardMessage:)];
-        
-        UIMenuItem * messageReply = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"replyOptionTitle", nil,[NSBundle mainBundle], @"Reply", @"") action:@selector(processMessageReply:)];
-        
-    
-        [[UIMenuController sharedMenuController] setMenuItems: @[msgInfo,messageReply,messageForward]];
-        [[UIMenuController sharedMenuController] update];
+
 
 
         if (IS_IPHONE_5)
@@ -147,7 +138,6 @@
             self.imageWithText.transform = CGAffineTransformMakeScale(-1.0, 1.0);
             self.mChannelMemberName.transform = CGAffineTransformMakeScale(-1.0, 1.0);
         }
-
         
     }
     
@@ -215,7 +205,7 @@
     
     self.replyParentView.hidden=NO;
     
-    NSLog(@"processReplyOfChat called");
+    ALSLog(ALLoggerSeverityInfo, @"processReplyOfChat called");
     self.replyUIView = [[MessageReplyView alloc] init];
     
     [self.replyUIView setBackgroundColor:[UIColor clearColor]];
@@ -226,12 +216,12 @@
     if( (self.mBubleImageView.frame.size.width) > replyWidthRequired )
     {
         replyWidthRequired = (self.mBubleImageView.frame.size.width);
-        NSLog(@" replyWidthRequired is less from parent one : %d", replyWidthRequired);
+        ALSLog(ALLoggerSeverityInfo, @"replyWidthRequired is less from parent one : %f", replyWidthRequired);
     }
     else
     {
         replyWidthRequired = replyWidthRequired;
-        NSLog(@" replyWidthRequired is grater from parent one : %d", replyWidthRequired);
+        ALSLog(ALLoggerSeverityInfo, @"replyWidthRequired is grater from parent one : %f", replyWidthRequired);
         
     }
     
@@ -241,23 +231,23 @@
     if(almessage.groupId && almessage.isReceivedMessage)
     {
         self.replyParentView.frame =
-        CGRectMake( bubbleXposition+2 ,
+        CGRectMake( bubbleXposition ,
                    self.mChannelMemberName.frame.origin.y + self.mChannelMemberName.frame.size.height,
-                   replyWidthRequired+5,
+                   replyWidthRequired-10,
                    60);
         
     }else if(!almessage.groupId & !almessage.isSentMessage  ){
         self.replyParentView.frame =
         CGRectMake( bubbleXposition -1 ,
                    self.mBubleImageView.frame.origin.y+3 ,
-                   replyWidthRequired+5,
+                   replyWidthRequired-10,
                    60);
         
     }else{
         self.replyParentView.frame =
-        CGRectMake( bubbleXposition -5 ,
-                   self.mBubleImageView.frame.origin.y+3 ,
-                   replyWidthRequired+5,
+        CGRectMake( bubbleXposition,
+                   self.mBubleImageView.frame.origin.y +3,
+                   replyWidthRequired-10,
                    60);
         
     }
@@ -268,7 +258,7 @@
         [v removeFromSuperview];
     }
     
-    [self.replyParentView setBackgroundColor:[UIColor redColor]];
+    [self.replyParentView setBackgroundColor:[ALApplozicSettings getBackgroundColorForReplyView]];
     [self.replyUIView populateUI:almessage withSuperView:self.replyParentView];
     [self.replyParentView addSubview:self.replyUIView];
 }

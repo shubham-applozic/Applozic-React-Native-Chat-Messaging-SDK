@@ -28,9 +28,12 @@
     }
     else
     {
+        NSArray *errorResponseList = [JSONString valueForKey:@"errorResponse"];
+        if (errorResponseList != nil && errorResponseList.count > 0) {
+            self.errorResponse = errorResponseList.firstObject;
+        }
         return self;
     }
-    
 }
 
 -(void) parseUserDetails:(NSMutableArray * ) userDetailJsonArray {
@@ -38,6 +41,7 @@
     for(NSDictionary *JSONDictionaryObject in userDetailJsonArray)
     {
         ALUserDetail *userDetail = [[ALUserDetail alloc] initWithDictonary:JSONDictionaryObject];
+        userDetail.unreadCount = 0;
         ALContactDBService * contactDB = [ALContactDBService new];
         [contactDB updateUserDetail: userDetail];
     }

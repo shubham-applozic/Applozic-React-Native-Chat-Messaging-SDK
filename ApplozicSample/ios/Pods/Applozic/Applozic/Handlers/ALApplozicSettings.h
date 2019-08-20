@@ -15,6 +15,8 @@
 #define CONVERSATION_TITLE @"com.applozic.userdefault.CONVERSATION_TITLE"
 #define BACK_BUTTON_TITLE @"com.applozic.userdefault.BACK_BUTTON_TITLE"
 #define FONT_FACE @"com.applozic.userdefault.FONT_FACE"
+#define CHAT_CELL_FONT_TEXT_STYLE @"com.applozic.userdefault.CHAT_CELL_FONT_TEXT_STYLE"
+#define CHAT_CHANNEL_CELL_FONT_TEXT_STYLE @"com.applozic.userdefault.CHAT_CHANNEL_CELL_FONT_TEXT_STYLE"
 #define NOTIFICATION_TITLE @"com.applozic.userdefault.NOTIFICATION_TITLE"
 #define IMAGE_COMPRESSION_FACTOR @"com.applozic.userdefault.IMAGE_COMPRESSION_FACTOR"
 #define IMAGE_UPLOAD_MAX_SIZE @"com.applozic.userdefault.IMAGE_UPLOAD_MAX_SIZE"
@@ -26,11 +28,13 @@
 #define FILTER_CONTACT_START_TIME @"com.applozic.userdefault.FILTER_CONTACT_START_TIME"
 #define WALLPAPER_IMAGE @"com.applozic.userdefault.WALLPAPER_IMAGE"
 #define CUSTOM_MSG_BACKGROUND_COLOR @"com.applozic.userdefault.CUSTOM_MSG_BACKGROUND_COLOR"
+#define CUSTOM_MSG_TEXT_COLOR @"com.applozic.userdefault.CUSTOM_MSG_TEXT_COLOR"
 #define ONLINE_CONTACT_LIMIT @"com.applozic.userdefault.ONLINE_CONTACT_LIMIT"
 #define GROUP_EXIT_BUTTON @"com.applozic.userdefault.GROUP_EXIT_BUTTON"
 #define GROUP_MEMBER_ADD_OPTION @"com.applozic.userdefault.GROUP_MEMBER_ADD_OPTION"
 #define GROUP_MEMBER_REMOVE_OPTION @"com.applozic.userdefault.GROUP_MEMBER_REMOVE_OPTION"
 #define THIRD_PARTY_VC_NAME @"com.applozic.userdefault.THIRD_PARTY_VC_NAME"
+#define THIRD_PARTY_DETAIL_VC_NOTIFICATION @"com.applozic.userdefault.THIRD_PARTY_DETAIL_VC_NOTIFICATION"
 #define CONTEXTUAL_CHAT_OPTION @"com.applozic.userdefault.CONTEXTUAL_CHAT_OPTION"
 #define USER_CALL_OPTION @"com.applozic.userdefault.USER_CALL_OPTION"
 #define SEND_BUTTON_BG_COLOR @"com.applozic.userdefault.SEND_BUTTON_BG_COLOR"
@@ -84,21 +88,87 @@
 #define SWIFT_FRAMEWORK @"com.applozic.userfefault.SWIFT_FRAMEWORK"
 #define DEDICATED_SERVER @"com.applozic.userfefault.DEDICATED_SERVER"
 #define HIDE_ATTACHMENT_OPTION @"com.applozic.HIDE_ATTACHMENT_OPTIONS"
-#define CUSTOM_STORAGE @"com.applozic.userdefault.CUSTOM_STORAGE"
+#define S3_STORAGE_SERVICE @"com.applozic.userdefault.S3_STORAGE_SERVICE"
 #define DEFAULT_GROUP_TYPE @"com.applozic.DEFAULT_GROUP_TYPE"
 #define CONTACTS_GROUP_ID_LIST @"com.applozic.userdefault.CONTACTS_GROUP_ID_LIST"
 #define SAVE_VIDEOS_TO_GALLERY @"com.applozic.userdefault.SAVE_VIDEOS_TO_GALLERY"
 #define ENABLE_QUICK_AUDIO_RECORDING @"com.applozic.userdefault.ENABLE_QUICK_AUDIO_RECORDING"
 #define AL_USER_ROLE_NAME @"com.applozic.userdefault.AL_USER_ROLE_NAME"
+#define AL_GROUP_CONVEERSATION_CLOSE @"com.applozic.userdefault.AL_GROUP_CONVEERSATION_CLOSE"
+#define DROP_IN_SHADOW_IN_NAVIGATION_BAR @"com.applozic.userdefault.DROP_IN_SHADOW_IN_NAVIGATION_BAR"
+#define APPLOZIC_LOCALIZABLE @"com.applozic.userdefault.APPLOZIC_LOCALIZABLE"
+#define AL_CATEGORY_NAME @"com.applozic.userdefault.AL_CATEGORY_NAME"
+#define DELETE_CONVERSATION_OPTION @"com.applozic.userdefault.DELETE_CONVERSATION_OPTION"
+#define GOOGLE_CLOUD_SERVICE_ENABLE @"com.applozic.userdefault.GOOGLE_CLOUD_SERVICE_ENABLE"
+#define TEMPLATE_MESSAGES @"com.applozic.TEMPLATE_MESSAGES"
+#define TEMPLATE_MESSAGE_VIEW @"com.applozic.TEMPLATE_MESSAGE_VIEW"
+#define AL_CONTACT_SEARCH @"com.applozic.AL_CONTACT_SEARCH"
+#define CHANNEL_MEMBER_INFO_IN_SUBTITLE @"com.applozic.CHANNEL_MEMBER_INFO_IN_SUBTITLE"
+
+static NSString *const TABBAR_BACKGROUND_COLOUR = @"com.applozic.TABBAR_BACKGROUND_COLOUR";
+static NSString *const TABBAR_SELECTED_ITEM_COLOUR = @"com.applozic.TABBAR_SELECTED_ITEM_COLOUR";
+static NSString *const TABBAR_UNSELECTED_ITEM_COLOUR = @"com.applozic.TABBAR_UNSELECTED_ITEM_COLOUR";
+static NSString *const ATTACHMENT_ITEM_COLOUR = @"com.applozic.ATTACHMENT_ITEM_COLOUR";
+static NSString *const SEND_ITEM_COLOUR = @"com.applozic.SEND_ITEM_COLOUR";
+static NSString *const MESSAGE_SUBTEXT_COLOUR = @"com.applozic.MESSAGE_SUBTEXT_COLOUR";
+static NSString *const MESSAGE_TEXT_COLOUR = @"com.applozic.MESSAGE_TEXT_COLOUR";
+static NSString *const PROFILE_MAIN_COLOUR = @"com.applozic.PROFILE_MAIN_COLOUR";
+static NSString *const PROFILE_SUB_COLOUR = @"com.applozic.PROFILE_SUB_COLOUR";
+static NSString *const NEW_CONTACT_SUB_COLOUR = @"com.applozic.NEW_CONTACT_SUB_COLOUR";
+static NSString *const NEW_CONTACT_MAIN_COLOUR = @"com.applozic.NEW_CONTACT_MAIN_COLOUR";
+static NSString *const NEW_CONTACT_TEXT_COLOUR = @"com.applozic.NEW_CONTACT_TEXT_COLOUR";
+static NSString *const MESSAGES_VIEW_BG_COLOUR = @"com.applozic.MESSAGES_VIEW_BG_COLOUR";
+static NSString *const CHAT_VIEW_BG_COLOUR = @"com.applozic.CHAT_VIEW_BG_COLOUR";
+static NSString *const SEARCHBAR_TINT_COLOUR = @"com.applozic.SEARCHBAR_TINT_COLOUR";
+static NSString *const HIDE_MESSAGES_WITH_METADATA_KEYS = @"com.applozic.HIDE_MESSAGES_WITH_METADATA_KEYS";
+static NSString *const ALDisableMultiSelectGalleryView = @"ALDisableMultiSelectGalleryView";
+static NSString *const AL_5MIN_VIDEO_LIMIT_IN_GALLERY= @"com.applozic.AL_5MIN_VIDEO_LIMIT_IN_GALLERY";
+static NSString *const BACKGROUND_COLOR_FOR_ATTACHMENT_PLUS_ICON =  @"com.applozic.BACKGROUND_COLOR_FOR_ATTACHMENT_PLUS_ICON";
+static NSString *const AL_TEXT_STYLE_FOR_CELL= @"com.applozic.AL_TEXT_STYLE_FOR_CELL";
+static NSString *const AL_CHAT_CELL_FONT_SIZE= @"com.applozic.AL_CHAT_CELL_FONT_SIZE";
+static NSString *const AL_CHANNEL_CELL_FONT_SIZE= @"com.applozic.AL_CHANNEL_CELL_FONT_SIZE";
+static NSString *const AL_BACKGROUND_COLOR_FOR_REPLY_VIEW= @"com.applozic.AL_BACKGROUND_COLOR_FOR_REPLY_VIEW";
+static NSString *const MESSAGE_TEXT_VIEW_COLOR = @"com.applozic.MESSAGE_TEXT_VIEW_COLOR";
+
+//Audio Recording View
+static NSString *const ENABLE_NEW_AUDIO_DESIGN = @"com.applozic.ENABLE_NEW_AUDIO_DESIGN";
+static NSString *const AUDIO_RECORDING_VIEW_BACKGROUND_COLOR = @"com.applozic.AUDIO_RECORDING_VIEW_BACKGROUND_COLOR";
+static NSString *const SLIDE_TO_CANCEL_TEXT_COLOR = @"com.applozic.SLIDE_TO_CANCEL_TEXT_COLOR";
+static NSString *const AUDIO_RECORDING_TEXT_COLOR = @"com.applozic.AUDIO_RECORDING_TEXT_COLOR";
+static NSString *const AUDIO_RECORD_VIEW_FONT = @"com.applozic.AUDIO_VIEW_FONT";
+static NSString *const MEDIA_SELECT_OPTIONS = @"com.applozic.MEDIA_SELECT_OPTIONS";
+static NSString *const AL_CHANNEL_ACTION_MESSAGE_BG_COLOR = @"com.applozic.AL_CHANNEL_ACTION_MESSAGE_BG_COLOR";
+static NSString *const AL_CHANNEL_ACTION_MESSAGE_TEXT_COLOR = @"com.applozic.AL_CHANNEL_ACTION_MESSAGE_TEXT_COLOR";
+static NSString *const AL_ALPHABETIC_COLOR_CODES = @"com.applozic.AL_ALPHABETIC_COLOR_CODES";
+static NSString *const DISABLE_UNBLOCK_FROM_CHAT = @"com.applozic.DISABLE_UNBLOCK_FROM_CHAT";
+static NSString *const AL_SHARE_EXTENSION = @"com.applozic.AL_SHARE_EXTENSION";
+static NSString *const AL_USER_DEFAULTS_GROUP_MIGRATION = @"com.applozic.AL_USER_DEFAULTS_GROUP_MIGRATION";
+static NSString *const AL_USER_DEFAULTS_MIGRATION = @"com.applozic.AL_USER_DEFAULTS_MIGRATION";
+static NSString *const AL_DEFAULT_APP_GROUP = @"group.com.applozic.share";
+static NSString *const AL_DOCUMENT_OPTION = @"com.applozic.AL_DOCUMENT_OPTION";
+static NSString *const AL_SENT_MESSAGE_CONTACT_BUTTON = @"com.applozic.AL_SENT_MESSAGE_CONTACT_BUTTON";
+static NSString *const AL_SENT_CONTACT_MSG_LABEL_COLOR = @"com.applozic.AL_SENT_CONTACT_MSG_LABEL_COLOR";
+static NSString *const AL_RECEIVED_CONTACT_MSG_LABEL_COLOR = @"com.applozic.AL_RECEIVED_CONTACT_MSG_LABEL_COLOR";
+static NSString *const AL_IMAGE_PREVIEW_BACKGROUND_COLOR = @"com.applozic.AL_IMAGE_PREVIEW_BACKGROUND_COLOR";
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 @interface ALApplozicSettings : NSObject
 
-+(void)setFontFace:(NSString *)fontFace;
+@property (strong, nonatomic) NSUserDefaults * userDefaults;
 
+
++(void)setFontFace:(NSString *)fontFace;
 +(NSString *)getFontFace;
+
+// works with font face for iOS 11, uses system font face for iOS 10, being ignored for versions below
++(void)setChatCellFontTextStyle:(NSString *)fontTextStyle;
++(NSString *)getChatCellFontTextStyle;
+
+// works with font face for iOS 11, uses system font face for iOS 10, being ignored for versions below
++(void)setChatChannelCellFontTextStyle:(NSString *)fontTextStyle;
++(NSString *)getChatChannelCellFontTextStyle;
 
 +(void)setUserProfileHidden: (BOOL)flag;
 
@@ -170,6 +240,9 @@
 
 +(UIColor *)getCustomMessageBackgroundColor;
 
++(void)setCustomMessageTextColor:(UIColor *)color;
++(UIColor *)getCustomMessageTextColor;
+
 +(void)setGroupExitOption:(BOOL)option;
 +(BOOL)getGroupExitOption;
 
@@ -184,6 +257,11 @@
 
 +(NSString *)getCustomClassName;
 +(void)setCustomClassName:(NSString *)className;
+
+// When a user taps on title view in ALChatViewController  with this option you can receive notification with name thirdPartyDetailVCNotification with options to show custom group detail VC
+// might be blocked by "setGroupInfoDisabled" and "setReceiverUserProfileOption"
++(BOOL)getOptionToPushNotificationToShowCustomGroupDetalVC;
++(void)setOptionToPushNotificationToShowCustomGroupDetalVC:(BOOL)option;
 
 +(void)setContextualChat:(BOOL)option;
 +(BOOL)getContextualChatOption;
@@ -249,7 +327,7 @@
 +(UIColor *)getStatusBarBGColor;
 +(void)setStatusBarBGColor:(UIColor *)color;
 
-+(UIStatusBarStyle)getStatusBarStyle;            
++(UIStatusBarStyle)getStatusBarStyle;
 +(void)setStatusBarStyle:(UIStatusBarStyle)style;
 
 +(void)setMaxTextViewLines:(int)numberOfLines;
@@ -270,7 +348,7 @@
 +(BOOL)getReceiverUserProfileOption;
 +(void)setReceiverUserProfileOption:(BOOL)flag;
 
-+(float)getCustomMessageFontSize; 
++(float)getCustomMessageFontSize;
 +(void)setCustomMessageFontSize:(float)fontSize;
 
 +(NSString *)getCustomMessageFont;
@@ -291,7 +369,7 @@
 +(void) setContactTypeToFilter:(NSMutableArray*)arrayWithIds;
 +(NSMutableArray*) getContactTypeToFilter;
 
-+(NSString *)getCustomNavigationControllerClassName; 
++(NSString *)getCustomNavigationControllerClassName;
 +(void)setNavigationControllerClassName:(NSString *)className;
 
 +(BOOL)getSubGroupLaunchFlag;
@@ -357,6 +435,12 @@
 +(BOOL)isStorageServiceEnabled;
 +(void)enableStorageService:(BOOL)flag;
 
++(BOOL)isGoogleCloudServiceEnabled;
++(void)enableGoogleCloudService:(BOOL)flag;
+
++(BOOL)isConversationCloseButtonEnabled;
++(void)setConversationCloseButton:(BOOL)flag;
+
 +(void) setHideAttachmentsOption:(NSArray*)array;
 
 +(NSArray*) getHideAttachmentsOption;
@@ -369,9 +453,9 @@
 +(BOOL) isBlockUserOptionHidden;
 +(BOOL) isShareContactOptionHidden;
 +(BOOL) isAttachmentButtonHidden;
-
-+(BOOL)isCustomStorageServiceEnabled;
-+(void)enableCustomStorageService:(BOOL)flag;
++(BOOL) isDocumentOptionHidden;
++(BOOL)isS3StorageServiceEnabled;
++(void)enableS3StorageService:(BOOL)flag;
 +(void) setDefaultGroupType:(NSInteger)type;
 +(NSInteger) getDefaultGroupType;
 +(void) enableSaveVideosToGallery:(BOOL)flag;
@@ -381,5 +465,139 @@
 
 +(void)setUserRoleName:(NSString*)roleName;
 +(NSString*)getUserRoleName;
+
++(void)setDropShadowInNavigationBar:(BOOL)flag;
++(BOOL)isDropShadowInNavigationBarEnabled;
+
++(void)setDeleteConversationOption:(BOOL)flag;
++(BOOL)isDeleteConversationOptionEnabled;
+
++(NSString *)getLocalizableName;
++(void)setLocalizableName:(NSString *)localizableName;
++(void) setTemplateMessages:(NSMutableDictionary*)dictionary;
++(NSMutableDictionary*) getTemplateMessages;
+
++(BOOL)isTemplateMessageEnabled;
++(void)enableTeamplateMessage:(BOOL)flag;
+
++(void)setCategoryName:(NSString*)categoryName;
++(NSString*)getCategoryName;
+
++(BOOL)isContactSearchEnabled;
++(void)enableContactSearch:(BOOL)flag;
+
++(BOOL)isChannelMembersInfoInNavigationBarEnabled;
++(void)showChannelMembersInfoInNavigationBar:(BOOL)flag;
+
++(UIColor *) getTabBarBackgroundColour;
++(void) setTabBarBackgroundColour:(UIColor *)color;
++(UIColor *) getTabBarSelectedItemColour;
++(void) setTabBarSelectedItemColour:(UIColor *)color;
++(UIColor *) getTabBarUnSelectedItemColour;
++(void) setTabBarUnSelectedItemColour:(UIColor *)color;
++(UIColor *) getAttachmentIconColour;
++(void) setAttachmentIconColour:(UIColor *)color;
++(UIColor *) getSendIconColour;
++(void) setSendIconColour:(UIColor *)color;
++(UIColor *) getMessageSubtextColour;
++(void) setMessageSubtextColour:(UIColor *)color;
++(UIColor *) getProfileMainColour;
++(void) setProfileMainColour:(UIColor *)color;
++(UIColor *) getProfileSubColour;
++(void) setProfileSubColour:(UIColor *)color;
++(UIColor *) getNewContactMainColour;
++(void) setNewContactMainColour:(UIColor *)color;
++(UIColor *) getNewContactSubColour;
++(void) setNewContactSubColour:(UIColor *)color;
++(UIColor *) getNewContactTextColour;
++(void) setNewContactTextColour:(UIColor *)color;
++(UIColor *) getMessageListTextColor;
++(void) setMessageListTextColor:(UIColor *)color;
++(UIColor *) getMessagesViewBackgroundColour;
++(void) setMessagesViewBackgroundColour:(UIColor *)color;
++(UIColor *) getChatViewControllerBackgroundColor;
++(void) setChatViewControllerBackgroundColor:(UIColor *)color;
++(UIColor *) getSearchBarTintColour;
++(void) setSearchBarTintColour:(UIColor *)color;
+
++(NSArray *) metadataKeysToHideMessages;
++(void) hideMessagesWithMetadataKeys:(NSArray *)keys;
+
++(BOOL)isMultiSelectGalleryViewDisabled;
++(void)disableMultiSelectGalleryView:(BOOL)enabled;
+
++(BOOL)is5MinVideoLimitInGalleryEnabled;
++(void)enable5MinVideoLimitInGallery:(BOOL)enabled;
+
++(void)setBackgroundColorForAttachmentPlusIcon:(UIColor *)backgroundColor;
++(UIColor *)getBackgroundColorForAttachmentPlusIcon;
++(void) clearAll;
+
++(BOOL)isTextStyleInCellEnabled;
++(void)enableTextStyleCell:(BOOL)enabled;
+
++(void)setChatCellTextFontSize:(float)fontSize;
++(float)getChatCellTextFontSize;
+
++(void)setChannelCellTextFontSize:(float)fontSize;
++(float)getChannelCellTextFontSize;
+
++(void)setBackgroundColorForAudioRecordingView:(UIColor *)backgroundColor;
++(UIColor *)getBackgroundColorForAudioRecordingView;
+
++(void)setColorForSlideToCancelText:(UIColor *)color;
++(UIColor *)getColorForSlideToCancelText;
+
++(void)setColorForAudioRecordingText:(UIColor *)color;
++(UIColor *)getColorForAudioRecordingText;
+
++(void)setFontForAudioView:(NSString *)font;
++(NSString *)getFontForAudioView;
+
++(void)enableNewAudioDesign:(BOOL)enable;
++(BOOL)isNewAudioDesignEnabled;
+
++(void)setBackgroundColorForReplyView:(UIColor *)backgroudColor;
++(UIColor *)getBackgroundColorForReplyView;
+
++(void) setHideMediaSelectOption:(NSMutableArray*)array;
++(NSArray*) getHideMediaSelectOption;
+
++(BOOL) imagesHiddenInGallery;
++(BOOL) videosHiddenInGallery;
+
++(void)setTextColorForMessageTextView:(UIColor *)txtColor;
++(UIColor *)getTextColorForMessageTextView;
+
++(void)setChannelActionMessageBgColor:(UIColor *)txtColor;
++(UIColor *)getChannelActionMessageBgColor;
+
++(void)setChannelActionMessageTextColor:(UIColor *)txtColor;
++(UIColor *)getChannelActionMessageTextColor;
+
++(void)setUserIconFirstNameColorCodes:(NSMutableDictionary*)nsMutableDictionary;
++(NSMutableDictionary*) getUserIconFirstNameColorCodes;
+
+// Enable/Disable unblock users from sendMessageTextView
++(void) setIsUnblockInChatDisabled:(BOOL)flag;
++(BOOL) isUnblockInChatDisabled;
+
++(void)setupSuiteAndMigrate;
++(NSString *)getShareExtentionGroup;
+
++(BOOL)isDocumentOptionEnabled;
++(void)enableDocumentOption:(BOOL)flag;
+
++(BOOL)isAddContactButtonForSenderDisabled;
++(void)disableAddContactButtonForSender;
+
++(void)setColorForSentContactMsgLabel:(UIColor *)sentContactLabelMsgColor;
++(void)setColorForReceivedContactMsgLabel:(UIColor *)receivedMsgColor;
+
++(UIColor *)getSentContactMsgLabelColor;
++(UIColor *)getReceivedContactMsgLabelColor;
+
++(void)setImagePreviewBackgroundColor:(UIColor *)color;
++(UIColor *)getImagePreviewBackgroundColor;
 
 @end

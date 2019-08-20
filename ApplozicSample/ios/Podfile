@@ -6,8 +6,8 @@ target 'ApplozicSample' do
    use_frameworks!
 
   # Pods for ApplozicSample
-    pod 'Applozic', '~>5.0.0'
- 
+    pod 'Applozic', '~>6.14.1'
+
 
   target 'ApplozicSampleTests' do
     inherit! :search_paths

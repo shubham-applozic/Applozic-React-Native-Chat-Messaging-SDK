@@ -8,6 +8,8 @@
 
 #import "MessageListRequest.h"
 #import "ALUserDefaultsHandler.h"
+#import "NSString+Encode.h"
+
 
 #define DEFAULT_PAGE_SIZE @"50";
 #define DEFAULT_START_INDEX @"0"
@@ -29,10 +31,10 @@
     {
         paramString = [NSString stringWithFormat:@"groupId=%@&startIndex=%@&pageSize=%@",self.channelKey,self.startIndex,self.pageSize];
     }else{
-        paramString = [NSString stringWithFormat:@"userId=%@&startIndex=%@&pageSize=%@",self.userId,self.startIndex,self.pageSize];
+        paramString = [NSString stringWithFormat:@"userId=%@&startIndex=%@&pageSize=%@",[self.userId urlEncodeUsingNSUTF8StringEncoding],self.startIndex,self.pageSize];
     }
     
-    if(self.endTimeStamp!=nil && !self.isFirstCall){
+    if(self.endTimeStamp!=nil){
         
         paramString = [paramString stringByAppendingFormat:@"&endTime=%@",self.endTimeStamp.stringValue];
     }
@@ -59,7 +61,11 @@
     
     if(![ALUserDefaultsHandler isServerCallDoneForMSGList:self.userId]){
         paramString = [paramString stringByAppendingString:@"&conversationReq=true"];
-        NSLog(@"adding conversationRequired true :theParamString :%@",paramString );
+        ALSLog(ALLoggerSeverityInfo, @"adding conversationRequired true :theParamString :%@",paramString );
+    }
+    
+    if(self.skipRead){
+        paramString = [paramString stringByAppendingFormat:@"&skipRead=true"];
     }
     
     return paramString;

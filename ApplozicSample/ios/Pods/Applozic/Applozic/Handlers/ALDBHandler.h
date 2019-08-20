@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "DB_Contact.h"
+#import "DB_CONTACT.h"
 
 @class ALContact;
+static NSString *const AL_SQLITE_FILE_NAME = @"AppLozic.sqlite";
 
 @interface ALDBHandler : NSObject
 
@@ -19,6 +20,12 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+
+@property (strong, nonatomic) NSPersistentContainer *persistentContainer;
+
+- (void)savePrivateAndMainContext:(NSManagedObjectContext *)context;
+
+- (NSManagedObjectContext *)privateContext;
 
 - (void)saveContext;
 

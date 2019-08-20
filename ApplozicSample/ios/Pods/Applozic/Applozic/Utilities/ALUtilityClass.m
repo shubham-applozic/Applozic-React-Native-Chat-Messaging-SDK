@@ -49,7 +49,7 @@
     
     if (! jsonData)
     {
-        NSLog(@"Got an error: %@", error);
+        ALSLog(ALLoggerSeverityError, @"Got an error: %@", error);
     }
     else
     {
@@ -218,7 +218,7 @@
 
 
 
-+(void)thirdDisplayNotificationTS:(NSString *)toastMessage andForContactId:(NSString *)contactId withGroupId:(NSNumber*) groupID delegate:(id)delegate
++(void)thirdDisplayNotificationTS:(NSString *)toastMessage andForContactId:(NSString *)contactId withGroupId:(NSNumber*) groupID withConversationId:(NSNumber *)conversationId delegate:(id)delegate
 {
     
     if([ALUserDefaultsHandler getNotificationMode] == NOTIFICATION_DISABLE ){
@@ -260,7 +260,7 @@
                                        callback:^(void){
         
                                            
-                                           [delegate thirdPartyNotificationTap1:contactId withGroupId:groupID];
+                                           [delegate thirdPartyNotificationTap1:contactId withGroupId:groupID withConversationId: conversationId];
 
         
     }buttonTitle:nil buttonCallback:nil atPosition:TSMessageNotificationPositionTop canBeDismissedByUser:YES];
@@ -371,12 +371,12 @@
     
     if([serverdate isEqualToString:todaydate])
     {
-        self.msgdate = NSLocalizedStringWithDefaultValue(@"todayMsgViewText", nil, [NSBundle mainBundle], @"today" , @"");
+        self.msgdate = NSLocalizedStringWithDefaultValue(@"todayMsgViewText", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"today" , @"");
         
     }
     else if ([serverdate isEqualToString:yesterdaydate])
     {
-        self.msgdate = NSLocalizedStringWithDefaultValue(@"yesterdayMsgViewText", nil, [NSBundle mainBundle], @"yesterday" , @"");
+        self.msgdate = NSLocalizedStringWithDefaultValue(@"yesterdayMsgViewText", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"yesterday" , @"");
     }
     
     [format setDateFormat:@"hh:mm a"];
@@ -398,6 +398,7 @@
 {
     AVAsset *asset = [AVAsset assetWithURL:url];
     AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    imageGenerator.appliesPreferredTrackTransform = YES;
     CMTime time = [asset duration];
     time.value = 0;
     CGImageRef imageRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:NULL];
@@ -418,7 +419,7 @@
     AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
         
         if (result != AVAssetImageGeneratorSucceeded) {
-            NSLog(@"couldn't generate thumbnail, error:%@", error);
+            ALSLog(ALLoggerSeverityError, @"couldn't generate thumbnail, error:%@", error);
         }
         
         completion([UIImage imageWithCGImage:im]);
@@ -431,22 +432,29 @@
 
 +(void)showAlertMessage:(NSString *)text andTitle:(NSString *)title
 {
-    UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:title
-                                                         message:text
-                                                        delegate:self
-                                               cancelButtonTitle:nil
-                                               otherButtonTitles:NSLocalizedStringWithDefaultValue(@"okText", nil, [NSBundle mainBundle], @"OK" , @""), nil];
-    
-    [alertView show];
-    
+
+    UIAlertController * uiAlertController = [UIAlertController
+                                 alertControllerWithTitle:title
+                                 message:text
+                                 preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction* okButton = [UIAlertAction
+                                actionWithTitle:NSLocalizedStringWithDefaultValue(@"okText", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"OK" , @"")
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action) {
+
+                                }];
+
+    [uiAlertController addAction:okButton];
+    ALPushAssist *pushAssist = [[ALPushAssist alloc]init];
+    [pushAssist.topViewController.navigationController presentViewController:uiAlertController animated:NO completion:nil];
+
+
 }
 
 +(UIView *)setStatusBarStyle
 {
     UIApplication * app = [UIApplication sharedApplication];
-    [app setStatusBarHidden:NO];
-    [app setStatusBarStyle:[ALApplozicSettings getStatusBarStyle]];
-    
     CGFloat height = app.statusBarFrame.size.height;
     CGFloat width = app.statusBarFrame.size.width;
     UIView *statusBarView = [[UIView alloc] initWithFrame:CGRectMake(0, -height, width, height)];
@@ -471,10 +479,10 @@
 {
     BOOL debug;
     #ifdef DEBUG
-        NSLog(@"DEBUG_MODE");
+        ALSLog(ALLoggerSeverityInfo, @"DEBUG_MODE");
         debug = YES;
     #else
-        NSLog(@"RELEASE_MODE");
+        ALSLog(ALLoggerSeverityInfo, @"RELEASE_MODE");
         debug = NO;
     #endif
     
@@ -489,14 +497,14 @@
 
 +(void)permissionPopUpWithMessage:(NSString *)msgText andViewController:(UIViewController *)viewController
 {
-    UIAlertController * alertController = [UIAlertController alertControllerWithTitle:NSLocalizedStringWithDefaultValue(@"applicationSettings", nil, [NSBundle mainBundle], @"Application Settings" , @"")    message:msgText
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle:NSLocalizedStringWithDefaultValue(@"applicationSettings", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"Application Settings" , @"")    message:msgText
                                                                        preferredStyle:UIAlertControllerStyleAlert];
     
     [ALUtilityClass setAlertControllerFrame:alertController andViewController:viewController];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedStringWithDefaultValue(@"cancelOptionText", nil, [NSBundle mainBundle], @"Cancel" , @"")  style:UIAlertActionStyleCancel handler:nil]];
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedStringWithDefaultValue(@"cancelOptionText", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"Cancel" , @"")  style:UIAlertActionStyleCancel handler:nil]];
     
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedStringWithDefaultValue(@"settings", nil, [NSBundle mainBundle], @"Settings" , @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedStringWithDefaultValue(@"settings", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"Settings" , @"") style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         
         [ALUtilityClass openApplicationSettings];
     }]];
@@ -650,6 +658,91 @@
     return coordinate;
 }
 
++(NSString *)getFileExtensionWithFileName:(NSString *)fileName{
+    NSArray *componentsArray = [fileName componentsSeparatedByString:@"."];
+    return componentsArray.count  > 0 ? [componentsArray lastObject]:nil;
+}
 
++(NSURL *)getDocumentDirectory{
+
+    return  [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
++(NSURL *)getAppsGroupDirectory{
+
+    NSURL * urlForDocumentsDirectory;
+    NSString * shareExtentionGroupName =  [ALApplozicSettings getShareExtentionGroup];
+    if(shareExtentionGroupName){
+        urlForDocumentsDirectory =  [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:shareExtentionGroupName];
+    }
+    return urlForDocumentsDirectory;
+}
+
++(NSURL *)getApplicationDirectoryWithFilePath:(NSString*) path {
+
+    NSURL * directory  =   [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    directory = [directory URLByAppendingPathComponent:path];
+    return directory;
+}
+
++(NSURL *)getAppsGroupDirectoryWithFilePath:(NSString*) path {
+
+    NSURL * urlForDocumentsDirectory = self. getAppsGroupDirectory;
+    if(urlForDocumentsDirectory){
+        urlForDocumentsDirectory = [urlForDocumentsDirectory URLByAppendingPathComponent:path];
+    }
+    return urlForDocumentsDirectory;
+}
+
++ (NSData *)compressImage:(NSData *) data {
+    float compressRatio;
+    switch (data.length) {
+        case 0 ...  10 * 1024 * 1024:
+            return data;
+        case (10 * 1024 * 1024 + 1) ... 50 * 1024 * 1024:
+            compressRatio = 0.5; //50%
+            break;
+        default:
+            compressRatio = 0.1; //10%;
+    }
+    UIImage *image = [[UIImage alloc] initWithData: data];
+    float actualHeight = image.size.height;
+    float actualWidth = image.size.width;
+    float maxHeight = 300.0;
+    float maxWidth = 400.0;
+    float imgRatio = actualWidth / actualHeight;
+    float maxRatio = maxWidth / maxHeight;
+
+    if (actualHeight > maxHeight || actualWidth > maxWidth)
+    {
+        if(imgRatio < maxRatio)
+        {
+            //adjust width according to maxHeight
+            imgRatio = maxHeight / actualHeight;
+            actualWidth = imgRatio * actualWidth;
+            actualHeight = maxHeight;
+        }
+        else if(imgRatio > maxRatio)
+        {
+            //adjust height according to maxWidth
+            imgRatio = maxWidth / actualWidth;
+            actualHeight = imgRatio * actualHeight;
+            actualWidth = maxWidth;
+        }
+        else
+        {
+            actualHeight = maxHeight;
+            actualWidth = maxWidth;
+        }
+    }
+
+    CGRect rect = CGRectMake(0.0, 0.0, actualWidth, actualHeight);
+    UIGraphicsBeginImageContext(rect.size);
+    [image drawInRect:rect];
+    UIImage *img = UIGraphicsGetImageFromCurrentImageContext();
+    NSData *imageData = UIImageJPEGRepresentation(img, compressRatio);
+    UIGraphicsEndImageContext();
+    return imageData;
+}
 
 @end

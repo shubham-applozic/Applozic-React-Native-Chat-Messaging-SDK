@@ -13,6 +13,11 @@
 
 #define CHANNEL_SPECIAL_CASE 7
 #define CHANNEL_DEFAULT_MUTE @"MUTE"
+#define CHANNEL_CONVERSATION_STATUS @"CONVERSATION_STATUS"
+
+static NSString *const AL_CATEGORY = @"AL_CATEGORY";
+static NSString * const AL_CONTEXT_BASED_CHAT = @"AL_CONTEXT_BASED_CHAT";
+static NSString * const CONVERSATION_ASSIGNEE = @"CONVERSATION_ASSIGNEE";
 
 /*********************
  type = 7 SPECIAL CASE
@@ -29,9 +34,15 @@ typedef enum
     OPEN = 6,
     GROUP_OF_TWO = 7,
     CONTACT_GROUP = 9,
+    SUPPORT_GROUP = 10,
     BROADCAST_ONE_BY_ONE = 106
 } CHANNEL_TYPE;
 
+typedef enum {
+    ALL_CONVERSATION = 0,
+    ASSIGNED_CONVERSATION = 1,
+    CLOSED_CONVERSATION = 3
+} CONVERSATION_CATEGORY;
 
 @interface ALChannel : ALJson
 
@@ -55,12 +66,21 @@ typedef enum
 @property (nonatomic, strong) NSNumber * notificationAfterTime;
 @property (nonatomic, strong) NSNumber * deletedAtTime;
 @property (nonatomic, strong) NSMutableDictionary * metadata;
+/// This is used to categorize the channel based on the metadata value for `CONVERSATION_CATEGORY`
+@property (nonatomic) short category;
 
 -(id)initWithDictonary:(NSDictionary *)messageDictonary;
 -(void)parseMessage:(id) messageJson;
 -(NSNumber *)getChannelMemberParentKey:(NSString *)userId;
 -(BOOL) isNotificationMuted;
+-(BOOL) isConversationClosed;
+-(BOOL) isContextBasedChat;
+-(BOOL) isBroadcastGroup;
 -(NSString*)getReceiverIdInGroupOfTwo;
+
 -(NSMutableDictionary *)getMetaDataDictionary:(NSString *)string;
+-(BOOL)isPartOfCategory:(NSString*)category;
+
++(CONVERSATION_CATEGORY)getConversationCategory:(NSDictionary *)metadata;
 
 @end

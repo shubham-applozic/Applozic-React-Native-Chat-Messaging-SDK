@@ -9,6 +9,9 @@
 #import <CoreData/NSManagedObject.h>
 #import "ALJson.h"
 #import "ALFileMetaInfo.h"
+#import "ALApplozicSettings.h"
+#import "ALMessageBuilder.h"
+#import "ALConstant.h"
 
 #define ALMESSAGE_CONTENT_DEFAULT 0
 #define ALMESSAGE_CONTENT_ATTACHMENT 1
@@ -27,6 +30,7 @@
 #define AL_MESSAGE_REPLY_KEY @"AL_REPLY"
 #define OUT_BOX @"5"
 #define IN_BOX  @"4"
+
 
 typedef enum {
     AL_NOT_A_REPLY,
@@ -102,7 +106,6 @@ typedef enum {
 
 @property (nonatomic,copy)NSNumber* messageReplyType;
 
-
 -(NSString *)getCreatedAtTime:(BOOL)today;
 
 -(id)initWithDictonary:(NSDictionary*)messageDictonary;
@@ -111,7 +114,6 @@ typedef enum {
 -(BOOL)isUploadRequire;
 -(BOOL)isHiddenMessage;
 -(BOOL)isVOIPNotificationMessage;
-
 
 -(NSString *)getCreatedAtTimeChat:(BOOL)today;
 -(NSNumber *)getGroupId;
@@ -122,6 +124,7 @@ typedef enum {
 -(BOOL)isPushNotificationMessage;
 -(BOOL)isMessageCategoryHidden;
 -(ALReplyType)getReplyType;
+-(BOOL)isToIgnoreUnreadCountIncrement;
 
 -(BOOL)isAReplyMessage;
 
@@ -130,10 +133,15 @@ typedef enum {
 
 -(BOOL)isLocationMessage;
 -(BOOL)isContactMessage;
+-(BOOL)isChannelContentTypeMessage;
 -(BOOL)isDocumentMessage;
-
+-(BOOL)isSilentNotification;
 
 @property (nonatomic,assign) BOOL deleted;
 @property (nonatomic, assign) BOOL msgHidden;
+- (instancetype)initWithBuilder:(ALMessageBuilder *)builder ;
++ (instancetype)build:(void (^)(ALMessageBuilder *))builder ;
+-(BOOL)isNotificationDisabled;
+-(BOOL)isLinkMessage;
 
 @end

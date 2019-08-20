@@ -21,7 +21,7 @@
 #import "ALMessageService.h"
 #import "ALMessageInfoViewController.h"
 #import "ALChatViewController.h"
-
+#import "ALMessageClientService.h"
 
 #define BUBBLE_PADDING_X 13
 #define BUBBLE_PADDING_X_OUTBOX 60
@@ -111,6 +111,10 @@
         [self.sizeLabel setTextColor:[UIColor whiteColor]];
         [self.contentView addSubview:self.sizeLabel];
         
+        UITapGestureRecognizer * menuTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(proccessTapForMenu:)];
+        [self.contentView addGestureRecognizer:menuTapGesture];
+
+        
     }
     return self;
 }
@@ -140,7 +144,12 @@
     
     [self.replyUIView removeFromSuperview];
     
-    if([alMessage.type isEqualToString:@MT_INBOX_CONSTANT])
+    UITapGestureRecognizer *tapForOpenChat = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(processOpenChat)];
+    tapForOpenChat.numberOfTapsRequired = 1;
+    [self.mUserProfileImageView setUserInteractionEnabled:YES];
+    [self.mUserProfileImageView addGestureRecognizer:tapForOpenChat];
+    
+    if([alMessage isReceivedMessage])
     {
         [self.mUserProfileImageView setFrame:CGRectMake(USER_PROFILE_PADDING_X, 0, USER_PROFILE_WIDTH, USER_PROFILE_HEIGHT)];
         
@@ -166,13 +175,13 @@
         {
             [self.mChannelMemberName setText:receiverName];
             [self.mChannelMemberName setHidden:NO];
-            [self.mChannelMemberName setTextColor: [ALColorUtility getColorForAlphabet:receiverName]];
+            [self.mChannelMemberName setTextColor: [ALColorUtility getColorForAlphabet:receiverName colorCodes:self.alphabetiColorCodesDictionary]];
             
             
             self.mChannelMemberName.frame = CGRectMake(self.mBubleImageView.frame.origin.x + CHANNEL_PADDING_X,
                                                        self.mBubleImageView.frame.origin.y + CHANNEL_PADDING_Y,
-                                                       self.mBubleImageView.frame.size.width +
-                                                       CHANNEL_PADDING_WIDTH, CHANNEL_PADDING_HEIGHT);
+                                                       self.mBubleImageView.frame.size.width
+                                                       , CHANNEL_PADDING_HEIGHT);
             requiredHeight =  requiredHeight + self.mChannelMemberName.frame.size.height;
             imageViewY = imageViewY + self.mChannelMemberName.frame.size.height;
             
@@ -228,14 +237,14 @@
         
         if(alContact.contactImageUrl)
         {
-            NSURL * theUrl1 = [NSURL URLWithString:alContact.contactImageUrl];
-            [self.mUserProfileImageView sd_setImageWithURL:theUrl1 placeholderImage:nil options:SDWebImageRefreshCached];
+            ALMessageClientService * messageClientService = [[ALMessageClientService alloc]init];
+            [messageClientService downloadImageUrlAndSet:alContact.contactImageUrl imageView:self.mUserProfileImageView defaultImage:@"ic_contact_picture_holo_light.png"];
         }
         else
         {
             [self.mUserProfileImageView sd_setImageWithURL:[NSURL URLWithString:@""] placeholderImage:nil options:SDWebImageRefreshCached];
             [self.mNameLabel setHidden:NO];
-            self.mUserProfileImageView.backgroundColor = [ALColorUtility getColorForAlphabet:receiverName];
+            self.mUserProfileImageView.backgroundColor = [ALColorUtility getColorForAlphabet:receiverName colorCodes:self.alphabetiColorCodesDictionary];
         }
         
         if (alMessage.imageFilePath == nil)
@@ -365,8 +374,19 @@
     
     if(alMessage.imageFilePath != nil && alMessage.fileMeta.blobKey)
     {
-        NSString * docDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-        NSString * filePath = [docDir stringByAppendingPathComponent:alMessage.imageFilePath];
+
+        NSURL *documentDirectory =  [ALUtilityClass getApplicationDirectoryWithFilePath:alMessage.imageFilePath];
+        NSString *filePath = documentDirectory.path;
+
+        if([[NSFileManager defaultManager] fileExistsAtPath:filePath]){
+            fileSourceURL = [NSURL fileURLWithPath:documentDirectory.path];
+        }else{
+            NSURL *appGroupDirectory =  [ALUtilityClass getAppsGroupDirectoryWithFilePath:alMessage.imageFilePath];
+
+            if(appGroupDirectory){
+                fileSourceURL = [NSURL fileURLWithPath:appGroupDirectory.path];
+            }
+        }
         [self.mBubleImageView setUserInteractionEnabled:YES];
         [self.mBubleImageView addGestureRecognizer:self.tapper];
         fileSourceURL = [NSURL fileURLWithPath:filePath];
@@ -377,7 +397,7 @@
     
     self.mDateLabel.text = theDate;
     
-    if ([alMessage.type isEqualToString:@MT_OUTBOX_CONSTANT])
+    if ([alMessage isSentMessage] && ((self.channel && self.channel.type != OPEN) || self.contact))
     {
         self.mMessageStatusImageView.hidden = NO;
         NSString * imageName;
@@ -408,15 +428,33 @@
         self.mMessageStatusImageView.image = [ALUtilityClass getImageFromFramworkBundle:imageName];
     }
     
-    UIMenuItem * messageForward = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"forwardOptionTitle", nil,[NSBundle mainBundle], @"Forward", @"") action:@selector(messageForward:)];
-    UIMenuItem * messageReply = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"replyOptionTitle", nil,[NSBundle mainBundle], @"Reply", @"") action:@selector(messageReply:)];
-    
-    
-    [[UIMenuController sharedMenuController] setMenuItems: @[messageForward,messageReply]];
-    [[UIMenuController sharedMenuController] update];
 
     
     return self;
+}
+
+#pragma mark - Menu option tap Method -
+
+-(void) proccessTapForMenu:(id)tap{
+
+    [self processKeyBoardHideTap];
+
+    UIMenuItem * messageForward = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"forwardOptionTitle", [ALApplozicSettings getLocalizableName],[NSBundle mainBundle], @"Forward", @"") action:@selector(messageForward:)];
+    UIMenuItem * messageReply = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"replyOptionTitle", [ALApplozicSettings getLocalizableName],[NSBundle mainBundle], @"Reply", @"") action:@selector(messageReply:)];
+
+    if ([self.mMessage.type isEqualToString:@MT_INBOX_CONSTANT]){
+
+        [[UIMenuController sharedMenuController] setMenuItems: @[messageForward,messageReply]];
+
+    }else if ([self.mMessage.type isEqualToString:@MT_OUTBOX_CONSTANT]){
+
+
+        UIMenuItem * msgInfo = [[UIMenuItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"infoOptionTitle", [ALApplozicSettings getLocalizableName],[NSBundle mainBundle], @"Info", @"") action:@selector(msgInfo:)];
+
+        [[UIMenuController sharedMenuController] setMenuItems: @[msgInfo,messageReply,messageForward]];
+    }
+    [[UIMenuController sharedMenuController] update];
+
 }
 
 -(void) addShadowEffects
@@ -528,7 +566,7 @@
     
     
     
-    if([self.mMessage.type isEqualToString:@MT_OUTBOX_CONSTANT] && self.mMessage.groupId)
+    if([self.mMessage isSentMessage] && self.mMessage.groupId)
     {
         return (self.mMessage.isDownloadRequired? (action == @selector(delete:) || action == @selector(msgInfo:)):(action == @selector(delete:)|| action == @selector(msgInfo:)|| [self isMessageReplyMenuEnabled:action] ||  [self isForwardMenuEnabled:action] ));
     }
@@ -538,9 +576,6 @@
                                                                               || [self isMessageReplyMenuEnabled:action]));
 }
 
-
-
-
 -(void) delete:(id)sender
 {
     //UI
@@ -549,18 +584,18 @@
     //serverCall
     [ALMessageService deleteMessage:self.mMessage.key andContactId:self.mMessage.contactIds withCompletion:^(NSString *string, NSError *error) {
         
-        NSLog(@"DELETE MESSAGE ERROR :: %@", error.description);
+        ALSLog(ALLoggerSeverityError, @"DELETE MESSAGE ERROR :: %@", error.description);
     }];
 }
-            
-            
 
 -(void) messageReply:(id)sender
 {
-    NSLog(@"Message forward option is pressed");
+    ALSLog(ALLoggerSeverityInfo, @"Message forward option is pressed");
     [self.delegate processMessageReply:self.mMessage];
     
-}-(void)openUserChatVC
+}
+
+-(void)openUserChatVC
 {
     [self.delegate processUserChatView:self.mMessage];
 }
@@ -585,27 +620,33 @@
         }
     }];
 }
-            
-            
+
 -(void) messageForward:(id)sender
 {
-    NSLog(@"Message forward option is pressed");
+    ALSLog(ALLoggerSeverityInfo, @"Message forward option is pressed");
     [self.delegate processForwardMessage:self.mMessage];
         
 }
 
+-(void) processKeyBoardHideTap
+{
+    [self.delegate handleTapGestureForKeyBoard];
+}
 
 -(BOOL)isForwardMenuEnabled:(SEL) action;
 {
     return ([ALApplozicSettings isForwardOptionEnabled] && action == @selector(messageForward:));
 }
+
 -(BOOL)isMessageReplyMenuEnabled:(SEL) action
 {
-    
-    
     return ([ALApplozicSettings isReplyOptionEnabled] && action == @selector(messageReply:));
 }
 
-
+-(void)processOpenChat
+{
+    [self processKeyBoardHideTap];
+    [self.delegate openUserChat:self.mMessage];
+}
 
 @end

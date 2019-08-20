@@ -207,13 +207,13 @@
     {
         case AVAudioSessionInterruptionTypeBegan:
         {
-            NSLog(@"AUDIO_INTERRUPTION_START : RECORDING_STOPPED");
+            ALSLog(ALLoggerSeverityInfo, @"AUDIO_INTERRUPTION_START : RECORDING_STOPPED");
             [self stopAction];
             break;
         }
         case AVAudioSessionInterruptionTypeEnded:
         {
-            NSLog(@"AUDIO_INTERRUPTION_END");
+            ALSLog(ALLoggerSeverityInfo, @"AUDIO_INTERRUPTION_END");
             [self alertDialog: @"Recording stopped !!!"];
             break;
         }
@@ -224,12 +224,23 @@
 
 -(void)alertDialog:(NSString *)msg
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Message"
-                                                    message: msg
-                                                   delegate: nil
-                                          cancelButtonTitle: @"OK"
-                                          otherButtonTitles: nil];
-    [alert show];
+    
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:@"Message"
+                                 message:msg
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    UIAlertAction* okButtonAction = [UIAlertAction
+                                actionWithTitle:@"OK"
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction * action) {
+                                }];
+    
+    [alert addAction:okButtonAction];
+    
+    [self presentViewController:alert animated:YES completion:nil];
+    
 }
 
 //=====================================================
@@ -246,12 +257,25 @@
 
 -(void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"DONE"
-                                                    message: @"FINISH PLAYING !!!"
-                                                   delegate: nil
-                                          cancelButtonTitle: @"OK"
-                                          otherButtonTitles: nil];
-    [alert show];
+
+    
+    UIAlertController * alert = [UIAlertController
+                                 alertControllerWithTitle:@"DONE"
+                                 message:@"FINISH PLAYING !!!"
+                                 preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    UIAlertAction* alertActionButton = [UIAlertAction
+                                        actionWithTitle:NSLocalizedStringWithDefaultValue(@"okText", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"OK" , @"")
+                                        style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction * action) {
+                                        }];
+    
+    [alert addAction:alertActionButton];
+
+    [self presentViewController:alert animated:YES completion:nil];
+
+    
 }
 
 @end

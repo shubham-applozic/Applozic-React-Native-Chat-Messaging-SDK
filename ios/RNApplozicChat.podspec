@@ -10,12 +10,12 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
   s.author             = { "author" => "adarsh@applozic.com" }
-  s.platform     = :ios, "8.0"
+  s.platform     = :ios, "9.0"
   s.source       = { :git => "https://github.com/AppLozic/Applozic-React-Native-Chat-Messaging-SDK.git", :tag => "master" }
   s.source_files  = "RNApplozicChat/**/*.{h,m}"
   s.requires_arc = true
 
 
   s.dependency "React"
-  s.dependency 'Applozic', '~> 6.9.0'
+  s.dependency 'Applozic', '~> 6.14.1'
 end

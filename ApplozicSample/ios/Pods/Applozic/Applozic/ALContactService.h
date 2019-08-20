@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ALContact.h"
 #import "DB_CONTACT.h"
+#import "ALUserDetail.h"
 
 
 
@@ -28,13 +29,13 @@
 
 -(BOOL)addListOfContacts:(NSArray *)contacts;
 
+-(void)addListOfContactsInBackground:(NSArray *)contacts completionHandler:(void(^)(BOOL))response;
+
 -(BOOL)addContact:(ALContact *)userContact;
 
 - (ALContact *)loadContactByKey:(NSString *) key value:(NSString*) value;
 
 - (ALContact *)loadOrAddContactByKeyWithDisplayName:(NSString *) contactId value:(NSString*) displayName;
-
-- (void) insertInitialContacts;
 
 -(BOOL)setUnreadCountInDB:(ALContact*)contact;
 
@@ -48,4 +49,5 @@
 
 -(BOOL)isUserDeleted:(NSString *)userId;
 
+-(ALUserDetail *)updateMuteAfterTime:(NSNumber*)notificationAfterTime andUserId:(NSString*)userId;
 @end

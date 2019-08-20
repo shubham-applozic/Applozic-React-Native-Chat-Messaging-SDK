@@ -14,6 +14,8 @@
 #import "ALChannelUserX.h"
 #import "ALConversationProxy.h"
 #import "DB_ConversationProxy.h"
+#import "ALApplozicSettings.h"
+#import "ALRealTimeUpdate.h"
 
 @interface ALChannelDBService : NSObject
 
@@ -47,7 +49,9 @@
 
 -(void)updateChannel:(NSNumber *)channelKey andNewName:(NSString *)newName orImageURL:(NSString *)imageURL orChildKeys:(NSMutableArray *)childKeysList isUpdatingMetaData:(BOOL)flag  orChannelUsers:(NSMutableArray *)channelUsers;
 
--(void)processArrayAfterSyncCall:(NSMutableArray *)channelArray;
+-(void)updateChannelMetaData:(NSNumber *)channelKey metaData:(NSMutableDictionary *)newMetaData;
+
+-(void)createChannelsAndUpdateInfo:(NSMutableArray *)channelArray withDelegate:(id<ApplozicUpdatesDelegate>)delegate;
 
 -(NSMutableArray *)getListOfAllUsersInChannel:(NSNumber *)key;
 //New Added...
@@ -62,6 +66,9 @@
 -(BOOL)isChannelLeft:(NSNumber *)groupId;
 
 -(BOOL)isChannelDeleted:(NSNumber *)groupId;
+-(BOOL)isConversaionClosed:(NSNumber *)groupId;
+
+-(BOOL)isAdminBroadcastChannel:(NSNumber *)groupId;
 
 -(void) updateChannelParentKey:(NSNumber *)channelKey
               andWithParentKey:(NSNumber *)channelParentKey isAdding:(BOOL)flag;
@@ -81,21 +88,25 @@
 
 -(void)updateMuteAfterTime:(NSNumber*)notificationAfterTime andChnnelKey:(NSNumber*)channelKey;
 
-
 -(DB_CHANNEL_USER_X *)getChannelUserX:(NSNumber *)channelKey;
 
 -(ALChannelUserX *)loadChannelUserX:(NSNumber *)channelKey;
 
 -(ALChannelUserX *)loadChannelUserXByUserId:(NSNumber *)channelKey andUserId:(NSString *)userId;
 
-
 -(void)updateParentKeyInChannelUserX:(NSNumber *)channelKey andWithParentKey:(NSNumber *)parentKey addUserId :(NSString *) userId;
-
 
 -(void)updateRoleInChannelUserX:(NSNumber *)channelKey andUserId:(NSString *)userId withRoleType:(NSNumber*)role;
 
 -(NSMutableArray *)getListOfAllUsersInChannelByNameForContactsGroup:(NSString *)channelName;
 
 -(DB_CHANNEL *)getContactsGroupChannelByName:(NSString *)channelName;
+-(NSMutableArray *) getGroupUsersInChannel:(NSNumber *)key;
+
+-(void)saveDataInBackgroundWithContext:(NSManagedObjectContext *) nsContext withChannel:(ALChannel *)channel;
+
+-(void)fetchChannelMembersAsyncWithChannelKey:(NSNumber*)channelKey witCompletion:(void(^)(NSMutableArray *membersArray))completion;
+
+-(void) getUserInSupportGroup:(NSNumber *) channelKey withCompletion:(void(^)(NSString *userId)) completion;
 
 @end

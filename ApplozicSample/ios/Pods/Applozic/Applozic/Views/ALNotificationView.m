@@ -23,6 +23,7 @@
 #import "ALGroupDetailViewController.h"
 #import "ALUserProfileVC.h"
 #import "ALUserService.h"
+#import "Applozic.h"
 
 
 @implementation ALNotificationView
@@ -59,19 +60,19 @@
     
     if(alMessage.contentType == ALMESSAGE_CONTENT_LOCATION)
     {
-        return NSLocalizedStringWithDefaultValue(@"shareadLocationText", nil,[NSBundle mainBundle], @"Shared a Location", @"") ;
+        return NSLocalizedStringWithDefaultValue(@"shareadLocationText", [ALApplozicSettings getLocalizableName],[NSBundle mainBundle], @"Shared a Location", @"") ;
     }
     else if(alMessage.contentType == ALMESSAGE_CONTENT_VCARD)
     {
-        return NSLocalizedStringWithDefaultValue(@"shareadContactText", nil,[NSBundle mainBundle], @"Shared a Contact", @"");
+        return NSLocalizedStringWithDefaultValue(@"shareadContactText", [ALApplozicSettings getLocalizableName],[NSBundle mainBundle], @"Shared a Contact", @"");
     }
     else if (alMessage.contentType == ALMESSAGE_CONTENT_CAMERA_RECORDING)
     {
-        return NSLocalizedStringWithDefaultValue(@"shareadVideoText", nil,[NSBundle mainBundle], @"Shared a Video", @"");
+        return NSLocalizedStringWithDefaultValue(@"shareadVideoText", [ALApplozicSettings getLocalizableName],[NSBundle mainBundle], @"Shared a Video", @"");
     }
     else if (alMessage.contentType == ALMESSAGE_CONTENT_AUDIO)
     {
-        return NSLocalizedStringWithDefaultValue(@"shareadAudioText", nil,[NSBundle mainBundle], @"Shared an Audio", @"");
+        return NSLocalizedStringWithDefaultValue(@"shareadAudioText", [ALApplozicSettings getLocalizableName],[NSBundle mainBundle], @"Shared an Audio", @"");
     }
     else if (alMessage.contentType == AV_CALL_CONTENT_THREE)
     {
@@ -80,7 +81,7 @@
     }else if (alMessage.contentType == ALMESSAGE_CONTENT_ATTACHMENT ||
              [alMessage.message isEqualToString:@""] || alMessage.fileMeta != NULL)
     {
-        return NSLocalizedStringWithDefaultValue(@"shareadAttachmentText", nil,[NSBundle mainBundle], @"Shared an Attachment", @"");
+        return NSLocalizedStringWithDefaultValue(@"shareadAttachmentText", [ALApplozicSettings getLocalizableName],[NSBundle mainBundle], @"Shared an Attachment", @"");
     }
     else{
         return alMessage.message;
@@ -129,11 +130,11 @@
 -(void)buildAndShowNotificationWithcompletionHandler:(void (^)(BOOL))handler
 {
 
-    if([ALUserDefaultsHandler getNotificationMode] == NOTIFICATION_DISABLE)
+    if([self.alMessageObject isNotificationDisabled])
     {
         return;
     }
-
+    
     NSString * title; // Title of Notification Banner (Display Name or Group Name)
     NSString * subtitle = self.text; //Message to be shown
 
@@ -226,7 +227,7 @@
 -(void)buildAndShowNotification:(id)delegate
 {
     
-    if([ALUserDefaultsHandler getNotificationMode] == NOTIFICATION_DISABLE )
+    if([self.alMessageObject isNotificationDisabled])
     {
         return;
     }
@@ -288,7 +289,7 @@
     // ** Attachment ** //
     if(self.alMessageObject.contentType == ALMESSAGE_CONTENT_LOCATION)
     {
-        subtitle = NSLocalizedStringWithDefaultValue(@"shareadLocation", nil,[NSBundle mainBundle], @"Shared Location", @"");
+        subtitle = NSLocalizedStringWithDefaultValue(@"shareadLocation", [ALApplozicSettings getLocalizableName],[NSBundle mainBundle], @"Shared Location", @"");
         
     }
     
@@ -321,7 +322,7 @@
                  ALMessagesViewController* class2=(ALMessagesViewController*)delegate;
                  if(self.groupId)
                  {
-                     class2.channelKey = self.groupId; NSLog(@"CLASS %@",class2.channelKey);
+                     class2.channelKey = self.groupId; ALSLog(ALLoggerSeverityInfo, @"CLASS %@",class2.channelKey);
                      //_contactId=self.groupId; CRASH: if you send contactId as NSNumber.
                  }
                  else
@@ -329,8 +330,8 @@
                      class2.channelKey = nil;
                      self.groupId = nil;
                  }
-                 NSLog(@"onTopMessageVC: ContactID %@ and ChannelID %@",self.contactId, self.groupId);
-                 [class2 createDetailChatViewController:_contactId];
+                 ALSLog(ALLoggerSeverityInfo, @"onTopMessageVC: ContactID %@ and ChannelID %@",self.contactId, self.groupId);
+                 [class2 createDetailChatViewControllerWithMessage:self.alMessageObject];
                  self.checkContactId = [NSString stringWithFormat:@"%@",self.contactId];
              }
              else if([delegate isKindOfClass:[ALChatViewController class]] && top.isChatViewOnTop)
@@ -345,7 +346,7 @@
              }
              else if ([delegate isKindOfClass:[ALUserProfileVC class]] && top.isUserProfileVCOnTop)
              {
-                 NSLog(@"OnTop UserProfile VC : ContactID %@ and ChannelID %@",self.contactId, self.groupId);
+                 ALSLog(ALLoggerSeverityInfo, @"OnTop UserProfile VC : ContactID %@ and ChannelID %@",self.contactId, self.groupId);
                  ALUserProfileVC * userProfileVC = (ALUserProfileVC *)delegate;
                  [userProfileVC.tabBarController setSelectedIndex:0];
                  UINavigationController *navVC = (UINavigationController *)userProfileVC.tabBarController.selectedViewController;
@@ -363,7 +364,7 @@
              }
              else if ([delegate isKindOfClass:[ALNewContactsViewController class]] && top.isContactVCOnTop)
              {
-                 NSLog(@"OnTop CONTACT VC : ContactID %@ and ChannelID %@",self.contactId, self.groupId);
+                 ALSLog(ALLoggerSeverityInfo, @"OnTop CONTACT VC : ContactID %@ and ChannelID %@",self.contactId, self.groupId);
                  ALNewContactsViewController *contactVC = (ALNewContactsViewController *)delegate;
                  ALMessagesViewController *msgVC = (ALMessagesViewController *)[contactVC.navigationController.viewControllers objectAtIndex:0];
                  
@@ -390,12 +391,27 @@
              }
              else
              {
-                 NSLog(@"View Already Opened and Notification coming already");
+                //This will come here once the notiifcation clicked from other views for opening the chat screen
+                 
+                 if(top.isChatViewOnTop){
+                     [self updateChatScreen:delegate];
+                 }else{
+                     ALChatLauncher *chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:[ALUserDefaultsHandler getApplicationKey]];
+                     
+                     if(self.groupId){
+                         self.contactId = nil;
+                     }else{
+                         self.groupId = nil;
+                     }
+                     
+                     [chatLauncher launchIndividualChat:self.contactId withGroupId: self.groupId withDisplayName:nil andViewControllerObject:top.topViewController andWithText:nil];
+                 }
+
              }
          }
          @catch (NSException * exp)
          {
-             NSLog(@"ALNotificationView : ON TAP NOTIFICATION EXCEPTION : %@", exp.description);
+             ALSLog(ALLoggerSeverityInfo, @"ALNotificationView : ON TAP NOTIFICATION EXCEPTION : %@", exp.description);
          }
          @finally
          {
@@ -412,7 +428,7 @@
 {
     // Chat View is Opened....
     ALChatViewController * class1 = (ALChatViewController*)delegate;
-    NSLog(@"onTopChatVC: ContactID %@ and ChannelID %@",self.contactId, self.groupId);
+    ALSLog(ALLoggerSeverityInfo, @"onTopChatVC: ContactID %@ and ChannelID %@",self.contactId, self.groupId);
     if(self.groupId){
         [class1 updateChannelSubscribing:class1.channelKey andNewChannel:self.groupId];
         class1.channelKey = self.groupId;
@@ -432,24 +448,24 @@
     else
     {
         class1.conversationId = nil;
-        class1.contactIds=self.contactId;
-        [class1 reloadView];
-        [class1 markConversationRead];
-        [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     }
+    class1.contactIds=self.contactId;
+    [class1 reloadView];
+    [class1 markConversationRead];
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
 }
 
 -(void)showGroupLeftMessage
 {
     [[TSMessageView appearance] setTitleTextColor:[UIColor whiteColor]];
-    [TSMessage showNotificationWithTitle: NSLocalizedStringWithDefaultValue(@"youHaveLeftGroupMesasge", nil, [NSBundle mainBundle], @"You have left this group", @"") type:TSMessageNotificationTypeWarning];
+    [TSMessage showNotificationWithTitle: NSLocalizedStringWithDefaultValue(@"youHaveLeftGroupMesasge", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"You have left this group", @"") type:TSMessageNotificationTypeWarning];
 }
 
 -(void)noDataConnectionNotificationView
 {
     [[TSMessageView appearance] setTitleTextColor:[UIColor whiteColor]];
-    [TSMessage showNotificationWithTitle: NSLocalizedStringWithDefaultValue(@"noInternetMessage", nil, [NSBundle mainBundle], @"No Internet Connectivity", @"")
+    [TSMessage showNotificationWithTitle: NSLocalizedStringWithDefaultValue(@"noInternetMessage", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"No Internet Connectivity", @"")
                                     type:TSMessageNotificationTypeWarning];
 }
 

@@ -30,7 +30,7 @@
     alConversationProxy.topicDetailJson =dbConversation.topicDetailJson;
     alConversationProxy.groupId = dbConversation.groupId;
     alConversationProxy.userId =  dbConversation.userId;
-    NSLog(@" parseMessage  called for conversation proxy topicDetailJson : %@",self.topicDetailJson);
+    ALSLog(ALLoggerSeverityInfo, @" parseMessage  called for conversation proxy topicDetailJson : %@",self.topicDetailJson);
     return alConversationProxy;
 }
 
@@ -47,6 +47,10 @@
 }
 
 -(ALTopicDetail*)getTopicDetail {
+    if(!self.topicDetailJson){
+        return nil;
+    }
+
     NSError *jsonError;
     NSData *objectData = [self.topicDetailJson dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *json = [NSJSONSerialization JSONObjectWithData:objectData

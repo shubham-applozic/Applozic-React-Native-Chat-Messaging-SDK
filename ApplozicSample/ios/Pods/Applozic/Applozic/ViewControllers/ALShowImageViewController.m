@@ -35,8 +35,8 @@
     [self.navigationBar setTintColor:[ALApplozicSettings getColorForNavigation]];
     [self.navigationBar setBarTintColor:[ALApplozicSettings getColorForNavigation]];
     
-    [self.backBarButton setTitle:NSLocalizedStringWithDefaultValue(@"back", nil, [NSBundle mainBundle], @"Back", @"")];
-    self.navigationBar.topItem.title = NSLocalizedStringWithDefaultValue(@"imagePreview", nil, [NSBundle mainBundle], @"Image Preview", @"");
+    [self.backBarButton setTitle:NSLocalizedStringWithDefaultValue(@"back", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"Back", @"")];
+    self.navigationBar.topItem.title = NSLocalizedStringWithDefaultValue(@"imagePreview", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"Image Preview", @"");
     self.navigationBar.titleTextAttributes = @{
                                                NSForegroundColorAttributeName:[ALApplozicSettings getColorForNavigationItem]
                                                };
@@ -51,6 +51,9 @@
     [super viewWillAppear:animated];
     
     [self.imageView setImage:self.image];
+
+    self.view.backgroundColor = [ALApplozicSettings getImagePreviewBackgroundColor];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -67,34 +70,26 @@
 }
 
 - (void) share:(id)sender{
-    
-    NSLog(@"shareButton pressed");
-    
-    //Image iteself
+    ALSLog(ALLoggerSeverityInfo, @"Share button pressed");
     UIImage *imagetoshare = self.image;
-    
-    // Message if associated with image
-    ALMessage * alMessage = self.alMessage;
-    NSString * messageString = alMessage.message;
-    NSLog(@"MSG_STRING :: %@",messageString);
-    
-    NSArray *activityItems = @[imagetoshare];
-    
-    //Custom Activity for Applozic Sharing
-    // set "uiActivityArray" for "applicationActivities:nil" instead of nill to add this fuctionality
-    //    NSArray *uiActivityArray = @[self.alImageActivity];
-    
-    UIActivityViewController *activityVC = [[UIActivityViewController alloc]
-                                            initWithActivityItems:activityItems
-                                            applicationActivities:nil];
-    
-    activityVC.excludedActivityTypes = @[UIActivityTypeAssignToContact,
-                                         UIActivityTypePrint,
-                                         UIActivityTypePostToTwitter,
-                                         UIActivityTypePostToWeibo,
-                                         UIActivityTypeMail];
-    
-    [self presentViewController:activityVC animated:TRUE completion:nil];
+    if(self.image){
+        // Message if associated with image
+        ALMessage * alMessage = self.alMessage;
+        NSString * messageString = alMessage.message;
+        ALSLog(ALLoggerSeverityInfo, @"MSG_STRING :: %@",messageString);
+
+        NSArray *activityItems = @[imagetoshare];
+        UIActivityViewController *activityVC = [[UIActivityViewController alloc]
+                                                initWithActivityItems:activityItems
+                                                applicationActivities:nil];
+        activityVC.excludedActivityTypes = @[UIActivityTypeAssignToContact,
+                                             UIActivityTypePrint,
+                                             UIActivityTypePostToTwitter,
+                                             UIActivityTypePostToWeibo,
+                                             UIActivityTypeMail];
+        activityVC.popoverPresentationController.barButtonItem = self.shareToolBarButton;
+        [self presentViewController:activityVC animated:TRUE completion:nil];
+    }
 }
 
 -(void)showContactsToShareImage
@@ -107,7 +102,7 @@
     
     
     
-    UIBarButtonItem * leftBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"cancelOptionText", nil, [NSBundle mainBundle], @"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismissContactViewControllerWithCompletion:)];
+    UIBarButtonItem * leftBarButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"cancelOptionText", [ALApplozicSettings getLocalizableName], [NSBundle mainBundle], @"Cancel", @"") style:UIBarButtonItemStylePlain target:self action:@selector(dismissContactViewControllerWithCompletion:)];
     
     UINavigationItem * navigationItem = [[UINavigationItem alloc] init];
     navigationItem.leftBarButtonItem = leftBarButton;

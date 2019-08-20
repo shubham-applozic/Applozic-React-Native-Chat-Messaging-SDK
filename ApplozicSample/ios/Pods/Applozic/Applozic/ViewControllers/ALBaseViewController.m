@@ -95,12 +95,12 @@ static CGFloat const sendTextViewCornerRadius = 15.0f;
     }
     
     NSBundle *bundle = [NSBundle mainBundle];
-    NSLog(@":: BUNDLE_NAME :: %@",bundle.bundleIdentifier);
+    ALSLog(ALLoggerSeverityInfo, @":: BUNDLE_NAME :: %@",bundle.bundleIdentifier);
     NSString *path = [bundle pathForResource:@"restrictWords" ofType:@"txt"];
-    NSLog(@":: FILE_PATH :: %@",path);
+    ALSLog(ALLoggerSeverityInfo, @":: FILE_PATH :: %@",path);
     NSError *error = nil;
     NSString *fileString = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
-    NSLog(@"ERROR(IF-ANY) WHILE IMPORT WORD FILE :: %@",error.description);
+    ALSLog(ALLoggerSeverityError, @"ERROR(IF-ANY) WHILE IMPORT WORD FILE :: %@",error.description);
     if (!error)
     {
         self.wordArray = [NSArray arrayWithArray:[fileString componentsSeparatedByString:@","]];
@@ -128,6 +128,8 @@ static CGFloat const sendTextViewCornerRadius = 15.0f;
                                                                                     target:self action:@selector(refreshTable:)];
     
     self.callButton = [[UIBarButtonItem alloc] initWithCustomView:[self customCallButtonView]];
+    self.closeButton = [[UIBarButtonItem alloc] initWithCustomView:[self customCloseButtonView]];
+
     
     if(self.individualLaunch)
     {
@@ -135,6 +137,7 @@ static CGFloat const sendTextViewCornerRadius = 15.0f;
     }
     
     self.navRightBarButtonItems = [NSMutableArray new];
+    
 
     if(![ALApplozicSettings isRefreshButtonHidden])
     {
@@ -186,7 +189,10 @@ static CGFloat const sendTextViewCornerRadius = 15.0f;
     
 //    [self.view insertSubview:self.noConversationLabel belowSubview:self.typingMessageView];
     
-    [self dropShadowInNavigationBar];
+    if([ALApplozicSettings isDropShadowInNavigationBarEnabled])
+    {
+        [self dropShadowInNavigationBar];
+    }
     
 }
 
@@ -361,13 +367,9 @@ static CGFloat const sendTextViewCornerRadius = 15.0f;
 {
     NSString * theAnimationDuration = [self handleKeyboardNotification:notification];
 
-    self.checkBottomConstraint.constant = self.view.frame.size.height - keyboardEndFrame.origin.y + navigationWidth;
-//    self.noConversationLabel.frame = CGRectMake(0,
-//                                                self.typingLabel.frame.origin.y -
-//                                                (self.typingLabel.frame.size.height+10),
-//                                                tempFrame.size.width,
-//                                                tempFrame.size.height);
-    
+    self.checkBottomConstraint.constant = -1 * keyboardEndFrame.size.height +
+    self.bottomLayoutGuide.length;
+
     [UIView animateWithDuration:theAnimationDuration.doubleValue animations:^{
         [self.view layoutIfNeeded];
         [self scrollTableViewToBottomWithAnimation:YES];
@@ -500,8 +502,31 @@ static CGFloat const sendTextViewCornerRadius = 15.0f;
     return view;
 }
 
+-(UIView *)customCloseButtonView
+{
+    UIImageView *imageView = [[UIImageView alloc] initWithImage: [ALUtilityClass getImageFromFramworkBundle:@"ic_clear_white.png"]];
+    [imageView setFrame:CGRectMake(0, 0, 20, 20)];
+    [imageView setTintColor:[UIColor whiteColor]];
+    
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, imageView.frame.size.width, imageView.frame.size.height)];
+    view.bounds = CGRectMake(view.bounds.origin.x, view.bounds.origin.y, view.bounds.size.width, view.bounds.size.height);
+    [view addSubview:imageView];
+    [view setBackgroundColor:[UIColor clearColor]];
+    
+    UITapGestureRecognizer * iconTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeConversation)];
+    iconTap.numberOfTapsRequired = 1;
+    [view addGestureRecognizer:iconTap];
+    
+    return view;
+}
+
+
 -(void)phoneCallMethod {
 
+}
+
+-(void)closeConversation {
+    
 }
 
 -(UIView *)setCustomBackButton
@@ -536,7 +561,7 @@ static CGFloat const sendTextViewCornerRadius = 15.0f;
     [view addGestureRecognizer:backTap];
 
     return view;
-}
+}   
 
 
 @end

@@ -15,6 +15,10 @@
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self  = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+
+    UITapGestureRecognizer * tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(processKeyBoardHideTap)];
+    tapGesture.numberOfTapsRequired = 1;
+    [self.contentView addGestureRecognizer:tapGesture];
     return self;
 }
 
@@ -28,7 +32,7 @@
     [self.mMessageLabel setTextAlignment:NSTextAlignmentCenter];
     [self.mMessageLabel setText:alMessage.message];
     [self.mMessageLabel setBackgroundColor:[UIColor clearColor]];
-    [self.mMessageLabel setTextColor:[UIColor blackColor]];
+    [self.mMessageLabel setTextColor:[ALApplozicSettings getCustomMessageTextColor]];
     [self.mMessageLabel setUserInteractionEnabled:NO];
     
     [self.mDateLabel setHidden:YES];
@@ -60,6 +64,11 @@
                                              theTextSize.height)];
 
     return self;
+}
+
+-(void) processKeyBoardHideTap
+{
+    [self.delegate handleTapGestureForKeyBoard];
 }
 
 @end
