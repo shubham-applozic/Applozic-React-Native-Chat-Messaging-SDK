@@ -1,4 +1,4 @@
-package com.applozic;
+package com.reactlibrary;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.applozic.mobicomkit.Applozic;
 import com.applozic.mobicomkit.ApplozicClient;
-import com.applozic.mobicomkit.contact.AppContactService;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
@@ -26,7 +25,6 @@ import com.applozic.mobicomkit.uiwidgets.conversation.activity.ConversationActiv
 import com.applozic.mobicommons.file.FileUtils;
 import com.applozic.mobicommons.json.GsonUtils;
 import com.applozic.mobicommons.people.channel.Channel;
-import com.applozic.mobicommons.people.contact.Contact;
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -135,29 +133,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             intent.putExtra(ConversationUIService.USER_ID, userId);
             intent.putExtra(ConversationUIService.TAKE_ORDER, true);
 
-        }
-        currentActivity.startActivity(intent);
-    }
-
-    @ReactMethod
-    public void openChatWithUserName(String userId, String userName) {
-        Activity currentActivity = getCurrentActivity();
-
-        if (currentActivity == null) {
-            Log.i("open ChatWithUser  ", "Activity doesn't exist");
-            return;
-        }
-
-        Intent intent = new Intent(currentActivity, ConversationActivity.class);
-
-        if (userId != null) {
-
-            intent.putExtra(ConversationUIService.USER_ID, userId);
-            intent.putExtra(ConversationUIService.TAKE_ORDER, true);
-
-        }
-        if (userName != null && userName != "") {
-            intent.putExtra(ConversationUIService.DISPLAY_NAME, userName);
         }
         currentActivity.startActivity(intent);
     }
@@ -475,7 +450,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void isUserLogIn(final Callback successCallback) {
         Activity currentActivity = getCurrentActivity();
         MobiComUserPreference mobiComUserPreference = MobiComUserPreference.getInstance(currentActivity);
-        successCallback.invoke(String.valueOf(mobiComUserPreference.isLoggedIn()));
+        successCallback.invoke(mobiComUserPreference.isLoggedIn());
     }
 
     @ReactMethod
@@ -537,28 +512,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         }
 
         ApplozicSetting.getInstance(currentActivity).setGalleryFilterOptions(options);
-    }
-
-    @ReactMethod
-    public void addContacts(String contactJson, Callback callback) {
-        Activity currentActivity = getCurrentActivity();
-        if (currentActivity == null) {
-            return;
-        }
-        try {
-            if (!TextUtils.isEmpty(contactJson)) {
-                AppContactService appContactService = new AppContactService(currentActivity);
-                Contact[] contactList = (Contact[]) GsonUtils.getObjectFromJson(contactJson, Contact[].class);
-                for (Contact contact : contactList) {
-                    appContactService.upsert(contact);
-                }
-                callback.invoke("Success", "Contacts inserted");
-            }
-        } catch (Exception e) {
-            if (callback != null) {
-                callback.invoke("Error", e.getMessage());
-            }
-        }
     }
 
     @Override
