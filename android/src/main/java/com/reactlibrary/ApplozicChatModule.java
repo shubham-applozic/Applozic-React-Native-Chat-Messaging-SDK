@@ -8,6 +8,10 @@ import android.util.Log;
 
 import com.applozic.mobicomkit.Applozic;
 import com.applozic.mobicomkit.ApplozicClient;
+import com.applozic.mobicomkit.api.conversation.Message;
+import com.applozic.mobicomkit.api.conversation.MessageBuilder;
+import com.applozic.mobicomkit.exception.ApplozicException;
+import com.applozic.mobicomkit.listners.MediaUploadProgressHandler;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.applozic.mobicomkit.api.account.user.MobiComUserPreference;
@@ -87,7 +91,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
                 } else {
                     String json = GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class);
                     callback.invoke(json, null);
-
                 }
 
             }
@@ -451,6 +454,49 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         Activity currentActivity = getCurrentActivity();
         MobiComUserPreference mobiComUserPreference = MobiComUserPreference.getInstance(currentActivity);
         successCallback.invoke(mobiComUserPreference.isLoggedIn());
+    }
+
+    @ReactMethod
+    public void sendMessage(final String messageJson, final Callback callback) {
+        final Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            callback.invoke("error", "Activity doesn't exists..");
+            return;
+        }
+
+        final Message message = (Message) GsonUtils.getObjectFromJson(messageJson, Message.class);
+
+        if (message == null) {
+            callback.invoke("error", "Unable to parse data to Applozic Message");
+            return;
+        }
+
+        new MessageBuilder(currentActivity).setMessageObject(message).send(new MediaUploadProgressHandler() {
+            @Override
+            public void onUploadStarted(ApplozicException e, String oldMessageKey) {
+
+            }
+
+            @Override
+            public void onProgressUpdate(int percentage, ApplozicException e, String oldMessageKey) {
+
+            }
+
+            @Override
+            public void onCancelled(ApplozicException e, String oldMessageKey) {
+
+            }
+
+            @Override
+            public void onCompleted(ApplozicException e, String oldMessageKey) {
+
+            }
+
+            @Override
+            public void onSent(Message message, String oldMessageKey) {
+                callback.invoke("Message sent", oldMessageKey, GsonUtils.getJsonFromObject(message, Message.class));
+            }
+        });
     }
 
     @ReactMethod

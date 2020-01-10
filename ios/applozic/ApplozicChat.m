@@ -313,6 +313,10 @@ RCT_EXPORT_METHOD(hideCreateGroupIcon: (BOOL) hide){
   [ALApplozicSettings setGroupOption: !hide];
 } 
 
+RCT_EXPORT_METHOD(sendMessage: (nonnull NSString*) messageJson andCallback:(RCTResponseSenderBlock)callback) {
+  return callback(@[@"Error", @"Method not implemented"]);
+}
+
 RCT_EXPORT_METHOD(showOnlyMyContacts: (BOOL) showOnlyMyContacts){
   [ALApplozicSettings setFilterContactsStatus:NO];
 
