@@ -11,6 +11,7 @@ import com.applozic.mobicomkit.ApplozicClient;
 import com.applozic.mobicomkit.api.conversation.Message;
 import com.applozic.mobicomkit.api.conversation.MessageBuilder;
 import com.applozic.mobicomkit.exception.ApplozicException;
+import com.applozic.mobicomkit.contact.AppContactService;
 import com.applozic.mobicomkit.listners.MediaUploadProgressHandler;
 import com.applozic.mobicomkit.uiwidgets.ApplozicSetting;
 import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
@@ -37,6 +38,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.applozic.mobicomkit.feed.AlResponse;
 import com.applozic.mobicomkit.uiwidgets.async.ApplozicChannelRemoveMemberTask;
+import com.applozic.mobicommons.people.contact.Contact;
 
 import java.util.Arrays;
 import java.util.HashMap;
