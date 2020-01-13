@@ -99,7 +99,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
             public void onFailure(RegistrationResponse registrationResponse, Exception exception) {
                 //If any failure in registration the callback  will come here
                 callback.invoke(exception != null ? exception.toString() : "error", registrationResponse != null ? GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class) : "Unknown error occurred");
-
             }
         };
 
@@ -497,6 +496,50 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
                 callback.invoke("Message sent", oldMessageKey, GsonUtils.getJsonFromObject(message, Message.class));
             }
         });
+    }
+
+    @ReactMethod
+    public void addContacts(String contactJson, Callback callback) {
+        Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            return;
+        }
+        try {
+            if (!TextUtils.isEmpty(contactJson)) {
+                AppContactService appContactService = new AppContactService(currentActivity);
+                Contact[] contactList = (Contact[]) GsonUtils.getObjectFromJson(contactJson, Contact[].class);
+                for (Contact contact : contactList) {
+                    appContactService.upsert(contact);
+                }
+                callback.invoke("Success", "Contacts inserted");
+            }
+        } catch (Exception e) {
+            if (callback != null) {
+                callback.invoke("Error", e.getMessage());
+            }
+        }
+    }
+
+    @ReactMethod
+    public void openChatWithUserName(String userId, String userName) {
+        Activity currentActivity = getCurrentActivity();
+
+        if (currentActivity == null) {
+            return;
+        }
+
+        Intent intent = new Intent(currentActivity, ConversationActivity.class);
+
+        if (userId != null) {
+
+            intent.putExtra(ConversationUIService.USER_ID, userId);
+            intent.putExtra(ConversationUIService.TAKE_ORDER, true);
+
+        }
+        if (userName != null && userName != "") {
+            intent.putExtra(ConversationUIService.DISPLAY_NAME, userName);
+        }
+        currentActivity.startActivity(intent);
     }
 
     @ReactMethod
