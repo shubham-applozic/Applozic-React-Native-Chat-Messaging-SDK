@@ -29,32 +29,32 @@ RCT_EXPORT_MODULE();
 
 RCT_EXPORT_METHOD(login:(NSDictionary *)userDetails andCallback:(RCTResponseSenderBlock)callback )
 {
-  
+
   ALUser * aluser =  [[ALUser alloc] initWithJSONString:[self getJsonString:userDetails]];
-  
+
   ALChatManager * chatManger = [[ALChatManager alloc] init];
-  
+
   [chatManger registerUserWithCompletion:aluser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
-    
+
     if(error){
-      
+
       NSString* errorResponse = error.description;
       if(rResponse){
-        
+
         errorResponse = [self getJsonString:[rResponse dictionary]];
       }
       return callback(@[errorResponse, [NSNull null]]);
 
     }else if ( rResponse.isRegisteredSuccessfully ){
-      
+
       return callback(@[[NSNull null],[self getJsonString:[rResponse dictionary]]]);
-      
+
     }
   }];
-  
+
   NSLog(@"Pretending to create an event  at ");
-  
-//===================================== initiating chats=================================================
+
+  //===================================== initiating chats=================================================
 }
 /**
  * Open chats
@@ -62,12 +62,12 @@ RCT_EXPORT_METHOD(login:(NSDictionary *)userDetails andCallback:(RCTResponseSend
  **/
 RCT_EXPORT_METHOD(openChat)
 {
-  
+
   ALChatManager * chatManger = [[ALChatManager alloc] init];
   ALPushAssist* pushAssistant = [[ALPushAssist alloc] init];
   dispatch_async(dispatch_get_main_queue(), ^{
     [chatManger launchChat:pushAssistant.topViewController];
-    
+
   });
 
 }
@@ -77,34 +77,43 @@ RCT_EXPORT_METHOD(openChat)
  **/
 RCT_EXPORT_METHOD(openChatWithUser:(NSString*)userId)
 {
-  
+
   ALChatManager * chatManger = [[ALChatManager alloc] init];
   ALChatLauncher * chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:chatManger.getApplicationKey];
   ALPushAssist* pushAssistant = [[ALPushAssist alloc] init];
 
   dispatch_async(dispatch_get_main_queue(), ^{
-    
+
     [chatLauncher launchIndividualChat:userId withGroupId:nil andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
-    
+
   });
-  
+
 }
 /**
  * Open chat with Group
  *
  **/
-RCT_EXPORT_METHOD(openChatWithGroup:(nonnull NSNumber*)groupId)
+RCT_EXPORT_METHOD(openChatWithGroup:(nonnull NSNumber*)groupId andCallback:(RCTResponseSenderBlock)callback)
 {
-  
+
   ALChatManager * chatManger = [[ALChatManager alloc] init];
   ALChatLauncher * chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:chatManger.getApplicationKey];
   ALPushAssist* pushAssistant = [[ALPushAssist alloc] init];
-  
-  dispatch_async(dispatch_get_main_queue(), ^{
-    
-    [chatLauncher launchIndividualChat:nil withGroupId:groupId andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
-    
-  });
+  ALChannelService *service = [ALChannelService new];
+
+  [service getChannelInformation:groupId orClientChannelKey:nil withCompletion:^(ALChannel *alChannel) {
+
+    if (alChannel) {
+
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [chatLauncher launchIndividualChat:nil withGroupId:alChannel.key andViewControllerObject:pushAssistant.topViewController andWithText:nil];
+      });
+      return callback(@[[NSNull null],@"success"]);
+
+    } else {
+      return callback(@[@"channel not found", [NSNull null] ]);
+    }
+  }];
 }
 
 /**
@@ -113,26 +122,26 @@ RCT_EXPORT_METHOD(openChatWithGroup:(nonnull NSNumber*)groupId)
  **/
 RCT_EXPORT_METHOD(openChatWithClientGroupId:(nonnull NSString*) clientGroupId andCallback:(RCTResponseSenderBlock)callback)
 {
-  
+
   ALChatManager * chatManger = [[ALChatManager alloc] init];
   ALPushAssist* pushAssistant = [[ALPushAssist alloc] init];
-  
+
   dispatch_async(dispatch_get_main_queue(), ^{
-    
+
     ALChannelService *service = [ALChannelService new];
     ALChatLauncher * chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:chatManger.getApplicationKey];
-    
+
     [service getChannelInformation:nil orClientChannelKey:clientGroupId withCompletion:^(ALChannel *alChannel) {
-      
+
       if(alChannel){
-        
-         [chatLauncher launchIndividualChat:nil withGroupId:alChannel.key andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
-         return callback(@[ [NSNull null],@"success"]);
-        
-    }else{
-      return callback(@[@"channel not found", [NSNull null] ]);
-    }
-              
+
+        [chatLauncher launchIndividualChat:nil withGroupId:alChannel.key andViewControllerObject:pushAssistant.topViewController andWithText:nil ];
+        return callback(@[ [NSNull null],@"success"]);
+
+      }else{
+        return callback(@[@"channel not found", [NSNull null] ]);
+      }
+
     }] ;
   });
 }
@@ -141,7 +150,7 @@ RCT_EXPORT_METHOD(openChatWithClientGroupId:(nonnull NSString*) clientGroupId an
 
 RCT_EXPORT_METHOD(createGroup:(NSDictionary *)channelDetails andCallback:(RCTResponseSenderBlock)callback )
 {
-  
+
   NSString* channelName = [channelDetails valueForKey:@"groupName"];
   NSString* clientChannelKey = [channelDetails valueForKey:@"clientGroupId"];
   NSString* imageLink = [channelDetails valueForKey:@"imageUrl"];
@@ -150,36 +159,36 @@ RCT_EXPORT_METHOD(createGroup:(NSDictionary *)channelDetails andCallback:(RCTRes
   NSNumber * parentChannelKey= [channelDetails objectForKey:@"parentChannelKey"];
   NSString * adminUserId= [channelDetails objectForKey:@"adminUserId"];
 
-  
+
   [ALChannelClientService createChannel:channelName andParentChannelKey:parentChannelKey orClientChannelKey:clientChannelKey
                          andMembersList:groupMemberList andImageLink:imageLink channelType:(short)PUBLIC
                             andMetaData:groupMetaData adminUser:adminUserId withCompletion:^(NSError *error, ALChannelCreateResponse *response) {
-                              
-                              if(!error && response.alChannel)
-                              {
-                                response.alChannel.adminKey = [ALUserDefaultsHandler getUserId];
-                                ALChannelDBService *channelDBService = [[ALChannelDBService alloc] init];
-                                [channelDBService createChannel:response.alChannel];
-                                return callback(@[[NSNull null],response.alChannel.key]);
-                              }else if(response){
-                                return callback(@[[NSNull null],[self getJsonString:response.response]]);
-                              }
-                              else
-                              {
-                                NSLog(@"ERROR_IN_CHANNEL_CREATING :: %@",error);
-                               return callback(@[error.description,[NSNull null]]);
 
-                              }
-                            }];
-  
+    if(!error && response.alChannel)
+    {
+      response.alChannel.adminKey = [ALUserDefaultsHandler getUserId];
+      ALChannelService *channelDBService = [[ALChannelService alloc] init];
+      [channelDBService createChannelEntry:response.alChannel fromMessageList:NO];
+      return callback(@[[NSNull null],response.alChannel.key]);
+    }else if(response){
+      return callback(@[[NSNull null],[self getJsonString:response.response]]);
+    }
+    else
+    {
+      NSLog(@"ERROR_IN_CHANNEL_CREATING :: %@",error);
+      return callback(@[error.description,[NSNull null]]);
+
+    }
+  }];
+
 
 }
 
 RCT_EXPORT_METHOD(addMemberToGroup:(NSDictionary *)requestData andCallback:(RCTResponseSenderBlock)callback )
 {
-  
+
   ALChannelService * alChannelService = [ALChannelService new];
-  
+
   NSNumber * groupId = [requestData valueForKey:@"groupId"];
   NSString * clientGroupId = [requestData valueForKey:@"clientGroupId"];
   NSString * userId = [requestData valueForKey:@"userId"];
@@ -188,43 +197,43 @@ RCT_EXPORT_METHOD(addMemberToGroup:(NSDictionary *)requestData andCallback:(RCTR
                          andChannelKey:groupId
                     orClientChannelKey:clientGroupId
                         withCompletion:^(NSError *error, ALAPIResponse *response) {
-                          if(error){
-                            NSLog(@"error description %@", error.description);
-                            return callback(@[ error.description ,[NSNull null]]);
-                          }else if([ response.status isEqualToString:RESPONSE_SUCCESS]){
-                            return callback(@[ [NSNull null],[self getJsonString:response.actualresponse]]);
-                          }else{
-                            return callback(@[ [self getJsonString:response.actualresponse], [NSNull null]]);
+    if(error){
+      NSLog(@"error description %@", error.description);
+      return callback(@[ error.description ,[NSNull null]]);
+    }else if([ response.status isEqualToString:AL_RESPONSE_SUCCESS]){
+      return callback(@[ [NSNull null],[self getJsonString:response.actualresponse]]);
+    }else{
+      return callback(@[ [self getJsonString:response.actualresponse], [NSNull null]]);
 
-                          }
-    
+    }
+
   }];
 
 }
 
 RCT_EXPORT_METHOD(removeMemberFromGroup:(NSDictionary *)requestData andCallback:(RCTResponseSenderBlock)callback )
 {
-  
+
   ALChannelService * alChannelService = [ALChannelService new];
-  
+
   NSNumber * groupId = [requestData valueForKey:@"groupId"];
   NSString * clientGroupId = [requestData valueForKey:@"clientGroupId"];
   NSString * userId = [requestData valueForKey:@"userId"];
-  
+
   [alChannelService removeMemberFromChannel:userId
                               andChannelKey:groupId
                          orClientChannelKey:clientGroupId
                              withCompletion:^(NSError *error, ALAPIResponse *response) {
-                               
-                               if(error){
-                                 NSLog(@"error description %@", error.description);
-                                 return callback(@[ error.description ,[NSNull null]]);
-                               }else{
-                                 return callback(@[ [NSNull null],[self getJsonString:response.dictionary]]);
-                               }
-                               
-                             }];
-  
+
+    if(error){
+      NSLog(@"error description %@", error.description);
+      return callback(@[ error.description ,[NSNull null]]);
+    }else{
+      return callback(@[ [NSNull null],[self getJsonString:response.dictionary]]);
+    }
+
+  }];
+
 }
 
 //======================================Unreadcounts ==============================================
@@ -232,36 +241,36 @@ RCT_EXPORT_METHOD(removeMemberFromGroup:(NSDictionary *)requestData andCallback:
 
 RCT_EXPORT_METHOD(getUnreadCountForUser:(NSString*)userId andCallback:(RCTResponseSenderBlock)callback )
 {
-  
+
   ALContactService* contactService = [ALContactService new];
   ALContact *contact = [contactService loadContactByKey:@"userId" value:userId];
   NSNumber *unreadCount = [contact unreadCount];
   return callback(@[[NSNull null], unreadCount]);
-  
+
 }
 
 RCT_EXPORT_METHOD(getUnreadCountForChannel:(NSDictionary *)requestData andCallback:(RCTResponseSenderBlock)callback )
 {
-  
+
   ALChannelService *channelService = [ALChannelService new];
   NSNumber * groupId = [requestData valueForKey:@"groupId"];
   NSString * clientGroupId = [requestData valueForKey:@"clientGroupId"];
-  
+
   if(clientGroupId){
     [channelService getChannelInformation:nil orClientChannelKey:clientGroupId withCompletion:^(ALChannel *alChannel) {
-      
+
       if(alChannel){
         NSNumber *unreadCount = [alChannel unreadCount];
         return callback(@[[NSNull null], unreadCount]);
-        
+
       }else{
         return callback(@[@"channel not found", [NSNull null] ]);
       }
-      
+
     }] ;
-    
+
   } else {
-    
+
     ALChannel *alChannel = [channelService getChannelByKey:groupId];
     NSNumber *unreadCount = [alChannel unreadCount];
     return callback(@[[NSNull null], unreadCount]);
@@ -270,17 +279,17 @@ RCT_EXPORT_METHOD(getUnreadCountForChannel:(NSDictionary *)requestData andCallba
 
 RCT_EXPORT_METHOD(totalUnreadCount:(RCTResponseSenderBlock)callback )
 {
-  
+
   ALUserService * alUserService = [[ALUserService alloc] init];
   NSNumber * totalUnreadCount = [alUserService getTotalUnreadCount];
   return callback(@[[NSNull null], totalUnreadCount]);
-  
+
 }
 
 RCT_EXPORT_METHOD(isUserLogIn:(RCTResponseSenderBlock)callback)
 {
-    NSString *response = [ALUserDefaultsHandler isLoggedIn] ? @"true" : @"false";
-    return callback(@[response]);
+  NSString *response = [ALUserDefaultsHandler isLoggedIn] ? @"true" : @"false";
+  return callback(@[response]);
 }
 
 //===================================== Log Out ===================================================
@@ -293,25 +302,25 @@ RCT_EXPORT_METHOD(isUserLogIn:(RCTResponseSenderBlock)callback)
 RCT_EXPORT_METHOD(logoutUser:(RCTResponseSenderBlock)callback)
 {
   ALRegisterUserClientService * alRegisterUserClientService = [[ALRegisterUserClientService alloc]init];
-  
+
   [alRegisterUserClientService logoutWithCompletionHandler:^(ALAPIResponse *response, NSError *error) {
     if(error){
-      
+
       NSString* errorResponse = error.description;
       return callback(@[errorResponse, [NSNull null]]);
-      
+
     }else if (response ){
-      
+
       return callback(@[[NSNull null],[self getJsonString:[response dictionary]]]);
-      
+
     }
   }];
-  
+
 }
 
 RCT_EXPORT_METHOD(hideCreateGroupIcon: (BOOL) hide){
   [ALApplozicSettings setGroupOption: !hide];
-} 
+}
 
 RCT_EXPORT_METHOD(sendMessage: (nonnull NSString*) messageJson andCallback:(RCTResponseSenderBlock)callback) {
   return callback(@[@"Error", @"Method not implemented"]);
@@ -332,7 +341,7 @@ RCT_EXPORT_METHOD(showOnlyMyContacts: (BOOL) showOnlyMyContacts){
 RCT_EXPORT_METHOD(addContacts: (nonnull NSString*) contactJson andCallback:(RCTResponseSenderBlock)callback){
   contactJson = [contactJson stringByReplacingOccurrencesOfString:@"\\\"" withString:@"\""];
   contactJson = [NSString stringWithFormat:@"%@",contactJson];
-  
+
   NSError* error;
   NSData *jsonData = [contactJson dataUsingEncoding:NSUTF8StringEncoding];
   id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options: NSJSONReadingMutableContainers error:&error];
@@ -367,17 +376,17 @@ RCT_EXPORT_METHOD(addContacts: (nonnull NSString*) contactJson andCallback:(RCTR
   NSData *jsonData = [NSJSONSerialization dataWithJSONObject:Object
                                                      options:NSJSONWritingPrettyPrinted // Pass 0 if you don't care about the readability of the generated string
                                                        error:&error];
-  
+
   if (! jsonData) {
-    
+
     NSLog(@"Got an error: %@", error);
-    
+
   } else {
-    
+
     jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
   }
   return jsonString;
 }
-                        
+
 
 @end
