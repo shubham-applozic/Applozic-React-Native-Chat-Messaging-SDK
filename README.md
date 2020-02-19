@@ -46,76 +46,77 @@ project(':react-native-applozic-chat').projectDir = new File(rootProject.project
 
 ```
 
-#### AndroidManifest.xml 
+#### AndroidManifest.xml
 
 Add entries for permission, activities,meta in the manifest files from documentaion below.
 
 https://docs.applozic.com/docs/android-chat-sdk#section-androidmanifest
 
 
-#### iOS 
+#### iOS
 
-### Add Pod 
+### Add Pod
 
 Setup your Podfile located at /ios/Podfile and add below pod dependency.
 
 ```
-  pod 'Applozic', '~>6.7.1'
+  use_frameworks!
+  pod 'Applozic', '~>7.1.0'
 ```
 
 If you have not yet using pod dependency, check out how you can add pod in your react-native [here](https://guides.cocoapods.org/using/getting-started.html])
 
-### Add Bridge Files 
+### Add Bridge Files
 
-1) Copy applozic folder from [here](https://github.com/AppLozic/Applozic-React-Native-Chat-Messaging-SDK/tree/master/ios/applozic) to /ios/ folder to your project. 
- 	 
+1) Copy applozic folder from [here](https://github.com/AppLozic/Applozic-React-Native-Chat-Messaging-SDK/tree/master/ios/applozic) to /ios/ folder to your project.
+
 2) Open project from /ios/ folder in xcode.
- 
+
 **NOTE :** Please make sure to use .xcworkspace, not .xcproject after that.
- 	 
+
  3) Add all .h and .m files to your project from applozic folder in step (1)
 
 
  ## Push Notification
- 
+
  ### iOS
- 
+
    Open AppDelegate.m file under /ios/YOUR_PROJECT/
-   
+
    Add code as mentioned in the following documentation:
    https://www.applozic.com/docs/ios-chat-sdk.html#step-4-push-notification-setup
- 
+
  ### Android
- 
- ### gradle changes 
+
+ ### gradle changes
  1. Open android/app/build.gradle and add below at bottom
- 
+
  ```
  apply plugin: 'com.google.gms.google-services'
  ```
  2. open project android/build.gradle and add google service dependency.
- 
+
  ```
  dependencies {
         ......
         classpath 'com.google.gms:google-services:3.0.0'
     }
  ```
- ### FCM/GCM setup 
+ ### FCM/GCM setup
  Follow below documentation for FCM/GCM setup.
- 
+
  https://docs.applozic.com/docs/android-push-notification
- 
- ## Integration 
- 
+
+ ## Integration
+
  Define native module.
- 
+
  ```
  var ApplozicChat = NativeModules.ApplozicChat;
 ```
 
  ### User Authentication
- 
+
  ```
  ApplozicChat.login({
                     'userId': UNIQUE_ID, //Please Note: +,*,/ is not allowed in userIds
@@ -133,22 +134,22 @@ If you have not yet using pod dependency, check out how you can add pod in your 
                     console.log(response);
                   }
                 })
- 
+
  ```
- ### Chat List 
- 
+ ### Chat List
+
  ```
  ApplozicChat.openChat();
  ```
- 
- ### One to one Chat 
- 
+
+ ### One to one Chat
+
  ```
  ApplozicChat.openChatWithUser(userId);
  ```
- 
- ### Group Chat 
- 
+
+ ### Group Chat
+
  1. With Applozic generated GroupId
  ```
  ApplozicChat.openChatWithGroup(groupId , (error,response) =>{
@@ -162,9 +163,9 @@ If you have not yet using pod dependency, check out how you can add pod in your 
               });
  ```
  **NOTE**: groupId must be Numeric.
- 
+
  2. With your assigned groupId (Client group Id)
- 
+
 ```
 ApplozicChat.openChatWithClientGroupId(clientGroupId, (error,response) =>{
             if(error){
@@ -177,20 +178,20 @@ ApplozicChat.openChatWithClientGroupId(clientGroupId, (error,response) =>{
           });
 ```
  **NOTE**: groupId must be String
- 
+
  ### Unread Count
- 
+
  1) Individual user
 
   To get the user's chat unread count with any user, use the below code:
-  
+
   ```
     ApplozicChat.getUnreadCountForUser( <user Id>, (error, count) => {
               console.log("count for userId:" + count);
             });
   ```
  2) Individual Group
- 
+
 To get the user's chat unread count in any group, use the below code:
 
 ```
@@ -209,18 +210,18 @@ To get the user's chat unread count in any group, use the below code:
 
 ```
  3) Total count
- 
+
  To get the user's total unread count i.e Users + Groups, use the below code:
- 
+
  ```
  ApplozicChat.totalUnreadCount((error, totalUnreadCount) => {
               console.log("totalUnreadCount for logged-in user:" + totalUnreadCount);
 
             });
-            
+
  ```
- ### Create Group 
- 
+ ### Create Group
+
  ```
  var groupDetails = {
                 'groupName':'React Test2',
@@ -241,9 +242,9 @@ To get the user's chat unread count in any group, use the below code:
                 }
               });
  ```
- ### Add member to group 
- 
- 
+ ### Add member to group
+
+
  ```
    var requestData = {
               'clientGroupId':'recatNativeCGI',
@@ -258,8 +259,8 @@ To get the user's chat unread count in any group, use the below code:
                }
              });
  ```
- ### Remove member from group 
- 
+ ### Remove member from group
+
  ```
  var requestData = {
              'clientGroupId':'recatNativeCGI',
@@ -274,9 +275,9 @@ To get the user's chat unread count in any group, use the below code:
               }
             });
  ```
- 
+
  ### Logout
- 
+
  ```
    ApplozicChat.logoutUser((error, response) => {
               if(error){
