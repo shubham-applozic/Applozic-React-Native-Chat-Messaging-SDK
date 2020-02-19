@@ -3,6 +3,7 @@ package com.reactlibrary;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -89,7 +90,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
                     };
                     String registrationId = Applozic.getInstance(context).getDeviceRegistrationId();
                     pushNotificationTask = new PushNotificationTask(registrationId, listener, currentActivity);
-                    pushNotificationTask.execute((Void) null);
+                    pushNotificationTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);;
                 } else {
                     String json = GsonUtils.getJsonFromObject(registrationResponse, RegistrationResponse.class);
                     callback.invoke(json, null);
@@ -105,7 +106,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         };
 
         User user = (User) GsonUtils.getObjectFromJson(GsonUtils.getJsonFromObject(config.toHashMap(), HashMap.class), User.class);
-        new UserLoginTask(user, listener, currentActivity).execute((Void) null);
+        new UserLoginTask(user, listener, currentActivity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @ReactMethod
@@ -169,7 +170,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
                   }
               };
               AlGroupInformationAsyncTask groupInfoTask = new AlGroupInformationAsyncTask(currentActivity, groupId, taskListener);
-              groupInfoTask.execute();
+              groupInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
           } else {
               callback.invoke("unable to launch group chat, check your groupId/ClientGroupId", null);
@@ -207,7 +208,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
                   }
               };
               AlGroupInformationAsyncTask groupInfoTask = new AlGroupInformationAsyncTask(currentActivity, clientGroupId, taskListener);
-              groupInfoTask.execute();
+              groupInfoTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
           }
       }
 
@@ -336,7 +337,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         };
 
         ApplozicChannelAddMemberTask applozicChannelAddMemberTask = new ApplozicChannelAddMemberTask(currentActivity, channelKey, userId, channelAddMemberListener);//pass channel key and userId whom you want to add to channel
-        applozicChannelAddMemberTask.execute((Void) null);
+        applozicChannelAddMemberTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 
@@ -388,7 +389,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         };
 
         ApplozicChannelRemoveMemberTask applozicChannelRemoveMemberTask = new ApplozicChannelRemoveMemberTask(currentActivity, channelKey, userId, channelRemoveMemberListener);//pass channelKey and userId whom you want to remove from channel
-        applozicChannelRemoveMemberTask.execute((Void) null);
+        applozicChannelRemoveMemberTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
     //======================================================================================================
 
@@ -433,9 +434,9 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         };
 
         if (config != null && config.hasKey("clientGroupId")) {
-            new AlGroupInformationAsyncTask(currentActivity, config.getString("clientGroupId"), listener).execute();
+            new AlGroupInformationAsyncTask(currentActivity, config.getString("clientGroupId"), listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else if (config != null && config.hasKey("groupId")) {
-            new AlGroupInformationAsyncTask(currentActivity, config.getInt("groupId"), listener).execute();
+            new AlGroupInformationAsyncTask(currentActivity, config.getInt("groupId"), listener).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } else {
             callback.invoke("Invalid data sent");
         }
