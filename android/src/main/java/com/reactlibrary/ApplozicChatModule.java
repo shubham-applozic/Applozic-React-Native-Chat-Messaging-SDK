@@ -1,4 +1,4 @@
-package com.applozic;
+package com.reactlibrary;
 
 import android.app.Activity;
 import android.content.Context;

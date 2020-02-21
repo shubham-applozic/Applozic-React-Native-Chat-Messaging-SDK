@@ -39,5 +39,5 @@ repositories {
 dependencies {
     compile 'com.facebook.react:react-native:+'
     compile 'com.android.support:appcompat-v7:27.1.1'
-    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.45'
+    compile 'com.applozic.communication.uiwidget:mobicomkitui:5.51.3'
 }

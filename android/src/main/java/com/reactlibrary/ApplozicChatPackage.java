@@ -1,4 +1,4 @@
-package com.applozic;
+package com.reactlibrary;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

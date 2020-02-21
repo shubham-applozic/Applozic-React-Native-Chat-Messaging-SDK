@@ -1,6 +1,6 @@
 {
   "name": "react-native-applozic-chat",
-  "version": "1.1.8",
+  "version": "1.1.81",
   "description": "This module provides Applozic chat integration with your React native application.",
   "main": "index.js",
   "scripts": {
