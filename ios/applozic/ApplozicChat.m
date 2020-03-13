@@ -368,6 +368,37 @@ RCT_EXPORT_METHOD(addContacts: (nonnull NSString*) contactJson andCallback:(RCTR
   }
 }
 
+RCT_EXPORT_METHOD(setAttachmentOptions: (NSDictionary *) settingsDictionary) {
+  NSMutableArray * settingsArray =  [NSMutableArray new];
+  if ([settingsDictionary valueForKey:@":camera"] != nil && [settingsDictionary[@":camera"]  isEqual: @NO]) {
+    [settingsArray addObject:@":camera"];
+  }
+  if ([settingsDictionary valueForKey:@":file"] != nil && [[settingsDictionary valueForKey:@":file"]  isEqual: @NO]) {
+    [settingsArray addObject:@":gallery"];
+  }
+  if ([settingsDictionary valueForKey:@":audio"] != nil && [settingsDictionary[@":audio"]  isEqual: @NO]) {
+    [settingsArray addObject:@":audio"];
+  }
+  if ([settingsDictionary valueForKey:@":video"] != nil && [settingsDictionary[@":video"]  isEqual: @NO]) {
+    [settingsArray addObject:@":video"];
+  }
+  if ([settingsDictionary valueForKey:@":location"] != nil && [settingsDictionary[@":location"]  isEqual: @NO]) {
+    [settingsArray addObject:@":location"];
+  }
+  if ([settingsDictionary valueForKey:@":blockUser"] != nil && [settingsDictionary[@":blockUser"]  isEqual: @NO]) {
+    [settingsArray addObject:@":blockUser"];
+  }
+  if ([settingsDictionary valueForKey:@":contact"] != nil && [settingsDictionary [@":contact"] isEqual: @NO]) {
+    [settingsArray addObject:@":shareContact"];
+  }
+  if ([settingsDictionary valueForKey:@":attachmentbutton"] != nil && [settingsDictionary[@":attachmentbutton"] isEqual: @NO]) {
+    [settingsArray addObject:@":attachmentbutton"];
+  }
+  if (settingsArray.count) {
+    NSArray *attachmentOptionToHide = [NSArray arrayWithArray:settingsArray];
+    [ALApplozicSettings setHideAttachmentsOption:attachmentOptionToHide];
+  }
+}
 
 -(NSString *)getJsonString:(id) Object{
 

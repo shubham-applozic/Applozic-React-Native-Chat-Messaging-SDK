@@ -623,6 +623,17 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         ApplozicSetting.getInstance(currentActivity).setGalleryFilterOptions(options);
     }
 
+    @ReactMethod
+    public void setAttachmentOptions(ReadableMap config) {
+        Activity currentActivity = getCurrentActivity();
+        Map<String, Boolean> options = new HashMap<>();
+
+        for (Map.Entry<String, Object> item : config.toHashMap().entrySet()) {
+            options.put(item.getKey(), (Boolean) item.getValue());
+        }
+        ApplozicSetting.getInstance(currentActivity).setAttachmentOptions(options);
+    }
+
     @Override
     public void onActivityResult(Activity activity, final int requestCode, final int resultCode, final Intent intent) {
     }

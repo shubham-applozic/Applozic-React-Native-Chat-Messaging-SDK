@@ -38,5 +38,5 @@ repositories {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    api 'com.applozic.communication.uiwidget:mobicomkitui:5.74'
+    api 'com.applozic.communication.uiwidget:mobicomkitui:5.75'
 }
