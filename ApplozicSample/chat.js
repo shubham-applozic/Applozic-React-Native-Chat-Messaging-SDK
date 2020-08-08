@@ -3,13 +3,11 @@ import React, {Component} from 'react';
 //import FCM from 'react-native-fcm';
 
 import {
-    AppRegistry,
     StyleSheet,
     Text,
     View,
     Button,
     TextInput,
-    Modal,
     ScrollView,
     NativeModules
 } from 'react-native';
