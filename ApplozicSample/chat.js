@@ -65,17 +65,6 @@ export default class AwesomeProject extends Component {
         this.refreshUnsubscribe();
 
     }
-    openModal() {
-        this.setState({modalVisible:true});
-      }
-
-    closeModal() {
-        this.setState({modalVisible:false});
-    }
-    openOneToOneChat(){
-     alert("");
-
-    }
 
     show() {
         this.setState({title: 'Loading....!'});
