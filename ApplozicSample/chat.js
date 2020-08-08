@@ -21,7 +21,7 @@ export default class AwesomeProject extends Component {
         this.state = {
             userId: '',
             email: '',
-            phoneNumer: '',
+            phoneNumber: '',
             pass_word: '',
             displayName: '',
             loggedIn: false,
