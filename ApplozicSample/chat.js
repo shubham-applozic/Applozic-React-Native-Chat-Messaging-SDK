@@ -120,7 +120,7 @@ export default class AwesomeProject extends Component {
               <Text style = {styles.titleText}>
                  Applozic </Text>
 			        <Text style = {styles.baseText}>
-                 Demo App < /Text>
+                 Demo App </Text>
               <TextInput style ={styles.inputText}
                  keyboardType = "default"
                  placeholder = "UserId"
