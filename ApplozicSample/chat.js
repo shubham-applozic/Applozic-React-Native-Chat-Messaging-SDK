@@ -167,7 +167,7 @@ export default class AwesomeProject extends Component {
 			  </View>
         );
     }
-    //======================== Applozic fucntions ==========================================================
+    //======================== Applozic functions ==========================================================
 
         //Login chat to the users..
         chatLogin() {
@@ -344,7 +344,7 @@ export default class AwesomeProject extends Component {
             });
     }
 
-    //======================== Applozic fucntions END===================================================
+    //======================== Applozic functions END===================================================
 
 }
 const styles = StyleSheet.create({
