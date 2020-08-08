@@ -22,7 +22,7 @@ export default class AwesomeProject extends Component {
             userId: '',
             email: '',
             phoneNumber: '',
-            pass_word: '',
+            password: '',
             displayName: '',
             loggedIn: false,
             visible: false,
@@ -148,10 +148,10 @@ export default class AwesomeProject extends Component {
                  placeholder = "Password"
                  keyboardType = "default"
                  underlineColorAndroid = 'transparent'
-                 value = {this.state.pass_word}
+                 value = {this.state.password}
                  secureTextEntry = {true}
                  password = "true"
-                 onChangeText = {pass_word => this.setState({pass_word})}/>
+                 onChangeText = {password => this.setState({password})}/>
               <TextInput id = "displayName"
                  style = {styles.inputText}
                  placeholder = "Display Name"
@@ -172,12 +172,12 @@ export default class AwesomeProject extends Component {
         //Login chat to the users..
         chatLogin() {
 
-            if (this.state.userId.length > 0 && this.state.pass_word.length > 0) {
+            if (this.state.userId.length > 0 && this.state.password.length > 0) {
               ApplozicChat.login({
                     'userId': this.state.userId,
                     'email': this.state.email,
                     'contactNumber': this.state.phoneNumber,
-                    'password': this.state.pass_word,
+                    'password': this.state.password,
                     'displayName': this.state.displayName
                 }, (error, response) => {
                   if(error){
@@ -242,7 +242,7 @@ export default class AwesomeProject extends Component {
                     userId: '',
                     email: '',
                     phoneNumber: '',
-                    pass_word: '',
+                    password: '',
                     displayName: '',
                     loggedIn: false,
                     title: 'Login/SignUp'
