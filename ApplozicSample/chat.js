@@ -3,13 +3,11 @@ import React, {Component} from 'react';
 //import FCM from 'react-native-fcm';
 
 import {
-    AppRegistry,
     StyleSheet,
     Text,
     View,
     Button,
     TextInput,
-    Modal,
     ScrollView,
     NativeModules
 } from 'react-native';
@@ -23,8 +21,8 @@ export default class AwesomeProject extends Component {
         this.state = {
             userId: '',
             email: '',
-            phoneNumer: '',
-            pass_word: '',
+            phoneNumber: '',
+            password: '',
             displayName: '',
             loggedIn: false,
             visible: false,
@@ -65,17 +63,6 @@ export default class AwesomeProject extends Component {
     componentWillUnMount()
     {
         this.refreshUnsubscribe();
-
-    }
-    openModal() {
-        this.setState({modalVisible:true});
-      }
-
-    closeModal() {
-        this.setState({modalVisible:false});
-    }
-    openOneToOneChat(){
-     alert("");
 
     }
 
@@ -120,7 +107,7 @@ export default class AwesomeProject extends Component {
               <Text style = {styles.titleText}>
                  Applozic </Text>
 			        <Text style = {styles.baseText}>
-                 Demo App < /Text>
+                 Demo App </Text>
               <TextInput style ={styles.inputText}
                  keyboardType = "default"
                  placeholder = "UserId"
@@ -150,10 +137,10 @@ export default class AwesomeProject extends Component {
                  placeholder = "Password"
                  keyboardType = "default"
                  underlineColorAndroid = 'transparent'
-                 value = {this.state.pass_word}
+                 value = {this.state.password}
                  secureTextEntry = {true}
                  password = "true"
-                 onChangeText = {pass_word => this.setState({pass_word})}/>
+                 onChangeText = {password => this.setState({password})}/>
               <TextInput id = "displayName"
                  style = {styles.inputText}
                  placeholder = "Display Name"
@@ -169,17 +156,17 @@ export default class AwesomeProject extends Component {
 			  </View>
         );
     }
-    //======================== Applozic fucntions ==========================================================
+    //======================== Applozic functions ==========================================================
 
         //Login chat to the users..
         chatLogin() {
 
-            if (this.state.userId.length > 0 && this.state.pass_word.length > 0) {
+            if (this.state.userId.length > 0 && this.state.password.length > 0) {
               ApplozicChat.login({
                     'userId': this.state.userId,
                     'email': this.state.email,
                     'contactNumber': this.state.phoneNumber,
-                    'password': this.state.pass_word,
+                    'password': this.state.password,
                     'displayName': this.state.displayName
                 }, (error, response) => {
                   if(error){
@@ -244,7 +231,7 @@ export default class AwesomeProject extends Component {
                     userId: '',
                     email: '',
                     phoneNumber: '',
-                    pass_word: '',
+                    password: '',
                     displayName: '',
                     loggedIn: false,
                     title: 'Login/SignUp'
@@ -346,7 +333,7 @@ export default class AwesomeProject extends Component {
             });
     }
 
-    //======================== Applozic fucntions END===================================================
+    //======================== Applozic functions END===================================================
 
 }
 const styles = StyleSheet.create({
