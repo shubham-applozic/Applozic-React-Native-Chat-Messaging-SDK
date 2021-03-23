@@ -110,7 +110,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void openChat() {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
+            Log.i("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -122,7 +122,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void openChatWithUser(String userId) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
+            Log.i("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -446,7 +446,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void setContactsGroupNameList(ReadableMap config) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
+            Log.i("Error", "Activity doesn't exist.");
             return;
         }
         List<String> contactGroupIdList = Arrays.asList((String[]) GsonUtils.getObjectFromJson(config.getString("contactGroupNameList"), String[].class));
@@ -474,7 +474,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void isUserLogIn(final Callback successCallback) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
             Log.i("Error", "Activity doesn't exist.");
             return;
         }
@@ -553,7 +552,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void openChatWithUserName(String userId, String userName) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
+            Log.i("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -575,7 +574,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void hideCreateGroupIcon(boolean hide) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
             Log.i("Error", "Activity doesn't exist.");
             return;
         }
@@ -591,7 +589,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void showOnlyMyContacts(boolean showOnlyMyContacts) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
             Log.i("Error", "Activity doesn't exist.");
             return;
         }
@@ -607,7 +604,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void hideChatListOnNotification() {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
             Log.i("Error", "Activity doesn't exist.");
             return;
         }
@@ -624,7 +620,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void setAttachmentType(ReadableMap config) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
             Log.i("Error", "Activity doesn't exist.");
             return;
         }
@@ -658,7 +653,6 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void setAttachmentOptions(ReadableMap config) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Error", "Activity doesn't exist.");
             Log.i("Error", "Activity doesn't exist.");
             return;
         }
