@@ -65,7 +65,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void login(final ReadableMap config, final Callback callback) {
         final Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Activity doesn't exist", null);
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -109,9 +109,8 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void openChat() {
         Activity currentActivity = getCurrentActivity();
-
         if (currentActivity == null) {
-            Log.i("OpenChat Error ", "Activity doesn't exist");
+            Log.i("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -122,9 +121,8 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void openChatWithUser(String userId) {
         Activity currentActivity = getCurrentActivity();
-
         if (currentActivity == null) {
-            Log.i("open ChatWithUser  ", "Activity doesn't exist");
+            Log.i("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -141,10 +139,9 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
 
     @ReactMethod
     public void openChatWithGroup(Integer groupId, final Callback callback) {
-
         final Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Activity doesn't exist", null);
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -177,10 +174,9 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
 
     @ReactMethod
     public void openChatWithClientGroupId(String clientGroupId, final Callback callback) {
-
         final Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("Activity doesn't exist", null);
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -211,13 +207,12 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
 
     @ReactMethod
     public void logoutUser(final Callback callback) {
-
         Activity currentActivity = getCurrentActivity();
-
         if (currentActivity == null) {
-            callback.invoke("Activity doesn't exist");
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
         }
+
         Applozic.logoutUser(currentActivity, new AlLogoutHandler() {
             @Override
             public void onSuccess(Context context) {
@@ -245,8 +240,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         final Activity currentActivity = getCurrentActivity();
 
         if (currentActivity == null) {
-
-            callback.invoke("Activity doesn't exist", null);
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
 
         }
@@ -305,8 +299,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         final Activity currentActivity = getCurrentActivity();
 
         if (currentActivity == null) {
-
-            callback.invoke("Activity doesn't exist", null);
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
 
         }
@@ -357,8 +350,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         final Activity currentActivity = getCurrentActivity();
 
         if (currentActivity == null) {
-
-            callback.invoke("Activity doesn't exist", null);
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
 
         }
@@ -405,7 +397,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         Activity currentActivity = getCurrentActivity();
 
         if (currentActivity == null) {
-            callback.invoke("Activity doesn't exist", null);
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -419,7 +411,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         Activity currentActivity = getCurrentActivity();
 
         if (currentActivity == null) {
-            callback.invoke("Activity doesn't exist", null);
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -454,6 +446,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void setContactsGroupNameList(ReadableMap config) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
+            Log.i("Error", "Activity doesn't exist.");
             return;
         }
         List<String> contactGroupIdList = Arrays.asList((String[]) GsonUtils.getObjectFromJson(config.getString("contactGroupNameList"), String[].class));
@@ -467,7 +460,8 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
         Activity currentActivity = getCurrentActivity();
 
         if (currentActivity == null) {
-            callback.invoke("Activity doesn't exist", null);
+            callback.invoke("Error", "Activity doesn't exist.");
+            Log.i("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -479,6 +473,11 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void isUserLogIn(final Callback successCallback) {
         Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            Log.i("Error", "Activity doesn't exist.");
+            return;
+        }
+
         MobiComUserPreference mobiComUserPreference = MobiComUserPreference.getInstance(currentActivity);
         successCallback.invoke(mobiComUserPreference.isLoggedIn());
     }
@@ -487,7 +486,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void sendMessage(final String messageJson, final Callback callback) {
         final Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
-            callback.invoke("error", "Activity doesn't exists..");
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -530,6 +529,7 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     public void addContacts(String contactJson, Callback callback) {
         Activity currentActivity = getCurrentActivity();
         if (currentActivity == null) {
+            callback.invoke("Error", "Activity doesn't exist.");
             return;
         }
         try {
@@ -551,8 +551,8 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void openChatWithUserName(String userId, String userName) {
         Activity currentActivity = getCurrentActivity();
-
         if (currentActivity == null) {
+            Log.i("Error", "Activity doesn't exist.");
             return;
         }
 
@@ -573,6 +573,10 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void hideCreateGroupIcon(boolean hide) {
         Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            Log.i("Error", "Activity doesn't exist.");
+            return;
+        }
 
         if (hide) {
             ApplozicSetting.getInstance(currentActivity).hideStartNewGroupButton();
@@ -584,6 +588,10 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void showOnlyMyContacts(boolean showOnlyMyContacts) {
         Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            Log.i("Error", "Activity doesn't exist.");
+            return;
+        }
 
         if (showOnlyMyContacts) {
             ApplozicClient.getInstance(currentActivity).enableShowMyContacts();
@@ -595,6 +603,11 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void hideChatListOnNotification() {
         Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            Log.i("Error", "Activity doesn't exist.");
+            return;
+        }
+
         ApplozicClient.getInstance(currentActivity).hideChatListOnNotification();
     }
 
@@ -606,6 +619,11 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void setAttachmentType(ReadableMap config) {
         Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            Log.i("Error", "Activity doesn't exist.");
+            return;
+        }
+
         Map<FileUtils.GalleryFilterOptions, Boolean> options = new HashMap<>();
 
         if (config.hasKey("allFiles")) {
@@ -634,6 +652,11 @@ public class ApplozicChatModule extends ReactContextBaseJavaModule implements Ac
     @ReactMethod
     public void setAttachmentOptions(ReadableMap config) {
         Activity currentActivity = getCurrentActivity();
+        if (currentActivity == null) {
+            Log.i("Error", "Activity doesn't exist.");
+            return;
+        }
+
         Map<String, Boolean> options = new HashMap<>();
 
         for (Map.Entry<String, Object> item : config.toHashMap().entrySet()) {
