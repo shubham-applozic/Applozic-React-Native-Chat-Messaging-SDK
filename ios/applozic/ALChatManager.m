@@ -7,13 +7,7 @@
 //
 
 #import "ALChatManager.h"
-#import <Applozic/ALUserDefaultsHandler.h>
-#import <Applozic/ALMessageClientService.h>
-#import <Applozic/ALApplozicSettings.h>
-#import <Applozic/ALChatViewController.h>
-#import <Applozic/ALMessage.h>
-#import <Applozic/ALNewContactsViewController.h>
-
+#import <Applozic/Applozic.h>
 
 @implementation ALChatManager
 
@@ -29,6 +23,10 @@
     {
         [ALUserDefaultsHandler setApplicationKey:applicationKey];
         self.permissableVCList = [[NSArray alloc] init];
+        [ALLogger setMinimumSeverity:ALLoggerSeverityInfo];
+        // Assumption: This init will be called from AppDelegate and it won't be deallocated till the app closes otherwise log's will not be saved.
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveLogs) name:UIApplicationWillTerminateNotification object:nil];
+        [self ALDefaultChatViewSettings];
     }
 
     return self;
@@ -39,13 +37,10 @@
 // This will register your User at applozic server.
 //==============================================================================================================================================
 
--(void)registerUser:(ALUser *)alUser
+-(void)connectUser:(ALUser *)alUser
 {
     self.chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:[self getApplicationKey]];
 
-    //////////////////////////   SET AUTHENTICATION-TYPE-ID FOR INTERNAL USAGE ONLY ////////////////////////
-    [ALUserDefaultsHandler setUserAuthenticationTypeId:(short)APPLOZIC];
-    ////////////////////////// ////////////////////////// ////////////////////////// ///////////////////////
 
     [self ALDefaultChatViewSettings];
     [alUser setApplicationId:[self getApplicationKey]];
@@ -62,6 +57,7 @@
 
         if(![rResponse isRegisteredSuccessfully])
         {
+            NSLog(@"ERROR_USER_REGISTRATION :: %@",rResponse.message);
             return;
         }
 
@@ -69,6 +65,7 @@
         {
 
         }
+
     }];
 }
 
@@ -84,13 +81,10 @@
 // Example: If Chat is your first screen after launch,launch chat list on sucess of login.
 //==============================================================================================================================================
 
--(void)registerUserWithCompletion:(ALUser *)alUser withHandler:(void(^)(ALRegistrationResponse *rResponse, NSError *error))completion
+-(void)connectUserWithCompletion:(ALUser *)alUser withHandler:(void(^)(ALRegistrationResponse *rResponse, NSError *error))completion
 {
     self.chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:[self getApplicationKey]];
 
-    //////////////////////////   SET AUTHENTICATION-TYPE-ID FOR INTERNAL USAGE ONLY ////////////////////////
-    [ALUserDefaultsHandler setUserAuthenticationTypeId:(short)APPLOZIC];
-    ////////////////////////// ////////////////////////// ////////////////////////// ///////////////////////
 
     [self ALDefaultChatViewSettings];
     [alUser setApplicationId:[self getApplicationKey]];
@@ -113,8 +107,72 @@
             completion(nil, passError);
             return;
         }
+
         completion(rResponse, error);
     }];
+}
+
+-(void)launchGroupOfTwoWithClientId:(NSString*)clientGroupId
+                       withMetaData:(NSMutableDictionary*)metadata
+                        andWithUser:(NSString *)userId
+              andFromViewController:(UIViewController *)viewController{
+
+    ALChannelService * channelService = [[ALChannelService alloc] init];
+
+    [channelService getChannelInformation:nil orClientChannelKey:clientGroupId withCompletion:^(ALChannel *alChannel) {
+
+            if(alChannel.key){
+
+                if( (alChannel.metadata && ![alChannel.metadata isEqualToDictionary:metadata]) ){
+                    [channelService updateChannelMetaData:alChannel.key orClientChannelKey:nil metadata:metadata withCompletion:^(NSError *error) {
+                        [self launchChatForUserWithDisplayName:nil withGroupId:alChannel.key
+                                            andwithDisplayName:nil andFromViewController:viewController];
+                    }];
+                }
+                else
+                {
+                    [self launchChatForUserWithDisplayName:nil withGroupId:alChannel.key
+                                        andwithDisplayName:nil andFromViewController:viewController];
+                }
+            }
+            else
+            {
+                ALChannelInfo *channelInfo = [[ALChannelInfo alloc] init];
+                channelInfo.clientGroupId = clientGroupId;
+                channelInfo.groupName = clientGroupId;
+                channelInfo.groupMemberList = [[NSMutableArray alloc] initWithObjects:userId, nil];
+                channelInfo.metadata = metadata;
+                channelInfo.type = GROUP_OF_TWO;
+
+                [channelService createChannelWithChannelInfo:channelInfo
+                                              withCompletion:^(ALChannelCreateResponse *response, NSError *error) {
+
+                    if (!error
+                        && [response.status isEqualToString:AL_RESPONSE_SUCCESS]) {
+                        [self launchChatForUserWithDisplayName:nil withGroupId:response.alChannel.key
+                                            andwithDisplayName:nil andFromViewController:viewController];
+                    }
+                }];
+            }
+        }];
+
+}
+
+-(void)launchGroupOfTwoWithClientId:(NSString *)userIdOfReceiver
+                         withItemId:(NSString *)itemId
+                       withMetaData:(NSMutableDictionary *)metadata
+                        andWithUser:(NSString *)userId
+              andFromViewController:(UIViewController *)viewController{
+    NSString* clientGroupId = [self buildUniqueClientId:itemId withUserId:userIdOfReceiver];
+    [self launchGroupOfTwoWithClientId:clientGroupId withMetaData:metadata andWithUser:userId andFromViewController:viewController];
+}
+
+-(NSString*) buildUniqueClientId:(NSString*)ItemId withUserId:(NSString*)userId
+{
+    NSString * loggedInUserId =  [ALUserDefaultsHandler getUserId];
+    NSArray * sortedArray = [ @[loggedInUserId,userId] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    return [NSString stringWithFormat:@"%@_%@_%@", ItemId,sortedArray[0],sortedArray[1]];
+
 }
 
 //==============================================================================================================================================
@@ -124,7 +182,7 @@
 
 -(void)launchChat: (UIViewController *)fromViewController
 {
-    [self registerUserAndLaunchChat:nil andFromController:fromViewController forUser:nil withGroupId:nil];
+    [self connectUserAndLaunchChat:nil andFromController:fromViewController forUser:nil withGroupId:nil];
 }
 
 //==============================================================================================================================================
@@ -134,7 +192,7 @@
 
 -(void)launchChatForUserWithDefaultText:(NSString *)userId andFromViewController:(UIViewController *)fromViewController
 {
-    [self registerUserAndLaunchChat:nil andFromController:fromViewController forUser:userId withGroupId:nil];
+    [self connectUserAndLaunchChat:nil andFromController:fromViewController forUser:userId withGroupId:nil];
 }
 
 //==============================================================================================================================================
@@ -142,7 +200,7 @@
 // If user information is not passed, it will try to get user information from getLoggedinUserInformation.
 //==============================================================================================================================================
 
--(void)registerUserAndLaunchChat:(ALUser *)alUser andFromController:(UIViewController *)viewController forUser:(NSString *)userId
+-(void)connectUserAndLaunchChat:(ALUser *)alUser andFromController:(UIViewController *)viewController forUser:(NSString *)userId
                      withGroupId:(NSNumber *)groupID
 {
     self.chatLauncher = [[ALChatLauncher alloc] initWithApplicationId:[self getApplicationKey]];
@@ -174,7 +232,7 @@
         return;
     }
 
-    [self registerUserWithCompletion:alUser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
+    [self connectUserWithCompletion:alUser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
 
         if (!error)
         {
@@ -231,7 +289,7 @@
     }
 
     ALUser *alUser = [ALChatManager getLoggedinUserInformation];
-    [self registerUserWithCompletion:alUser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
+    [self connectUserWithCompletion:alUser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
 
     }];
 }
@@ -331,6 +389,14 @@
 
 -(void)ALDefaultChatViewSettings
 {
+    [ALApplozicSettings setListOfViewControllers:
+    @[
+     [ALMessagesViewController description],
+     [ALChatViewController description],
+     [ALGroupDetailViewController description],
+     [ALNewContactsViewController description],
+     [ALUserProfileVC description]
+     ]];
 
     /*********************************************  NAVIGATION SETTINGS  ********************************************/
 
@@ -343,15 +409,22 @@
     [ALApplozicSettings setColorForNavigationItem:[UIColor whiteColor]];
     [ALApplozicSettings hideRefreshButton:NO];
     [ALUserDefaultsHandler setNavigationRightButtonHidden:NO];
-    [ALUserDefaultsHandler setBottomTabBarHidden:NO];
+    [ALUserDefaultsHandler setBottomTabBarHidden:YES];
     [ALApplozicSettings setTitleForConversationScreen:@"Chats"];
+    [ALApplozicSettings enableRefreshChatButtonInMsgVc:NO];                   /*  SET VISIBILITY FOR REFRESH BUTTON (COMES FROM TOP IN MSG VC)   */
     [ALApplozicSettings setTitleForBackButtonMsgVC:@"Back"];                /*  SET BACK BUTTON FOR MSG VC  */
     [ALApplozicSettings setTitleForBackButtonChatVC:@"Back"];               /*  SET BACK BUTTON FOR CHAT VC */
+    [ALApplozicSettings setDropShadowInNavigationBar:YES];                    /*  ENABLE / DISABLE DROPS IN SHADOW IN NAVIGATION BAR */
     /****************************************************************************************************************/
+
+    //Font size for cells
+    [ALApplozicSettings setChatCellTextFontSize:15];
+
+    [ALApplozicSettings setChannelCellTextFontSize:15];
 
 
     /***************************************  SEND RECEIVE MESSAGES SETTINGS  ***************************************/
-
+    [ALApplozicSettings showChannelMembersInfoInNavigationBar:YES];
     [ALApplozicSettings setSendMsgTextColor:[UIColor whiteColor]];
     [ALApplozicSettings setReceiveMsgTextColor:[UIColor grayColor]];
     [ALApplozicSettings setColorForReceiveMessages:[UIColor colorWithRed:255/255 green:255/255 blue:255/255 alpha:1]];
@@ -360,6 +433,10 @@
     [ALApplozicSettings setCustomMessageBackgroundColor:[UIColor lightGrayColor]];              /*  SET CUSTOM MESSAGE COLOR */
     [ALApplozicSettings setCustomMessageFontSize:14];                                     /*  SET CUSTOM MESSAGE FONT SIZE */
     [ALApplozicSettings setCustomMessageFont:@"Helvetica"];
+
+
+//    [ALApplozicSettings setChatCellFontTextStyle:UIFontTextStyleSubheadline];
+//    [ALApplozicSettings setChatChannelCellFontTextStyle:UIFontTextStyleSubheadline];
 
     //****************** DATE COLOUR : AT THE BOTTOM OF MESSAGE BUBBLE ******************/
     [ALApplozicSettings setDateColor:[UIColor colorWithRed:51.0/255 green:51.0/255 blue:51.0/255 alpha:0.5]];
@@ -397,16 +474,16 @@
     [ALApplozicSettings setGroupMemberAddOption:YES];
     [ALApplozicSettings setGroupMemberRemoveOption:YES];
 
-
     /****************************************************************************************************************/
 
 
     /******************************************** NOTIIFCATION SETTINGS  ********************************************/
 
+
     NSString * appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"];
     [ALApplozicSettings setNotificationTitle:appName];
 
-    [ALApplozicSettings enableNotification]; //0
+        [ALApplozicSettings enableNotification]; //0
     //    [ALApplozicSettings disableNotification]; //2
     //    [ALApplozicSettings disableNotificationSound]; //1                /*  IF NOTIFICATION SOUND NOT NEEDED  */
     //    [ALApplozicSettings enableNotificationSound];//0                   /*  IF NOTIFICATION SOUND NEEDED    */
@@ -414,6 +491,8 @@
 
 
     /********************************************* CHAT VIEW SETTINGS  **********************************************/
+
+    [ALApplozicSettings setMsgContainerVC:@"ContinerListViewController"];
 
     [ALApplozicSettings setVisibilityForNoMoreConversationMsgVC:NO];        /*  SET VISIBILITY NO MORE CONVERSATION (COMES FROM TOP IN MSG VC)  */
     [ALApplozicSettings setEmptyConversationText:@"You have no conversations yet"]; /*  SET TEXT FOR EMPTY CONVERSATION    */
@@ -437,6 +516,7 @@
     //   [ALUserDefaultsHandler setAppModuleName:@"SELLER"];
     /****************************************************************************************************************/
 
+    [ALApplozicSettings openChatOnTapUserProfile:YES];
 
     /*********************************************** CONTACT SETTINGS  **********************************************/
 
@@ -459,7 +539,7 @@
 
     [ALApplozicSettings setUnreadCountLabelBGColor:[UIColor purpleColor]];
     [ALApplozicSettings setCustomClassName:@"ALChatManager"];                   /*  SET 3rd Party Class Name OR ALChatManager */
-    [ALUserDefaultsHandler setFetchConversationPageSize:20];                    /*  SET MESSAGE LIST PAGE SIZE  */ // DEFAULT VALUE 20
+    [ALUserDefaultsHandler setFetchConversationPageSize:60];                    /*  SET MESSAGE LIST PAGE SIZE  */ // DEFAULT VALUE 20
     [ALUserDefaultsHandler setUnreadCountType:1];                               /*  SET UNRAED COUNT TYPE   */ // DEFAULT VALUE 0
     [ALApplozicSettings setMaxTextViewLines:4];
     [ALUserDefaultsHandler setDebugLogsRequire:YES];                            /*   ENABLE / DISABLE LOGS   */
@@ -467,6 +547,10 @@
     [ALApplozicSettings setUserProfileHidden:NO];
     [ALApplozicSettings setFontFace:@"Helvetica"];
     [ALApplozicSettings setChatWallpaperImageName:@"<WALLPAPER NAME>"];
+    [ALApplozicSettings replyOptionEnabled:YES];
+    [ALApplozicSettings forwardOptionEnableOrDisable:YES];
+
+
     /****************************************************************************************************************/
 
 
@@ -479,18 +563,18 @@
 
     [ALUserDefaultsHandler setGoogleMapAPIKey:@"AIzaSyBnWMTGs1uTFuf8fqQtsmLk-vsWM7OrIXk"]; //REPLACE WITH YOUR GOOGLE MAPKEY
 
-    //    NSMutableArray * array = [NSMutableArray new];
-    //    [array addObject:[NSNumber numberWithInt:1]];
-    //    [array addObject:[NSNumber numberWithInt:2]];
-    //
-    //    [ALApplozicSettings setContactTypeToFilter: array];         // SET ARRAY TO PREFERENCE
+//    NSMutableArray * array = [NSMutableArray new];
+//    [array addObject:[NSNumber numberWithInt:1]];
+//    [array addObject:[NSNumber numberWithInt:2]];
+//
+//    [ALApplozicSettings setContactTypeToFilter: array];         // SET ARRAY TO PREFERENCE
 
     /************************************** 3rd PARTY VIEWS + MSg CONTAINER SETTINGS  *************************************/
 
-    //    NSArray * viewArray = @[@"VC1", @"VC2"];    // VC : ViewController's Class Name
-    //    [self.permissableVCList arrayByAddingObject:@""];
+//    NSArray * viewArray = @[@"VC1", @"VC2"];    // VC : ViewController's Class Name
+//    [self.permissableVCList arrayByAddingObject:@""];
 
-    //    [ALApplozicSettings setMsgContainerVC:@""];  // ADD CLASS NAME
+//    [ALApplozicSettings setMsgContainerVC:@""];  // ADD CLASS NAME
     /**********************************************************************************************************************/
 
     [ALApplozicSettings setUserDeletedText:@"User has been deleted"];            /*  SET DELETED USER NOTIFICATION TITLE   */
@@ -502,6 +586,22 @@
 
     [ALApplozicSettings setChatListTabTitle:@""];
     [ALApplozicSettings setProfileTabTitle:@""];
+    // Hide attachment options in chat screen
+//    NSArray * attachmentOptionToHide = @[@":audio", @":video", @":location",@":shareContact"];
+//
+//    [ALApplozicSettings setHideAttachmentsOption:attachmentOptionToHide];
+
+    /********************************************* Attachment Plus Icon background color
+     *****************************************************************/
+    [ALApplozicSettings setBackgroundColorForAttachmentPlusIcon:[UIColor colorWithRed:0.0/255 green:0.0/255 blue:0.0/255 alpha:1]];
+
+    //Audio Recording View color
+    [ALApplozicSettings enableNewAudioDesign:YES];
+    [ALApplozicSettings setBackgroundColorForAudioRecordingView:[UIColor lightGrayColor]];
+    [ALApplozicSettings setColorForAudioRecordingText:[UIColor redColor]];
+    [ALApplozicSettings setColorForSlideToCancelText:[UIColor darkGrayColor]];
+    [ALApplozicSettings setFontForAudioView:@"HelveticaNeue"];
+    [ALApplozicSettings disableGroupListingTab:NO];
 }
 
 -(void)getApplicationBaseURL
@@ -555,7 +655,7 @@
         return;
     }
 
-    [self registerUserWithCompletion:alUser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
+    [self connectUserWithCompletion:alUser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
 
         if (!error)
         {
@@ -591,13 +691,13 @@
 
     [self ALDefaultChatViewSettings];
     ALUser *alUser = [ALChatManager getLoggedinUserInformation];
-    [self registerUserWithCompletion:alUser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
+    [self connectUserWithCompletion:alUser withHandler:^(ALRegistrationResponse *rResponse, NSError *error) {
 
-        if (!error)
-        {
-            [self.chatLauncher launchChatListWithParentKey:parentGroupKey
-                                   andViewControllerObject:viewController];
-        }
+       if (!error)
+       {
+           [self.chatLauncher launchChatListWithParentKey:parentGroupKey
+                                  andViewControllerObject:viewController];
+       }
     }];
 }
 
@@ -613,6 +713,11 @@
     //    UIViewController * customView = [storyboard instantiateViewControllerWithIdentifier:@"CustomVC"];
     //    ALChatViewController * chatVC = (ALChatViewController *)chatView;
     //    [chatVC presentViewController:customView animated:YES completion:nil];
+}
+
+-(void) saveLogs
+{
+    [ALLogger saveLogArray];
 }
 
 @end
