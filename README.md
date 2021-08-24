@@ -32,8 +32,14 @@ dependencies {
 include ':react-native-applozic-chat'
 project(':react-native-applozic-chat').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-applozic-chat/android')
 ```
+3. Open android/build.gradle (project level) and add the following to `allProjects { repositories { ... }}`:
 
-3. Add ApplozicChatPackage in MainApplication.java
+```
+maven {
+    url 'https://applozic.jfrog.io/artifactory/applozic-android-sdk'
+}
+```
+4. Add ApplozicChatPackage in MainApplication.java
 
 ```
  @Override
